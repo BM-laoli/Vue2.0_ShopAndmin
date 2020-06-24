@@ -14,7 +14,7 @@ import breadCrumbs from '../../components/common/bread-crumbs'
       breadCrumbs,
     },
   }
-</script>
+</script>c
 
 <style lang="scss" scoped>
 .el-card {

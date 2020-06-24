@@ -4,14 +4,17 @@ import Vue from 'vue'
 
 
 const http  = axios.create( {
-  baseURL:'http://localhost:3000'
+  baseURL:'http://192.168.29.243:3001'
 } )
 
 
 
 
-// 请求拦截 两个错误
+// 请求拦截 两个错误,配置token
 http.interceptors.request.use((config) => {
+  if(sessionStorage.token){
+    config.headers.Authorization =  sessionStorage.token 
+  }
     return config;
   },
   (err) => {
@@ -20,8 +23,8 @@ http.interceptors.request.use((config) => {
   }
   );
 
-// 拦截调请求
 
+// 拦截调请求
 //我们在这里全局捕获错误，进行统一的错误处理,定义一个拦截器,response
 http.interceptors.response.use(res => {
   return res
@@ -37,8 +40,7 @@ http.interceptors.response.use(res => {
   // console.log(err.response.data.message);
   // 我们把讯息挂在到vue原行上,message是ele-ui上的一个方法，可以弹出一些错误讯息 
   if(err.response.status === 401){ 
-     router.push('/login')
-      
+     router.push('/login')   
   }
 
   return Promise.reject(err)

@@ -8,9 +8,9 @@
          :rules="loginFormRules" 
          ref="loginFormRef" 
          size="small">
-          <el-form-item  prop="email">
+          <el-form-item  prop="username">
           <el-input 
-            v-model="loginForm.email"
+            v-model="loginForm.username"
             prefix-icon="el-icon-user-solid"
           ></el-input>
           </el-form-item>
@@ -35,13 +35,13 @@ import {checkEmail} from '../lib/utils'
     data() {
       return {
         loginForm:{
-          email:'',
+          username:'',
           password:''
         },
         loginFormRules:{
-          email:[
+          username:[
             {  required: true, message: '请输入邮箱', trigger: 'blur' }, 
-            {  validator:checkEmail ,trigger: 'blur' }
+            { mix:4,max:15,message:"长度在6到15位之间",trigger:'blur' }
           ],
           password:[ 
             { required:true,message:'请输入密码',trigger:'blur' },
@@ -63,18 +63,16 @@ import {checkEmail} from '../lib/utils'
           }
 
         // 2.验证通过开始发请求
-          let {data:res} =  await this.$http.post( 'login',this.loginForm )
+          let {data:res} =  await this.$http.post( '/api/login',this.loginForm )
         // 3. 拿到数据之后开始做处理 是存还是抛出错误====> 请拦截器中判断错误
 
-          window.sessionStorage.setItem('status',res.status)
+          window.sessionStorage.setItem('token',res.token)
            
           this.$notify({
             title: '标题名称',
             message:'登录成功'
           });
-          
           this.$router.push('/home')
-
         } )
         
 

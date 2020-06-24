@@ -4,5 +4,19 @@
   </div>
 </template>
 
-<style>
+
+
+<script>
+  export default {
+    // 测试用例
+    created () {
+       window.sessionStorage.setItem('status',1)
+    },    
+}
+</script>
+
+
+<style lang="scss" scoped>
+
 </style>
+

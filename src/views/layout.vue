@@ -82,7 +82,7 @@
                     <el-menu-item index="/home/shopDiscount">店铺优惠卷</el-menu-item>、
                   </el-menu-item-group>
                 </el-submenu>
-                <el-menu-item index="/home/comment">
+                <el-menu-item index="/home/commentList">
                     <i class="el-icon-s-comment"></i>
                     <span slot="title">推广列表</span>
                 </el-menu-item>
@@ -143,6 +143,7 @@
                 <div>
                   <el-button type="primary" icon="el-icon-user">修改密码</el-button>
                   <el-button el-button type='info' icon="el-icon-circle-close" @click="logout" >退出</el-button> 
+                  <el-button el-button type='info' icon="el-icon-circle-close" @click="tests" >测试接口</el-button> 
                 </div>
               </el-header>
             <router-view></router-view>
@@ -163,6 +164,10 @@
       }
     },
     methods: {
+      async tests(){
+        let {data:res}  = await this.$http.get('api/rest/products/byid/5eea19df2e49305a7050ac65')
+        console.log(res);
+      },
       toggleMeume(){
         this.isCollapse =!this.isCollapse
       },

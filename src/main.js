@@ -14,7 +14,7 @@ import './assets/sass/style.scss'
 // ele样式配置
 
 
-// 自定义命名空间
+// 自定义命名空间,请在这个项目下 放在全局的资源或者库
 import {deleteMessage} from './lib/utils'
 Vue.prototype.name_space = { 
     deleteMessage
@@ -22,17 +22,17 @@ Vue.prototype.name_space = {
 
 // 富文本编辑器
 import VueQuillEditor from 'vue-quill-editor'
-
 import 'quill/dist/quill.core.css' // import styles
 import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
-
 Vue.use(VueQuillEditor, /* { default global options } */)
 
+
+// http
 Vue.prototype.$http = http
 
-Vue.config.productionTip = false
 
+Vue.config.productionTip = false
 new Vue({
     router,
     store,
