@@ -4,7 +4,7 @@ import Vue from 'vue'
 
 
 const http  = axios.create( {
-  baseURL:'http://127.0.0.1:3001/api'
+  baseURL:'http://192.168.29.243:3001/api'
 } )
 
 
