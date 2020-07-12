@@ -3,49 +3,14 @@
     <bread-crumbs :level="this.$route.meta"></bread-crumbs>
     <!-- 查询用户表单start -->
     <el-card class="box-card" style="height:80px">
-      <el-row>
-        <el-col :span="24"
-          ><div class="grid-content bg-purple-dark">
-            <el-form
-              :rules="findUserFormRules"
-              ref="findUserFormRef"
-              :model="findUserForm"
-              label-width="80px"
-              inline
-            >
-              <el-form-item
-                label="账号"
-                style="margin:0 120px 0 0"
-                prop="username"
-              >
-                <el-input v-model="findUserForm.username"></el-input>
-              </el-form-item>
-              <el-form-item label="姓名" style="margin:0 120px 0 0" prop="name">
-                <el-input v-model="findUserForm.name"></el-input>
-              </el-form-item>
-              <el-form-item
-                label="手机号"
-                style="margin:0 120px 0 0"
-                prop="phone"
-              >
-                <el-input v-model="findUserForm.phone"></el-input>
-              </el-form-item>
-              <span style="line-height:35px">
-                <el-button type="primary" size="mini" @click="findUser()"
-                  >查询</el-button
-                >
-                <el-button
-                  type="info"
-                  size="mini"
-                  style="margin-left:30px"
-                  @click="resetFindUserForm()"
-                  >重置</el-button
-                >
-              </span>
-            </el-form>
-          </div></el-col
-        >
-      </el-row>
+      <!-- 查找用户组件start -->
+      <find-user
+        ref="findUserRef"
+        :form="findUserForm"
+        @find-user="findUser($event)"
+        @reset-find="resetFindUserForm()"
+      ></find-user>
+      <!-- 查找用户组件end -->
     </el-card>
     <!-- 查询用户表单end -->
 
@@ -58,37 +23,16 @@
     >
     <!-- 新增账号end -->
 
-    <!-- 用户列表start -->
+    <!-- 用户列表组件start -->
     <el-card>
-      <el-table :data="userList" style="width: 100%" :border="false">
-        <el-table-column prop="username" label="账号" width="350">
-        </el-table-column>
-        <el-table-column prop="name" label="姓名" width="200">
-        </el-table-column>
-        <el-table-column prop="phone" label="联系电话" width="300">
-        </el-table-column>
-        <el-table-column prop="role" label="职位" width="200">
-        </el-table-column>
-        <el-table-column prop="status" label="状态" width="200">
-          {{ userList.status == true ? "启用" : "停用" }}
-        </el-table-column>
-        <el-table-column label="操作" #default="{row}">
-          <el-button type="primary" size="mini" @click="showDialog(row)"
-            >编辑</el-button
-          >
-          <el-button type="warning" size="mini" @click="resetPassword(row)"
-            >重置密码</el-button
-          >
-          <el-button type="primary" plain size="mini" @click="stopUse(row)">{{
-            row.status == true ? "停用" : "启用"
-          }}</el-button>
-          <el-button type="danger" size="mini" @click="deleteUserById(row._id)"
-            >删除</el-button
-          >
-        </el-table-column>
-      </el-table>
-
-      <!-- 用户列表end -->
+      <user-list
+        :list="userList"
+        @show-dialog="showDialog($event)"
+        @reset-password="resetPassword($event)"
+        @stop-use="stopUse($event)"
+        @delete-user="deleteUserById($event)"
+      ></user-list>
+      <!-- 用户列表组件end -->
 
       <!-- 分页区域 -->
       <el-pagination
@@ -144,17 +88,17 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="addUserDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="add">确 定</el-button>
-        </span>
-      </el-dialog>
-      <!-- 添加账号对话框end -->
+      </span>
+    </el-dialog>
+    <!-- 添加账号对话框end -->
 
-      <!-- 修改账号对话框start -->
-      <el-dialog
-        title="编辑账号"
-        v-if="editUserDialogVisible"
-        :visible.sync="editUserDialogVisible"
-        width="20%"
-        @close="editUserDialogClosed"
+    <!-- 修改账号对话框start -->
+    <el-dialog
+      title="编辑账号"
+      v-if="editUserDialogVisible"
+      :visible.sync="editUserDialogVisible"
+      width="20%"
+      @close="editUserDialogClosed"
     >
       <el-form
         ref="editUserFormRef"
@@ -181,7 +125,7 @@
             :data="treedata"
             show-checkbox
             node-key="id"
-            :default-checked-keys="editFrom"  
+            :default-checked-keys="editFrom"
             default-expand-all
             :props="ruleProps"
           >
@@ -202,7 +146,7 @@
       width="50%"
       @close="resetPasswordClosed"
     >
-      <el-form>
+      <el-form ref="resetPasswordForm">
         <el-form-item>
           <el-input v-model="newPassword"></el-input>
         </el-form-item>
@@ -218,14 +162,18 @@
 
 <script>
 import breadCrumbs from "../../components/common/bread-crumbs";
+import UserList from "./components/user-list";
+import FindUser from "./components/find-user";
 export default {
   components: {
-    breadCrumbs
+    breadCrumbs,
+    UserList,
+    FindUser
   },
   data() {
     return {
       // 编辑用户的复选框存储点
-      editFrom:null,
+      editFrom: null,
       ruleProps: {
         label: "label",
         children: "children"
@@ -309,15 +257,7 @@ export default {
       addUserDialogVisible: false, // 添加账号对话框开关
       // 用户列表
       userList: [],
-      // 查询用户表单验证规则
-      findUserFormRules: {
-        username: [
-          // { required: true, meeage: "请输入账号", trigger: "blur" },
-          { mix: 4, max: 15, message: "长度在6到15位之间", trigger: "blur" }
-        ],
-        name: [{ required: true, meeage: "请输入姓名", trigger: "blur" }]
-        // phone: [{ required: true, meeage: "请输入手机号", trigger: "blur" }]
-      },
+
       // 查询用户表单
       findUserForm: {
         username: "",
@@ -441,35 +381,33 @@ export default {
     },
     // 点击确定  完成编辑功能
     async edit() {
-      const res = await this.$refs.editUserFormRef.validate(  valid => {
-          console.log( this.userForm );
-          this.editFrom = []
-    });
-      
+      const res = await this.$refs.editUserFormRef.validate(valid => {
+        console.log(this.userForm);
+        this.editFrom = [];
+      });
     },
     editUserDialogClosed() {
-        this.$refs.editUserFormRef.resetFields();
-        this.editFrom = []
-        // this.editUserForm = null
+      this.$refs.editUserFormRef.resetFields();
+      this.editFrom = [];
+      // this.editUserForm = null
     },
     // 点击编辑按钮  展示对话框
     showDialog(row) {
-
-
-
-      this.editUserForm = row;  
-      let array = []
-      let obj = row.rule
-      for (let key in obj ) {
-          obj[key].children.forEach( ( v ) => { 
-            array.push( v.authName )
-           } )
-      } 
-      this.editFrom = array
+      this.editUserForm = row;
+      let array = [];
+      let obj = row.rule;
+      for (let key in obj) {
+        obj[key].children.forEach(v => {
+          array.push(v.authName);
+        });
+      }
+      this.editFrom = array;
       this.editUserDialogVisible = true;
     },
     // 查找账户
-    async findUser() {
+    async findUser(form) {
+      this.findUserForm = form;
+      console.log(this.findUserForm);
       const res = await this.$http.get(`rest/operation_user/unitedquery/`, {
         params: this.findUserForm
       });
@@ -482,7 +420,8 @@ export default {
     },
     // 点击重置按钮  清空查找表单输入
     resetFindUserForm() {
-      this.$refs.findUserFormRef.resetFields();
+      // console.log(this.$refs.findUserRef);s
+      this.$refs.findUserRef.$refs.findRef.resetFields();
       this.getUserList();
     },
     // 获取所有账号列表信息
@@ -513,15 +452,5 @@ export default {
 }
 .el-pagination {
   margin-top: 20px;
-}
-
-::v-deep .el-table__header-wrapper {
-  color: red;
-  border: 3px solid #000;
-  border-radius: 10px;
-  width: 1582px;
-}
-::v-deep .el-table td {
-  border: 0;
 }
 </style>
