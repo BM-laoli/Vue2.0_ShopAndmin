@@ -35,6 +35,10 @@ Vue.prototype.$http = http
 // filter
 import './filters/LSZ-text-abbreviation'
 
+// mock
+import '@/mock'
+
+
 Vue.config.productionTip = false
 new Vue({
     router,

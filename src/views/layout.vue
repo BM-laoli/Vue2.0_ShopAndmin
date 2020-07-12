@@ -196,6 +196,7 @@ let datas = {
 		}
 	}
 }
+import  {testMock }  from '../api/mock/test'
   export default {
     data() {
       return {
@@ -204,7 +205,7 @@ let datas = {
     },
     methods: {
       async tests(){
-        let {data:res}  = await this.$http.post('/rest/operation_user' ,datas )
+        let {data:res}  = await testMock()
         console.log(res);
       },
       toggleMeume(){
