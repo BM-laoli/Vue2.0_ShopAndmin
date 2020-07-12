@@ -32,6 +32,9 @@ Vue.use(VueQuillEditor, /* { default global options } */)
 Vue.prototype.$http = http
 
 
+// filter
+import './filters/LSZ-text-abbreviation'
+
 Vue.config.productionTip = false
 new Vue({
     router,
