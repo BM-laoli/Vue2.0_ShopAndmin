@@ -144,16 +144,17 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="addUserDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="add">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- 添加账号对话框end -->
+        </span>
+      </el-dialog>
+      <!-- 添加账号对话框end -->
 
-    <!-- 修改账号对话框start -->
-    <el-dialog
-      title="新增账号"
-      :visible.sync="editUserDialogVisible"
-      width="20%"
-      @close="editUserDialogClosed"
+      <!-- 修改账号对话框start -->
+      <el-dialog
+        title="编辑账号"
+        v-if="editUserDialogVisible"
+        :visible.sync="editUserDialogVisible"
+        width="20%"
+        @close="editUserDialogClosed"
     >
       <el-form
         ref="editUserFormRef"
@@ -180,6 +181,7 @@
             :data="treedata"
             show-checkbox
             node-key="id"
+            :default-checked-keys="editFrom"  
             default-expand-all
             :props="ruleProps"
           >
@@ -222,6 +224,8 @@ export default {
   },
   data() {
     return {
+      // 编辑用户的复选框存储点
+      editFrom:null,
       ruleProps: {
         label: "label",
         children: "children"
@@ -437,20 +441,31 @@ export default {
     },
     // 点击确定  完成编辑功能
     async edit() {
-      const res = await this.$refs.editUserFormRef.validate(valid => {
-        console.log(valid);
-      });
+      const res = await this.$refs.editUserFormRef.validate(  valid => {
+          console.log( this.userForm );
+          this.editFrom = []
+    });
+      
     },
     editUserDialogClosed() {
-      this.$refs.editUserFormRef.resetFields();
+        this.$refs.editUserFormRef.resetFields();
+        this.editFrom = []
+        // this.editUserForm = null
     },
     // 点击编辑按钮  展示对话框
     showDialog(row) {
-      // console.log(row);
-      // console.log(row.rule);
-      this.editUserForm = row;
-      console.log(this.editUserForm);
 
+
+
+      this.editUserForm = row;  
+      let array = []
+      let obj = row.rule
+      for (let key in obj ) {
+          obj[key].children.forEach( ( v ) => { 
+            array.push( v.authName )
+           } )
+      } 
+      this.editFrom = array
       this.editUserDialogVisible = true;
     },
     // 查找账户
