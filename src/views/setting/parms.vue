@@ -43,6 +43,7 @@ export default {
 
     input {
       width: 30px;
+      height: 20px;
       margin: 0 10px;
     }
   }
