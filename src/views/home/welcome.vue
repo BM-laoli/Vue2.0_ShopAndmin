@@ -2,7 +2,148 @@
   <div>
    <bread-crumbs :level="this.$route.meta"></bread-crumbs>
     <el-card class="box-card">
-      <h1>在是一个模板页面</h1>
+      <el-row>
+        <el-col :span="12">
+              <!-- 提现 -->
+          <div class="muner">
+            <div shadow="always" class="sonCard">
+              <div class="card-box">
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+              </div>
+              <div class="features">
+                  <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                  <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                  <div>
+                   <el-button size="mini" type="primary">提现管理 </el-button>
+                  </div>
+                  <el-button size="mini" type="primary">平台支持明细 </el-button>
+              </div>
+            </div>
+          </div>
+          
+        </el-col>
+         <el-col :span="12">
+              <!-- 提现 -->
+          <div class="muner">
+            <div shadow="always" class="sonCard">
+              <div class="card-box">
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+              </div>
+              <div class="features">
+                  <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                  <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                  <div>
+                   <el-button size="mini" type="primary">提现管理 </el-button>
+                  </div>
+                  <el-button size="mini" type="primary">平台支持明细 </el-button>
+              </div>
+            </div>
+          </div>
+          
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+              <!-- 提现 -->
+          <div class="muner">
+            <div shadow="always" class="sonCard">
+              <div class="card-box">
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+              </div>
+              <div class="features">
+                  <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                  <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                  <div>
+                   <el-button size="mini" type="primary">提现管理 </el-button>
+                  </div>
+                  <el-button size="mini" type="primary">平台支持明细 </el-button>
+              </div>
+            </div>
+          </div>
+          
+        </el-col>
+         <el-col :span="12">
+              <!-- 提现 -->
+          <div class="muner">
+            <div shadow="always" class="sonCard">
+              <div class="card-box">
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+              </div>
+              <div class="features">
+                  <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                  <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                  <div>
+                   <el-button size="mini" type="primary">提现管理 </el-button>
+                  </div>
+                  <el-button size="mini" type="primary">平台支持明细 </el-button>
+              </div>
+            </div>
+          </div>
+          
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+              <!-- 提现 -->
+          <div class="muner">
+            <div shadow="always" class="sonCard">
+              <div class="card-box">
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                 总提现金额：<span>1555元</span>
+                </div>
+              </div>
+              <div class="features">
+                  <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                  <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                  <div>
+                   <el-button size="mini" type="primary">提现管理 </el-button>
+                  </div>
+                  <el-button size="mini" type="primary">平台支持明细 </el-button>
+              </div>
+            </div>
+          </div>
+          
+        </el-col>
+      </el-row>
+      
     </el-card>
   </div>
 </template>
@@ -18,9 +159,46 @@ import breadCrumbs from '../../components/common/bread-crumbs'
 
 <style lang="scss" scoped>
 .el-card {
+  height: 1000px;
   margin: 15px;
   margin-top: 22px;
   background-color:	#E6E6FA;
+}
+.muner {
+  padding: 15px;
+  width: 80%;
+  height: 150px;
+}
+.el-row {
+  margin-top: 88px;
+}
+.el-row:nth-child(1) {
+  margin-top:0;
+}
+.sonCard {
+  width: 100%;
+  padding: 5px;
+  height: 150%;
+  background-color: #fff;
+  line-height: 35px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.card-box {
+    span {
+      color:red
+    }
+}
+.features {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .el-button {
+      width: 150px;
+      margin-top: 15px;
+    }
 }
 
 </style>

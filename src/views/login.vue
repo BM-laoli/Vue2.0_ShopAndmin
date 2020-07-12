@@ -62,7 +62,7 @@ export default {
         }
 
         // 2.验证通过开始发请求
-        let { data: res } = await this.$http.post("login", this.loginForm);
+          let {data:res} =  await this.$http.post( '/login',this.loginForm )
         // 3. 拿到数据之后开始做处理 是存还是抛出错误====> 请拦截器中判断错误
 
         window.sessionStorage.setItem("token", res.token);

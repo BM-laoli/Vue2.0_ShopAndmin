@@ -2,9 +2,13 @@
 import axios from 'axios'
 import Vue from 'vue'
 
-const http = axios.create({
-    baseURL: 'http://192.168.29.243:3001/api/',
-})
+
+const http  = axios.create( {
+  baseURL:'http://192.168.29.243:3001/api'
+} )
+
+
+
 
 // 请求拦截 两个错误,配置token
 http.interceptors.request.use(

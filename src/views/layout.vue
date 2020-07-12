@@ -157,6 +157,46 @@
 </template>
 
 <script>
+// 测试数据
+let datas = {
+	"username": "admin1",
+	"password": "123456",
+	"name": "liszhiengg",
+	"phone": '13617713259',
+	"role": "推广经理",
+	"status": false,
+	"rule": {
+		"buisness": {
+			"authName": "商圈管理",
+			"children": [
+				{
+					"authName": "共享商圈"
+				},
+				{
+					"authName": "个人商圈"
+				}
+			]
+		},
+		"shops": {
+			"authName": "店铺管理",
+			"children": [
+				{
+					"authName": "店铺列表"
+				},
+				{
+					"authName": "商品列表"
+				},
+				{
+					"authName": "开店审核"
+				},
+				{
+					"authName": "店铺权益管理"
+				}
+			]
+		}
+	}
+}
+import  {testMock }  from '../api/mock/test'
   export default {
     data() {
       return {
@@ -165,7 +205,7 @@
     },
     methods: {
       async tests(){
-        let {data:res}  = await this.$http.get('api/rest/products/byid/5eea19df2e49305a7050ac65')
+        let {data:res}  = await testMock()
         console.log(res);
       },
       toggleMeume(){
