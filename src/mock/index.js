@@ -5,6 +5,8 @@ import ratings from './modules/ratings'
 import businiess from './modules/lsz'
 // import businiess from './modules/lsz'
 // console.log(businiess);
+import cuz from './modules/cuz'
+
 // Mock函数
 const { mock } = Mock
 
@@ -20,3 +22,7 @@ mock(/\/rest\/peronale/, 'get', businiess.getPersinalData)
 
 
 // 李仕增的mock数据
+
+// 推广列表请求
+mock(/\/api\/cuz\/userList/, 'get', cuz.userList)
+mock(/\/api\/cuz\/shopList/, 'get', cuz.shopList)

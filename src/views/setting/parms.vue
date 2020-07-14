@@ -32,13 +32,19 @@ import breadCrumbs from '../../components/common/bread-crumbs'
 .el-card {
   margin: 15px;
   margin-top: 22px;
-  background-color:	#E6E6FA;
-  padding: 8px;
-}
-.hedaer-box {
-  width: 100%;
-  height: 150px;
-  background-color: pink;
+  background-color:#e6e6fa;
+  width: 60%;
+  border-radius: 10px;
+  .box {
+    margin-left: 50px;
+    margin-top: 20px;
+
+    input {
+      width: 30px;
+      height: 20px;
+      margin: 0 10px;
+    }
+  }
 }
 .tabbe-box {
   width: 100%;
