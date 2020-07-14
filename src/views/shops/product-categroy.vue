@@ -21,14 +21,14 @@
       <el-table
         :data="tableData"
         style="width: 100%"
-        row-key="id"
+        row-key="cateId"
         default-expand-all
         :tree-props="{children: 'children', hasChildren: true}"
-        :default-sort="{prop: 'date', order: 'address'}"
+        :default-sort="{prop: 'cateId', order: 'cateName'}"
       >
-        <el-table-column prop="name" label="类别名称" sortable width="180"></el-table-column>
-        <el-table-column prop="id" label="排序" sortable width="180"></el-table-column>
-        <el-table-column prop="date" label="类别数量" sortable width="180"></el-table-column>
+        <el-table-column prop="cateName" label="类别名称" sortable width="180"></el-table-column>
+        <el-table-column prop="cateId" label="排序" sortable width="180"></el-table-column>
+        <el-table-column prop="children.cateChildNum" label="类别数量" sortable width="180"></el-table-column>
         <el-table-column label="操作" #default="{row:shopData}">
           <el-button
             @click="editData(shopData)"
@@ -96,6 +96,7 @@
 </template>
 
 <script>
+import { categroyData } from "@/api/mock/test";
 import breadCrumbs from "../../components/common/bread-crumbs";
 export default {
   components: {
@@ -111,172 +112,18 @@ export default {
       editDialogFormVisible: false,
       editIndustryValue: "",
       editIndustrySortValue: "",
-      tableData: [
-        {
-          id: 1,
-          name: "生鲜",
-          num: 11,
-          children: [
-            {
-              id: 100,
-              name: "生鲜",
-              num: 11
-            },
-            {
-              id: 110,
-              name: "肉类",
-              num: 110
-            },
-            {
-              id: 120,
-              name: "零食",
-              num: 115
-            },
-            {
-              id: 130,
-              name: "百货",
-              num: 112
-            },
-            {
-              id: 140,
-              name: "家具",
-              num: 118
-            }
-          ]
-        },
-        {
-          id: 2,
-          name: "肉类",
-          num: 11,
-          children: [
-            {
-              id: 200,
-              name: "生鲜",
-              num: 11
-            },
-            {
-              id: 210,
-              name: "肉类",
-              num: 110
-            },
-            {
-              id: 220,
-              name: "零食",
-              num: 115
-            },
-            {
-              id: 230,
-              name: "百货",
-              num: 112
-            },
-            {
-              id: 240,
-              name: "家具",
-              num: 118
-            }
-          ]
-        },
-        {
-          id: 3,
-          name: "零食",
-          num: 11,
-          children: [
-            {
-              id: 300,
-              name: "生鲜",
-              num: 11
-            },
-            {
-              id: 310,
-              name: "肉类",
-              num: 110
-            },
-            {
-              id: 320,
-              name: "零食",
-              num: 115
-            },
-            {
-              id: 330,
-              name: "百货",
-              num: 112
-            },
-            {
-              id: 340,
-              name: "家具",
-              num: 118
-            }
-          ]
-        },
-        {
-          id: 4,
-          name: "百货",
-          num: 11,
-          children: [
-            {
-              id: 400,
-              name: "生鲜",
-              num: 11
-            },
-            {
-              id: 410,
-              name: "肉类",
-              num: 110
-            },
-            {
-              id: 420,
-              name: "零食",
-              num: 115
-            },
-            {
-              id: 430,
-              name: "百货",
-              num: 112
-            },
-            {
-              id: 440,
-              name: "家具",
-              num: 118
-            }
-          ]
-        },
-        {
-          id: 5,
-          name: "家具",
-          num: 11,
-          children: [
-            {
-              id: 500,
-              name: "生鲜",
-              num: 11
-            },
-            {
-              id: 510,
-              name: "肉类",
-              num: 110
-            },
-            {
-              id: 520,
-              name: "零食",
-              num: 115
-            },
-            {
-              id: 530,
-              name: "百货",
-              num: 112
-            },
-            {
-              id: 540,
-              name: "家具",
-              num: 118
-            }
-          ]
-        }
-      ]
+      tableData: []
     };
   },
-  created() {},
+  created() {
+    this.categroyData();
+  },
   methods: {
+    async categroyData() {
+      const { data: res } = await categroyData();
+      this.tableData = res.data;
+      console.log(res);
+    },
     onSelect() {
       console.log(this.input);
     },
@@ -285,8 +132,8 @@ export default {
     },
     editData(v) {
       this.editDialogFormVisible = true;
-      this.editIndustryValue = v.name;
-      this.editIndustrySortValue = v.id;
+      this.editIndustryValue = v.cateName;
+      this.editIndustrySortValue = v.cateId;
       console.log(v);
     },
     deleteData() {

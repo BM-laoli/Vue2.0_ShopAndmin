@@ -23,8 +23,8 @@
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}"
       >
-        <el-table-column prop="name" label="子类别名称" sortable width="350"></el-table-column>
-        <el-table-column prop="id" label="排序" sortable width="350"></el-table-column>
+        <el-table-column prop="uname" label="子类别名称" sortable width="350"></el-table-column>
+        <el-table-column prop="uid" label="排序" sortable width="350"></el-table-column>
         <el-table-column label="操作" #default="{row:shopData}">
           <el-button @click="editData(shopData)" icon="el-icon-edit" type="text">编 辑</el-button>
           <el-button
@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import { industryData } from "@/api/mock/test";
 import breadCrumbs from "../../components/common/bread-crumbs";
 export default {
   components: {
@@ -95,32 +96,18 @@ export default {
       editDialogFormVisible: false,
       editIndustryValue: "",
       editIndustrySortValue: "",
-      tableData: [
-        {
-          id: 100,
-          name: "生鲜"
-        },
-        {
-          id: 110,
-          name: "肉类"
-        },
-        {
-          id: 120,
-          name: "零食"
-        },
-        {
-          id: 130,
-          name: "百货"
-        },
-        {
-          id: 140,
-          name: "家具"
-        }
-      ]
+      tableData: []
     };
   },
-  created() {},
+  created() {
+    this.getIndustryData();
+  },
   methods: {
+    async getIndustryData() {
+      const { data: res } = await industryData();
+      this.tableData = res.data;
+      console.log(res);
+    },
     onSelect() {
       console.log(this.input);
     },
@@ -129,8 +116,8 @@ export default {
     },
     editData(v) {
       this.editDialogFormVisible = true;
-      this.editIndustryValue = v.name;
-      this.editIndustrySortValue = v.id;
+      this.editIndustryValue = v.uname;
+      this.editIndustrySortValue = v.uid;
       console.log(v);
     },
     deleteData() {
