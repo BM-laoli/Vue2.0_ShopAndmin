@@ -93,9 +93,9 @@
         <el-link :underline="false" icon="el-icon-refresh">启用</el-link>
             <el-link :underline="false" icon="el-icon-delete">删除</el-link>-->
             <router-link :to="{path:'/home/shops/shopDetail', query:{id: shopbase.uid}}">详情</router-link>
-            <router-link to="{path:'//rest/public_shop_base/byId', query:{id: uid}}">查看商品</router-link>
-            <router-link to="{path:'//rest/public_shop_base/byId', query:{id: uid}}">经营分析</router-link>
-            <router-link to="{path:'//rest/public_shop_base/byId', query:{id: uid}}">启用</router-link>
+            <router-link :to="{path:'/rest/public_shop_base/byId', query:{id: shopbase.uid}}">查看商品</router-link>
+            <router-link :to="{path:'/home/shops/businessAnalysis', query:{id: shopbase.uid}}">经营分析</router-link>
+            <router-link :to="{path:'/rest/public_shop_base/byId', query:{id: shopbase.uid}}">启用</router-link>
             <router-link to="{path:'//rest/public_shop_base/byId', query:{id: uid}}">删除</router-link>
           </el-table-column>
         </el-table>

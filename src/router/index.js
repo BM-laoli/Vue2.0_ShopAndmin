@@ -9,6 +9,7 @@ const welcome = () => import('../views/home/welcome')
 // 商铺管理
 const shopsList = () => import('../views/shops/shops-list')
 const shopDetail = () => import('../views/shops/shoplist/shop-detail')
+const businessAnalysis = () => import('../views/shops/shoplist/business-analysis')
 const productList = () => import('../views/shops/product-list')
 const openShop = () => import('../views/shops/open-shop')
 const shopRight = () => import('../views/shops/shop-right')
@@ -36,6 +37,8 @@ const financeJion = () => import('../views/finance/finance-jion')
 // 系统设置
 const user = () => import('../views/setting/user')
 const parms = () => import('../views/setting/parms')
+
+
 
 
 
@@ -82,6 +85,12 @@ const routes = [
         name: 'shopDetail',
         component: shopDetail,
         meta: { levelOne: '店铺详情', levelTow: '' },
+      },
+      {
+        path: '/home/shops/businessAnalysis',
+        name: 'businessAnalysis',
+        component: businessAnalysis,
+        meta: { levelOne: '经营分析', levelTow: '' },
       },
       {
         path: '/home/shops/productList',

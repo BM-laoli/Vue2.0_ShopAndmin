@@ -168,18 +168,18 @@
                 </el-row>
               </el-form-item>
               <el-row style="width:70%">
-                <el-col :span="8">
+                <el-col :span="7">
                   <el-form-item label="起配价">
                     <el-input v-model="form.delivery.region.start_price"></el-input>元
                   </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="10">
                   <el-form-item label="配送范围">
                     <el-input v-model="form.delivery.region.over"></el-input>公里（以内）
                   </el-form-item>
                 </el-col>
-                <el-col :span="8">
-                  <el-form-item label="配送费" label-width="150px">
+                <el-col :span="7">
+                  <el-form-item label="配送费" label-width="0px">
                     <el-input v-model="form.delivery.region.total_price"></el-input>元
                   </el-form-item>
                 </el-col>
