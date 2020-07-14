@@ -8,6 +8,8 @@ const home = () => import('../views/layout')
 const welcome = () => import('../views/home/welcome')
 // 商铺管理
 const shopsList = () => import('../views/shops/shops-list')
+const shopDetail = () => import('../views/shops/shoplist/shop-detail')
+const businessAnalysis = () => import('../views/shops/shoplist/business-analysis')
 const productList = () => import('../views/shops/product-list')
 const openShop = () => import('../views/shops/open-shop')
 const openShopAudit = () => import('../views/shops/open-shop-audit.vue')
@@ -74,6 +76,18 @@ const routes = [
                 name: 'shopsList',
                 component: shopsList,
                 meta: { levelOne: '商铺管理', levelTow: '商铺列表' },
+            },
+            {
+              path: '/home/shops/shopDetail',
+              name: 'shopDetail',
+              component: shopDetail,
+              meta: { levelOne: '店铺详情', levelTow: '' },
+            },
+            {
+              path: '/home/shops/businessAnalysis',
+              name: 'businessAnalysis',
+              component: businessAnalysis,
+              meta: { levelOne: '经营分析', levelTow: '' },
             },
             {
                 path: '/home/shops/productList',
@@ -217,7 +231,7 @@ const routes = [
 
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
-    return originalPush.call(this, location).catch((err) => err)
+  return originalPush.call(this, location).catch((err) => err)
 }
 
 const router = new VueRouter({
@@ -227,20 +241,20 @@ const router = new VueRouter({
 // 路由拦截方案1
 // 这个方案是保存了token，在下次访问的时候去拿这个token判断就好了，有的就放行，没令牌的就不放行
 router.beforeEach((to, from, next) => {
-    if (to.path === '/login') {
-        return next()
-    }
-    // 注意，在服务器上，使用的是打标识的方式，如果我们登录了，服务器就记住我们，然后给我们
-    // 返回一个字符串 ‘ var isLogin = true; var userId=id   || var isLogin = false  ’
-    const token = window.sessionStorage.getItem('token')
+  if (to.path === '/login') {
+      return next()
+  }
+  // 注意，在服务器上，使用的是打标识的方式，如果我们登录了，服务器就记住我们，然后给我们
+  // 返回一个字符串 ‘ var isLogin = true; var userId=id   || var isLogin = false  ’
+  const token = window.sessionStorage.getItem('token')
 
-    if (top.path === '/login' && token) {
-        return next('/home')
-    }
-    if (!token || to.path === '/login') {
-        return next('/login')
-    }
-    next()
+  if (top.path === '/login' && token) {
+      return next('/home')
+  }
+  if (!token || to.path === '/login') {
+      return next('/login')
+  }
+  next()
 })
 
 // 路由拦截方案2 给路由打标签，如果是pubinc就公开的，允许访问，否则就需要验证
