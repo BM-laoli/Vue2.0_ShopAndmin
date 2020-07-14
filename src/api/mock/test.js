@@ -5,6 +5,15 @@ export const testMock = options => {
   return result
 };
 
+export const industryData = options => {
+  let result = http.get('/api/product/form');
+  return result
+};
+export const categroyData = options => {
+  let result = http.get('/api/product/cateForm');
+  return result
+};
+
 export const orderMock = (options) => {
   let result = http.get('/api/orders/orderList')
   return result

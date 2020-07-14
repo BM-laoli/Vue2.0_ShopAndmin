@@ -16,6 +16,7 @@ const openShopAudit = () => import('../views/shops/open-shop-audit.vue')
 const shopRight = () => import('../views/shops/shop-right')
 const shopIndustry = () => import('../views/shops/shop-industry')
 const productCategroy = () => import('../views/shops/product-categroy')
+const productSubCategroy = () => import('../views/shops/product-subcategory')
 // 商圈管理
 const publicBusinessDistrict = () =>  import('../views/business-district/public-business-district')
 const personalBusinessDistrict = () =>  import('../views/business-district/personal-business-district')
@@ -117,6 +118,13 @@ const routes = [
                 component: productCategroy,
                 meta: { levelOne: '商铺管理', levelTow: '商品类别管理' },
             },
+             {
+                path: '/home/shops/productSubCategroy/:id',
+                name: 'productSubCategroy',
+                component: productSubCategroy,
+                meta: { levelOne: '商铺管理', levelTow: '商品子类别管理' },
+                props: true
+            },
             // 商圈管理模块
             {
                 path: '/home/publicBusinessDistrict',

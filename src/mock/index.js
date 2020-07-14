@@ -7,6 +7,7 @@ import businiess from './modules/lsz'
 // console.log(businiess);
 import cuz from './modules/cuz'
 import orders from './modules/order'
+import prodcut from './modules/product'
 
 
 
@@ -30,3 +31,5 @@ mock(/\/rest\/peronale/, 'get', businiess.getPersinalData)
 mock(/\/api\/cuz\/userList/, 'get', cuz.userList)
 mock(/\/api\/cuz\/shopList/, 'get', cuz.shopList)
 mock(/\/api\/orders\/orderList/, 'get', orders.orderList)
+mock(/\/api\/product\/form/, 'get', prodcut.form)
+mock(/\/api\/product\/cateForm/, 'get', prodcut.cateForm)
