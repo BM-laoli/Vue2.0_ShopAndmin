@@ -3,9 +3,9 @@ import axios from 'axios'
 import Vue from 'vue'
 
 
-const http  = axios.create( {
-  baseURL:'http://192.168.29.243:3001/api'
-} )
+const http = axios.create({
+    baseURL: 'http://localhost:3001/api'
+})
 
 
 
