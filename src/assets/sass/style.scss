@@ -6,6 +6,7 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
+  background-color: #eee;
 }
 
 // 重置一些 ele里面固有的样式
@@ -15,7 +16,7 @@ body,
 }
 
 .el-card {
-  box-shadow: 0 1px 1px rgba(0,0,0,0.15) !important;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
 }
 
 img {
