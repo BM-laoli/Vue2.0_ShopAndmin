@@ -1,38 +1,41 @@
-<template>
-  <div>
-   <bread-crumbs :level="this.$route.meta"></bread-crumbs>
-    <el-card class="box-card">
-      <!-- heder头部 -->
-      <div class="hedaer-box">
-          
-      </div>
 
-      <div class="border-middleware">
-          
+ <template>
+  <div>
+    <bread-crumbs :level="this.$route.meta"></bread-crumbs>
+    <el-card class="box-card">
+      <span>店铺订单抽佣比例</span>
+      <div class="box">
+        <span>抽佣比</span>
+        <input type="text" />
+        <span>%</span>
       </div>
-      <!-- body 身体 -->
-      <div class="tabbe-box">
-        
-      </div>
-      
     </el-card>
+    <el-card class="box-card">
+      <span>用户素材收佣比例</span>
+      <div class="box">
+        <span>抽佣比</span>
+        <input type="text" />
+        <span>%</span>
+      </div>
+    </el-card>
+    <el-button type="primary" class="saveBtn">保存</el-button>
   </div>
 </template>
 
 <script>
-import breadCrumbs from '../../components/common/bread-crumbs'
-  export default {
-    components: {
-      breadCrumbs,
-    },  
+import breadCrumbs from "../../components/common/bread-crumbs";
+export default {
+  components: {
+    breadCrumbs
   }
+};
 </script>
 
 <style lang="scss" scoped>
 .el-card {
   margin: 15px;
   margin-top: 22px;
-  background-color:#e6e6fa;
+  background-color: #e6e6fa;
   width: 60%;
   border-radius: 10px;
   .box {
@@ -46,16 +49,9 @@ import breadCrumbs from '../../components/common/bread-crumbs'
     }
   }
 }
-.tabbe-box {
-  width: 100%;
-  height: 1000px;
-  background-color: cornflowerblue;
-}
-
-.border-middleware {
-  width: 100%;
-  height: 80px;
-  background-color: yellowgreen;
-  margin: 10px 0;
+.saveBtn {
+  width: 150px;
+  height: 40px;
+  margin: 20px 0 0 60px;
 }
 </style>
