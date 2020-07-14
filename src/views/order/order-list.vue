@@ -98,7 +98,6 @@ export default {
       data: { data }
     } = await orderMock();
     this.orderData = data.array;
-    console.log(data);
   }
 };
 </script>

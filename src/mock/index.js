@@ -15,3 +15,4 @@ Mock.setup({
 // 使用拦截规则拦截命中的请求，mock(url, post/get, 返回的数据);
 mock(/\/api\/ratings\/list/, 'post', ratings.list)
 mock(/\/api\/orders\/orderList/, 'get', orders.orderList)
+mock(/\/api\/orders\/detailedData/, 'get', orders.detailedData)
