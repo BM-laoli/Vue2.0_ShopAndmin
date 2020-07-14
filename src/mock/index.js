@@ -6,6 +6,9 @@ import businiess from './modules/lsz'
 // import businiess from './modules/lsz'
 // console.log(businiess);
 import cuz from './modules/cuz'
+import orders from './modules/order'
+
+
 
 // Mock函数
 const { mock } = Mock
@@ -26,3 +29,4 @@ mock(/\/rest\/peronale/, 'get', businiess.getPersinalData)
 // 推广列表请求
 mock(/\/api\/cuz\/userList/, 'get', cuz.userList)
 mock(/\/api\/cuz\/shopList/, 'get', cuz.shopList)
+mock(/\/api\/orders\/orderList/, 'get', orders.orderList)

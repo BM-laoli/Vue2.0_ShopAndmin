@@ -17,10 +17,8 @@ const shopRight = () => import('../views/shops/shop-right')
 const shopIndustry = () => import('../views/shops/shop-industry')
 const productCategroy = () => import('../views/shops/product-categroy')
 // 商圈管理
-const publicBusinessDistrict = () =>
-    import('../views/business-district/public-business-district')
-const personalBusinessDistrict = () =>
-    import('../views/business-district/personal-business-district')
+const publicBusinessDistrict = () =>  import('../views/business-district/public-business-district')
+const personalBusinessDistrict = () =>  import('../views/business-district/personal-business-district')
 // 订单管理模块
 const orderList = () => import('../views/order/order-list')
 const orderCalculation = () => import('../views/order/order-calculation')
@@ -235,24 +233,25 @@ VueRouter.prototype.push = function push(location) {
 }
 
 const router = new VueRouter({
-  routes,
+  routes
 })
 
 // 路由拦截方案1
 // 这个方案是保存了token，在下次访问的时候去拿这个token判断就好了，有的就放行，没令牌的就不放行
 router.beforeEach((to, from, next) => {
-  if (to.path === '/login') {
-      return next()
-  }
   // 注意，在服务器上，使用的是打标识的方式，如果我们登录了，服务器就记住我们，然后给我们
   // 返回一个字符串 ‘ var isLogin = true; var userId=id   || var isLogin = false  ’
   const token = window.sessionStorage.getItem('token')
 
-  if (top.path === '/login' && token) {
-      return next('/home')
+  if (to.path === '/login' && token) {
+    return next('/home')
   }
+  if (to.path === '/login' || !token) {
+    return next()
+  }
+
   if (!token || to.path === '/login') {
-      return next('/login')
+    return next('/login')
   }
   next()
 })

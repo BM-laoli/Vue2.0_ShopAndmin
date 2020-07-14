@@ -34,5 +34,18 @@
     "@vue/cli-service": "~4.4.0",
     "mockjs": "^1.1.0",
     "vue-template-compiler": "^2.6.11"
-  }
+  },
+  "description": "## Project setup ``` npm install ```",
+  "main": "babel.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BM-laoli/SeagullStore.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BM-laoli/SeagullStore/issues"
+  },
+  "homepage": "https://github.com/BM-laoli/SeagullStore#readme"
 }
