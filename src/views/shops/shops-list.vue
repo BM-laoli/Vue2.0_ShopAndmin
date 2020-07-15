@@ -1,7 +1,7 @@
 <template>
   <div>
     <bread-crumbs :level="this.$route.meta"></bread-crumbs>
-    <el-card class="box-card">
+    <el-card class="box-card colors_dark">
       <!-- heder头部 -->
       <div class="hedaer-box">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">

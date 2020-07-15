@@ -2,7 +2,7 @@
   <div>
     <bread-crumbs :level="this.$route.meta"></bread-crumbs>
     <el-button type="info" round @click="$router.back()" style="margin-left: 15px">返回类别管理</el-button>
-    <el-card class="box-card">
+    <el-card class="box-card bg-dark">
       <el-form :inline="true" :model="form" class="demo-form-inline">
         <el-form-item label="子类别数量">
           <el-input v-model="input" placeholder="请输入内容" style="width: 200px;margin:0 15px 0 15px"></el-input>
@@ -14,17 +14,18 @@
       </el-form>
     </el-card>
     <div class="title_box">
-      <div class="num">子类别数量：xxx</div>
+      <div class="num">子类别数量：{{cateNum}}</div>
       <el-button type="primary" round slot="reference" @click="addindustry">新增子类别</el-button>
     </div>
-    <el-card>
+    <el-card class="bg-dark">
       <el-table
+        class="js-start"
         :data="tableData"
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}"
       >
-        <el-table-column prop="uname" label="子类别名称" sortable width="350"></el-table-column>
-        <el-table-column prop="uid" label="排序" sortable width="350"></el-table-column>
+        <el-table-column prop="cateName" label="子类别名称" sortable></el-table-column>
+        <el-table-column prop="cateId" label="排序" sortable></el-table-column>
         <el-table-column label="操作" #default="{row:shopData}">
           <el-button @click="editData(shopData)" icon="el-icon-edit" type="text">编 辑</el-button>
           <el-button
@@ -80,7 +81,7 @@
 </template>
 
 <script>
-import { industryData } from "@/api/mock/test";
+import { categroyData } from "@/api/mock/test";
 import breadCrumbs from "../../components/common/bread-crumbs";
 export default {
   components: {
@@ -96,7 +97,8 @@ export default {
       editDialogFormVisible: false,
       editIndustryValue: "",
       editIndustrySortValue: "",
-      tableData: []
+      tableData: [],
+      cateNum: 0
     };
   },
   created() {
@@ -104,8 +106,14 @@ export default {
   },
   methods: {
     async getIndustryData() {
-      const { data: res } = await industryData();
-      this.tableData = res.data;
+      const { data: res } = await categroyData();
+      res.data.forEach(v => {
+        v.children.forEach(a => {
+          this.tableData.push(a);
+        });
+        let i = v.children.length;
+      });
+      this.cateNum = this.tableData.length;
       console.log(res);
     },
     onSelect() {
@@ -116,8 +124,8 @@ export default {
     },
     editData(v) {
       this.editDialogFormVisible = true;
-      this.editIndustryValue = v.uname;
-      this.editIndustrySortValue = v.uid;
+      this.editIndustryValue = v.cateName;
+      this.editIndustrySortValue = v.cateId;
       console.log(v);
     },
     deleteData() {
