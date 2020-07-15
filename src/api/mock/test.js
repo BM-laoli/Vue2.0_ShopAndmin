@@ -18,3 +18,12 @@ export const orderMock = (options) => {
   let result = http.get('/api/orders/orderList')
   return result
 }
+
+export const detailedMock = (options) => {
+  let result = http.get('/api/orders/detailedData')
+  return result
+}
+export const calculationMock = (options) => {
+  let result = http.get('/api/orders/calculationData')
+  return result
+}

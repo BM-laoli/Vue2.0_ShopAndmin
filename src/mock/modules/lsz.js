@@ -56,4 +56,31 @@ function getPersinalData(res) {
   }
 }
 
-export default {getShopBaseList,getPersinalData}
+
+
+
+let paersonalCousData = Mock.mock({
+  
+  'data|10':[
+    {
+
+      '_id|+1':1,
+      'username|3':'@clast()',
+      'industry':() => Random.cword('另一二三十呜流六级里',3),
+      'orderNumber|100-200':100,
+      'orderPerice|100-200':100,
+      'cousDate':Random.date(),
+    }
+  ]
+})
+
+function getpaersonalCousData() {
+  return {
+    code: 200,
+    data: paersonalCousData,
+    message: '请求成功'
+  }
+}
+
+
+export default {getShopBaseList, getPersinalData, getpaersonalCousData}

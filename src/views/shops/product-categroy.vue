@@ -1,7 +1,7 @@
 <template>
   <div>
     <bread-crumbs :level="this.$route.meta"></bread-crumbs>
-    <el-card class="box-card">
+    <el-card class="box-card bg-dark">
       <el-form :inline="true" :model="form" class="demo-form-inline">
         <el-form-item label="类别数量">
           <el-input v-model="input" placeholder="请输入内容" style="width: 200px;margin:0 15px 0 15px"></el-input>
@@ -13,12 +13,13 @@
       </el-form>
     </el-card>
     <div class="title_box">
-      <div class="num">类别数量：xxx</div>
-      <div class="num">类别数量：xxx</div>
+      <div class="num">类别数量：{{cateNum}}</div>
+      <div class="num">类别数量：{{cateChildNum}}</div>
       <el-button type="primary" round @click="addindustry">新增类别</el-button>
     </div>
-    <el-card>
+    <el-card class="bg-dark">
       <el-table
+        class="js-start"
         :data="tableData"
         style="width: 100%"
         row-key="cateId"
@@ -26,9 +27,9 @@
         :tree-props="{children: 'children', hasChildren: true}"
         :default-sort="{prop: 'cateId', order: 'cateName'}"
       >
-        <el-table-column prop="cateName" label="类别名称" sortable width="180"></el-table-column>
-        <el-table-column prop="cateId" label="排序" sortable width="180"></el-table-column>
-        <el-table-column prop="children.cateChildNum" label="类别数量" sortable width="180"></el-table-column>
+        <el-table-column prop="cateName" label="类别名称" sortable></el-table-column>
+        <el-table-column prop="cateId" label="排序" sortable></el-table-column>
+        <el-table-column prop="cateChildNum" label="类别数量" sortable></el-table-column>
         <el-table-column label="操作" #default="{row:shopData}">
           <el-button
             @click="editData(shopData)"
@@ -112,6 +113,8 @@ export default {
       editDialogFormVisible: false,
       editIndustryValue: "",
       editIndustrySortValue: "",
+      cateNum: 0,
+      cateChildNum: 0,
       tableData: []
     };
   },
@@ -121,8 +124,13 @@ export default {
   methods: {
     async categroyData() {
       const { data: res } = await categroyData();
+      this.cateNum = res.data.length;
+      res.data.forEach(v => {
+        let i = v.children.length;
+        this.cateChildNum += i;
+      });
       this.tableData = res.data;
-      console.log(res);
+      console.log(res, this.cateNum, this.cateChildNum);
     },
     onSelect() {
       console.log(this.input);
@@ -162,8 +170,8 @@ export default {
       });
     },
     toSubCate(data) {
-      this.$router.push("/home/shops/productSubCategroy/" + data.date);
-      console.log(data.id);
+      this.$router.push("/home/shops/productSubCategroy/" + data.cateId);
+      console.log(data.cateId);
     }
   }
 };

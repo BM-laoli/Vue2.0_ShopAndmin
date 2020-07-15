@@ -17,16 +17,11 @@
         <template #default="{row}">{{row.total}}元</template>
       </el-table-column>
       <el-table-column prop="distribution" label="配送方式" width="80"></el-table-column>
-      <el-table-column prop="address" label="收货地址/提货人" width="160"></el-table-column>
+      <el-table-column prop="address" label="收货地址/提货人"></el-table-column>
       <el-table-column prop="orderStatus" label="订单状态" width="100"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template #default="{row}">
-          <el-button
-            class="checkOrder"
-            type="text"
-            size="small"
-            @click="orderDialogTableVisible=true"
-          >查看订单</el-button>
+          <el-button class="checkOrder" type="text" size="small" @click="lookDetailedData">查看订单</el-button>
           <el-button
             v-if="row.orderStatus!=='已收货' && row.orderStatus!=='已取消'"
             type="text"
@@ -49,56 +44,85 @@
     <el-dialog title="订单详情" :visible.sync="orderDialogTableVisible" width="40%">
       <div class="order-data">
         <span class="order-left">商户ID：</span>
-        <span>123123</span>
+        <span>{{order.id}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">商户名称：</span>
-        <span>123123</span>
+        <span>{{order.name}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">订单号：</span>
-        <span></span>
+        <span>{{order.orderId}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">配送方式：</span>
-        <span>123123</span>
+        <span>{{order.distribution}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">收货地址：</span>
-        <span>123123</span>
+        <span>{{order.address}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">选购商品：</span>
-        <span>123123</span>
+        <div v-for="(v,i) in order.orderList" :key="i">
+          <div class="orderCount">
+            <img class="orderImg" :src="v.orderImg" />
+            <i>{{v.commodity}}</i>
+            <i>×{{v.count}}</i>
+          </div>
+        </div>
       </div>
       <div class="order-data">
         <span class="order-left">包装</span>
-        <span class="order-right">123123</span>
+        <span class="order-right">￥{{order.packing}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">优惠活动</span>
-        <span class="order-right">123123</span>
+        <span class="order-right">￥{{order.discounts}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">优惠卷</span>
-        <span class="order-right">123123</span>
+        <span class="order-right">￥{{order.coupon}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">配送费</span>
-        <span class="order-right">123123</span>
+        <span class="order-right">￥{{order.shippingFee}}</span>
       </div>
-      <div class="total">合计 ￥85.4</div>
+      <div class="total">合计 ￥{{total}}</div>
     </el-dialog>
   </div>
 </template>
 <script>
+import { detailedMock } from "@/api/mock/test.js";
 export default {
   name: "OrderTable",
   props: ["orderData"],
   data() {
     return {
-      orderDialogTableVisible: false
+      orderDialogTableVisible: false,
+      order: {},
+      loading: true
     };
+  },
+  methods: {
+    async lookDetailedData() {
+      this.orderDialogTableVisible = true;
+      const {
+        data: { data }
+      } = await detailedMock();
+      this.loading = false;
+      this.order = data.array;
+    }
+  },
+  computed: {
+    total() {
+      return (
+        this.order.total -
+        this.order.packing -
+        this.order.shippingFee -
+        this.order.coupon
+      );
+    }
   }
 };
 </script>
@@ -109,6 +133,18 @@ export default {
 ::v-deep .el-dialog {
   .order-data {
     margin-bottom: 20px;
+    .orderCount {
+      line-height: 50px;
+      margin-left: 100px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .orderImg {
+      width: 50px;
+      height: 50px;
+      display: inline-block;
+    }
     .order-left {
       display: inline-block;
       width: 100px;

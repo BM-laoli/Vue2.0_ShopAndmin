@@ -1,41 +1,47 @@
-const Mock = require('mockjs');
-const { Random } = require('mockjs');
+const Mock = require('mockjs')
+const { Random } = require('mockjs')
 const industry = Mock.mock({
-    "array|5": [
-        {
-            uname: () => Random.cword(2),
-            uid: () => Random.increment(100)
-        }
-    ]
+  'array|5': [
+    {
+      uname: () => Random.cword(2),
+      uid: () => Random.increment(100),
+    },
+  ],
 })
 const categroy = Mock.mock({
-    "array|5": [
+  'array|5': [
+    {
+      cateName: () => Random.cword(2),
+      cateId: () => Random.increment(100),
+      children: [
         {
             cateName: () => Random.cword(2),
             cateId: () => Random.increment(100),
-            'children': [{
+            'children|5': [{
                 cateName: () => Random.cword(2),
                 cateId: () => Random.increment(200),
-                cateChildNum: () => Random.increment(10),
+                cateChildNum: () => Random.increment(2),
             }]
         }
     ]
+    },
+  ],
 })
 function form(res) {
-    // res是一个请求对象，包含: url, type, body
-    return {
-        code: 200,
-        data: industry.array,
-        message: '请求成功'
-    }
+  // res是一个请求对象，包含: url, type, body
+  return {
+    code: 200,
+    data: industry.array,
+    message: '请求成功',
+  }
 }
 function cateForm(res) {
-    // res是一个请求对象，包含: url, type, body
-    return {
-        code: 200,
-        data: categroy.array,
-        message: '请求成功'
-    }
+  // res是一个请求对象，包含: url, type, body
+  return {
+    code: 200,
+    data: categroy.array,
+    message: '请求成功',
+  }
 }
 
 export default { form, cateForm }

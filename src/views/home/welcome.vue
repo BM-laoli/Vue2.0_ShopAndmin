@@ -5,7 +5,7 @@
       <el-row>
         <el-col :span="12">
           <!-- 提现 -->
-          <div class="muner">
+          <div class="muner font-md">
             <div shadow="always" class="sonCard">
               <div class="card-box">
                 <div>
@@ -32,63 +32,7 @@
         </el-col>
         <el-col :span="12">
           <!-- 提现 -->
-          <div class="muner">
-            <div shadow="always" class="sonCard">
-              <div class="card-box">
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
-              </div>
-              <div class="features">
-                <!-- <el-button size="mini" type="primary">5 </el-button> -->
-                <!-- <el-button size="mini" type="primary">5 </el-button> -->
-                <div>
-                  <el-button size="mini" type="primary">提现管理 </el-button>
-                </div>
-                <el-button size="mini" type="primary">平台支持明细 </el-button>
-              </div>
-            </div>
-          </div>
-
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <!-- 提现 -->
-          <div class="muner">
-            <div shadow="always" class="sonCard">
-              <div class="card-box">
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
-              </div>
-              <div class="features">
-                <!-- <el-button size="mini" type="primary">5 </el-button> -->
-                <!-- <el-button size="mini" type="primary">5 </el-button> -->
-                <div>
-                  <el-button size="mini" type="primary">提现管理 </el-button>
-                </div>
-                <el-button size="mini" type="primary">平台支持明细 </el-button>
-              </div>
-            </div>
-          </div>
-
-        </el-col>
-        <el-col :span="12">
-          <!-- 提现 -->
-          <div class="muner">
+          <div class="muner font-md">
             <div shadow="always" class="sonCard">
               <div class="card-box">
                 <div>
@@ -117,7 +61,63 @@
       <el-row>
         <el-col :span="12">
           <!-- 提现 -->
-          <div class="muner">
+          <div class="muner font-md">
+            <div shadow="always" class="sonCard">
+              <div class="card-box">
+                <div>
+                  总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                  总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                  总提现金额：<span>1555元</span>
+                </div>
+              </div>
+              <div class="features">
+                <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                <div>
+                  <el-button size="mini" type="primary">提现管理 </el-button>
+                </div>
+                <el-button size="mini" type="primary">平台支持明细 </el-button>
+              </div>
+            </div>
+          </div>
+
+        </el-col>
+        <el-col :span="12">
+          <!-- 提现 -->
+          <div class="muner font-md">
+            <div shadow="always" class="sonCard">
+              <div class="card-box">
+                <div>
+                  总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                  总提现金额：<span>1555元</span>
+                </div>
+                <div>
+                  总提现金额：<span>1555元</span>
+                </div>
+              </div>
+              <div class="features">
+                <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                <!-- <el-button size="mini" type="primary">5 </el-button> -->
+                <div>
+                  <el-button size="mini" type="primary">提现管理 </el-button>
+                </div>
+                <el-button size="mini" type="primary">平台支持明细 </el-button>
+              </div>
+            </div>
+          </div>
+
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <!-- 提现 -->
+          <div class="muner font-md">
             <div shadow="always" class="sonCard">
               <div class="card-box">
                 <div>
@@ -180,7 +180,7 @@ export default {
   padding: 5px;
   height: 150%;
   background-color: #fff;
-  line-height: 35px;
+  line-height: 35px;  
   display: flex;
   justify-content: space-around;
   align-items: center;

@@ -1,7 +1,7 @@
 <template>
   <div>
     <bread-crumbs :level="this.$route.meta"></bread-crumbs>
-    <el-card class="box-card">
+    <el-card class="box-card bg-dark">
       <el-form :inline="true" :model="form" class="demo-form-inline">
         <el-form-item label="行业数量">
           <el-input v-model="input" placeholder="请输入内容" style="width: 200px;margin:0 15px 0 15px"></el-input>
@@ -16,10 +16,10 @@
       <div class="num">行业数量：xxx</div>
       <el-button type="primary" round slot="reference" @click="addindustry">新增行业</el-button>
     </div>
-    <el-card>
+    <el-card class="bg-dark js-start">
       <el-table :data="tableData" style="width: 100%" :default-sort="{prop: 'id', order: 'name'}">
-        <el-table-column prop="uname" label="行业名称" sortable width="350"></el-table-column>
-        <el-table-column prop="uid" label="排序" sortable width="350"></el-table-column>
+        <el-table-column prop="uname" label="行业名称" sortable></el-table-column>
+        <el-table-column prop="uid" label="排序" sortable></el-table-column>
         <el-table-column prop="address" label="操作" #default="{row:shopData}">
           <el-button @click="editData(shopData)" icon="el-icon-edit" type="text">编 辑</el-button>
           <el-button
@@ -100,7 +100,7 @@ export default {
   methods: {
     async getIndustryData() {
       const { data: res } = await industryData();
-      this.tableData = res.data
+      this.tableData = res.data;
       console.log(res);
     },
     onSelect() {
