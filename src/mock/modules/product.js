@@ -13,10 +13,10 @@ const categroy = Mock.mock({
         {
             cateName: () => Random.cword(2),
             cateId: () => Random.increment(100),
-            'children': [{
+            'children|5': [{
                 cateName: () => Random.cword(2),
                 cateId: () => Random.increment(200),
-                cateChildNum: () => Random.increment(10),
+                cateChildNum: () => Random.increment(2),
             }]
         }
     ]
