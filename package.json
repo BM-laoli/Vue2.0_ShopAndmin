@@ -18,6 +18,7 @@
     "sass-loader": "^8.0.2",
     "tiptap": "^1.27.1",
     "tiptap-extensions": "^1.29.1",
+    "vant": "^2.9.1",
     "vue": "^2.6.11",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.2.0",
