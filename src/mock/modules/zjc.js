@@ -6,14 +6,26 @@ const materialManage = Mock.mock({
     {
       name: () => Random.cname(),
       image: () => Random.image('200x100'),
-      sort: () => Random.cname(),
       sort1: () => Random.cname(),
       price: () => Random.increment(100),
       date: () => Random.date(),
     },
   ],
 })
-
+const classMaterialManage = Mock.mock({
+  'data|1-10': [
+    {
+      'id|+1': 1,
+      label: '@CNAME',
+      'children|1-3': [
+        {
+          'id|+1': 10,
+          label: '@CNAME',
+        },
+      ],
+    },
+  ],
+})
 function materialManag(res) {
   return {
     code: 200,
@@ -24,6 +36,15 @@ function materialManag(res) {
   }
 }
 
+function getMaterialClass(res) {
+  return {
+    code: 200,
+    message: '获取成功',
+    data: classMaterialManage.data,
+  }
+}
+
 export default {
   materialManag,
+  getMaterialClass,
 }
