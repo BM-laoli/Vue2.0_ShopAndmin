@@ -30,7 +30,7 @@
           </el-form-item>
           <span class="searchBtns">
             <el-button type="primary">查询</el-button>
-            <el-button type="success" @click="formReset">重置</el-button>
+            <el-button type="info" @click="formReset">重置</el-button>
           </span>
         </el-form>
       </div>
@@ -117,7 +117,7 @@ export default {
 }
 ::v-deep.hedaer-box {
   width: 100%;
-  background-color: pink;
+  background-color: #fff;
   .searchForm {
     .el-form-item {
       margin: 16px;

@@ -1,9 +1,10 @@
 <template>
   <div>
     <bread-crumbs :level="this.$route.meta"></bread-crumbs>
+    <el-button type="info" round @click="$router.back()" style="margin-left: 15px">返回类别管理</el-button>
     <el-card class="box-card">
       <el-form :inline="true" :model="form" class="demo-form-inline">
-        <el-form-item label="行业数量">
+        <el-form-item label="子类别数量">
           <el-input v-model="input" placeholder="请输入内容" style="width: 200px;margin:0 15px 0 15px"></el-input>
         </el-form-item>
         <el-form-item>
@@ -13,14 +14,18 @@
       </el-form>
     </el-card>
     <div class="title_box">
-      <div class="num">行业数量：xxx</div>
-      <el-button type="primary" round slot="reference" @click="addindustry">新增行业</el-button>
+      <div class="num">子类别数量：xxx</div>
+      <el-button type="primary" round slot="reference" @click="addindustry">新增子类别</el-button>
     </div>
     <el-card>
-      <el-table :data="tableData" style="width: 100%" :default-sort="{prop: 'id', order: 'name'}">
-        <el-table-column prop="uname" label="行业名称" sortable width="350"></el-table-column>
+      <el-table
+        :data="tableData"
+        style="width: 100%"
+        :default-sort="{prop: 'date', order: 'descending'}"
+      >
+        <el-table-column prop="uname" label="子类别名称" sortable width="350"></el-table-column>
         <el-table-column prop="uid" label="排序" sortable width="350"></el-table-column>
-        <el-table-column prop="address" label="操作" #default="{row:shopData}">
+        <el-table-column label="操作" #default="{row:shopData}">
           <el-button @click="editData(shopData)" icon="el-icon-edit" type="text">编 辑</el-button>
           <el-button
             type="text"
@@ -31,10 +36,10 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <!-- 新增行业弹框 -->
-    <el-dialog title="新增行业" :visible.sync="addDialogFormVisible">
+    <!-- 新增类别弹框 -->
+    <el-dialog title="新增子类别" :visible.sync="addDialogFormVisible">
       <el-form :model="form" ref="addIndustryFrom">
-        <el-form-item label="行业名称" label-width="120px">
+        <el-form-item label="子类别名称" label-width="120px">
           <el-input v-model="addIndustryValue" autocomplete="off" style="width:220px"></el-input>
         </el-form-item>
         <el-form-item label="排 序" label-width="120px">
@@ -51,10 +56,10 @@
         <el-button type="primary" @click="addDialogFormVisible = false">确 定</el-button>
       </div>
     </el-dialog>
-    <!-- 编辑行业弹框 -->
-    <el-dialog title="编辑行业" :visible.sync="editDialogFormVisible">
+    <!-- 编辑类别弹框 -->
+    <el-dialog title="编辑子类别" :visible.sync="editDialogFormVisible">
       <el-form :model="form" ref="editIndustryFrom">
-        <el-form-item label="行业名称" label-width="120px">
+        <el-form-item label="子类别名称" label-width="120px">
           <el-input v-model="editIndustryValue" autocomplete="off" style="width:220px"></el-input>
         </el-form-item>
         <el-form-item label="排 序" label-width="120px">
@@ -100,7 +105,7 @@ export default {
   methods: {
     async getIndustryData() {
       const { data: res } = await industryData();
-      this.tableData = res.data
+      this.tableData = res.data;
       console.log(res);
     },
     onSelect() {
@@ -116,7 +121,7 @@ export default {
       console.log(v);
     },
     deleteData() {
-      console.log(1);
+      console.log(this.$route.meta);
     },
     addindustry() {
       this.addDialogFormVisible = true;
@@ -146,8 +151,8 @@ export default {
 
 <style lang="scss" scoped>
 .el-card {
-  margin: 10px;
-  // margin-top: 22px;
+  margin: 15px;
+  margin-top: 22px;
   border-radius: 10px;
   // background-color:	#E6E6FA;
 }

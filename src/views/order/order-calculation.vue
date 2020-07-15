@@ -33,14 +33,14 @@
       <!-- 统计列 -->
       <div class="border-middleware">
         <div class="middleware-left">
-          <span class="countTotal">订单数量：</span>
-          <span class="orderTotal">订单总金额：</span>
+          <span class="countTotal">订单数量：{{orderCount}}个</span>
+          <span class="orderTotal">订单总金额：{{moneyTotal}}元</span>
         </div>
         <div class="middleware-right">
-          <span>退款/售后订单数量：</span>
-          <span>退款/售后率：</span>
-          <span>确认退款订单数量：</span>
-          <span>确认退款率：</span>
+          <span>退款/售后订单数量：{{reimburseCount}}</span>
+          <span>退款/售后率：{{reimburse}}%</span>
+          <span>确认退款订单数量：{{affirmReimburseCount}}</span>
+          <span>确认退款率：{{affirm}}%</span>
         </div>
       </div>
       <!-- body 身体 -->
@@ -89,8 +89,30 @@ export default {
   },
   computed: {
     orderCount() {
-      this.tableData;
-      return null;
+      let count = 0;
+      this.tableData.forEach(v => (count += v.orderCount));
+      return count;
+    },
+    moneyTotal() {
+      let total = 0;
+      this.tableData.forEach(v => (total += v.orderTotal));
+      return total;
+    },
+    reimburseCount() {
+      let count = 0;
+      this.tableData.forEach(v => (count += v.reimburseCount));
+      return count;
+    },
+    reimburse() {
+      return ((this.reimburseCount / this.orderCount) * 100).toFixed(2);
+    },
+    affirmReimburseCount() {
+      let count = 0;
+      this.tableData.forEach(v => (count += v.affirmReimburse));
+      return count;
+    },
+    affirm() {
+      return ((this.affirmReimburseCount / this.orderCount) * 100).toFixed(2);
     }
   },
   components: {
@@ -133,6 +155,9 @@ export default {
 }
 
 ::v-deep .border-middleware {
+  span {
+    font-size: 14px;
+  }
   width: 100%;
   box-sizing: border-box;
   margin-top: 80px;

@@ -134,6 +134,7 @@ export default {
   .order-data {
     margin-bottom: 20px;
     .orderCount {
+      line-height: 50px;
       margin-left: 100px;
       margin-bottom: 10px;
       display: flex;
