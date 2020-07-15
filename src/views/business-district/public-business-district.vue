@@ -1,15 +1,16 @@
 <template>
   <div>
    <bread-crumbs :level="this.$route.meta"></bread-crumbs>
-    <el-card class="box-card">
+    <el-card class="box-card bg-defaultPink">
       <!-- heder头部 -->
-      <div class="hedaer-box">
         <hader-from></hader-from>
-      </div>
+    </el-card>  
 
-      <!-- body 身体 -->
+    
+    <el-card class="box-card bg-defaultPink">
+        <!-- body 身体 -->
       <div class="tabbe-box">
-        <div>
+        <div class="">
            <el-table
               :data="tableData.list"
               style="width: 100%">
@@ -94,11 +95,10 @@
               :current-page.sync="tableData.queryInfo.page"
               :page-sizes="[2, 5, 10]"
               :page-size.sync="tableData.queryInfo.size"
-              layout="total, sizes, jumper, prev, pager, next, slot"
+              layout="total, sizes, prev, pager, next,jumper, slot"
               :total="tableData.queryInfo.total">
             </el-pagination>
       </div>
-      
     </el-card>
   </div>
 </template>
@@ -150,13 +150,11 @@ import  HaderFrom from '../../components/business-district/hader-from'
 .el-card {
   margin: 15px;
   margin-top: 22px;
-  background-color:	#E6E6FA;
   padding: 8px;
 }
 .hedaer-box {
   width: 100%;
-  // height: 150px;
-  background-color: pink;
+  margin-bottom: 15px;
   .el-form {
     padding-top: 20px;
   }
@@ -164,16 +162,16 @@ import  HaderFrom from '../../components/business-district/hader-from'
     margin-left: 55px;
   }
 }
-.tabbe-box {
+
+.tabbe-box {  
   width: 100%;
-  height: 1000px;
-  background-color: cornflowerblue;
 }
 
-.border-middleware {
-  width: 100%;
-  height: 80px;
-  background-color: yellowgreen;
-  margin: 10px 0;
+.el-pagination {
+  margin-top: 15px;
 }
+
 </style>
+
+
+

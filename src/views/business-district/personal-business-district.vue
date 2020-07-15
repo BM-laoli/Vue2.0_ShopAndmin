@@ -3,16 +3,18 @@
    <bread-crumbs :level="this.$route.meta"></bread-crumbs>
     <!-- 切换之前 -->
     <el-card class="box-card">
-      <!-- heder头部 -->
-      <div class="hedaer-box">
        <personal-hader-from></personal-hader-from>
-      </div>
+     </el-card>
       <!-- 中间 -->
-      <div class="border-middleware">
-        <div> 用户数量：<span> 15111  </span> </div>
-        <div> 订单数量：<span> 1511131 </span> </div>
-        <div> 消费总额：<span> 1555w </span> </div>
-      </div>
+      <el-card class="box-card">
+        <div class="border-middleware bg-defaultPink">
+          <div> 用户数量：<span> 15111  </span> </div>
+          <div> 订单数量：<span> 1511131 </span> </div>
+          <div> 消费总额：<span> 1555w </span> </div>
+        </div>
+     </el-card>
+
+      <el-card class="box-card">
       <!-- body 身体 -->
       <div class="tabbe-box">
         <div>
@@ -80,13 +82,28 @@
               :total="tableData.queryInfo.total">
             </el-pagination> -->
       </div>
+
+        <el-pagination
+              @size-change="onLoadList()"
+              @current-change="onLoadList()"
+              :current-page.sync="tableData.queryInfo.page"
+              :page-sizes="[2, 5, 10]"
+              :page-size.sync="tableData.queryInfo.size"
+              layout="total, sizes, prev, pager, next,jumper, slot"
+              :total="tableData.queryInfo.total">
+            </el-pagination>
     </el-card>
+
+
+
     <el-dialog
       :visible.sync="switchPage"
       width="90%"
       top="5vh"
+      @closed="switchPageOver = false"
+      @open="switchPageOver = true"
       >
-      <personal-analysis @close=" () => {switchPage = false}"></personal-analysis>
+      <personal-analysis v-if="switchPageOver" @close=" () => {switchPage = false}"></personal-analysis>
     </el-dialog>
 
 
@@ -105,7 +122,7 @@ import PersonalAnalysis from '../../components/business-district/personal-analys
       PersonalHaderFrom,
       PersonalAnalysis
     },
-    data() {
+    data() {  
       return {
           tableData:{
             list:[],
@@ -115,6 +132,7 @@ import PersonalAnalysis from '../../components/business-district/personal-analys
               page:1
             }
           },
+          switchPageOver:false,
           switchPage:false
         }
     },
@@ -139,7 +157,7 @@ import PersonalAnalysis from '../../components/business-district/personal-analys
       }
 
     },
-    handleClose(){}
+    handleClose(){},
    },
   }
 </script>
@@ -153,8 +171,6 @@ import PersonalAnalysis from '../../components/business-district/personal-analys
 }
 .hedaer-box {
   width: 100%;
-  // height: 150px;
-  background-color: pink;
   .el-form {
     padding-top: 20px;
   }
@@ -164,21 +180,11 @@ import PersonalAnalysis from '../../components/business-district/personal-analys
 }
 .tabbe-box {
   width: 100%;
-  height: 1000px;
-  background-color: cornflowerblue;
 }
 
 .border-middleware {
   width: 100%;
-  height: 80px;
-  background-color: yellowgreen;
-  margin: 10px 0;
-}
-.border-middleware {
-  width: 100%;
-  height: 80px;
-  background-color: yellowgreen;
-  margin: 10px 0;
+  // height: px;
 }
 
 .border-middleware {
@@ -194,5 +200,9 @@ import PersonalAnalysis from '../../components/business-district/personal-analys
 }
 .slidebox {
   overflow: hidden;
+}
+
+.el-pagination {
+  margin-top: 15px;
 }
 </style>
