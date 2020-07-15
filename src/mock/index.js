@@ -8,7 +8,7 @@ import cuz from './modules/cuz'
 import orders from './modules/order'
 import prodcut from './modules/product'
 import shop_discount from './modules/shop_discount'
-
+import zjc from './modules/zjc'
 
 // Mock函数
 const { mock } = Mock
@@ -29,6 +29,7 @@ mock(/\/api\/rest\/shopCoupon/, 'get', shop_discount.getShopCouPonList)
 
 mock(/\/rest\/peronale/, 'get', businiess.getPersinalData)
 mock(/\/rest\/peronale\/gethehe/, 'get', businiess.getpaersonalCousData)
+// 李仕增的mock数据
 
 // 推广列表请求
 mock(/\/api\/cuz\/userList/, 'get', cuz.userList)
@@ -38,3 +39,5 @@ mock(/\/api\/orders\/detailedData/, 'get', orders.detailedData)
 mock(/\/api\/orders\/calculationData/, 'get', orders.calculationData)
 mock(/\/api\/product\/form/, 'get', prodcut.form)
 mock(/\/api\/product\/cateForm/, 'get', prodcut.cateForm)
+mock(/\/api\/zjc\/material/, 'get', zjc.materialManag)
+mock(/\/api\/zjc\/classMaterial/, 'get', zjc.getMaterialClass)
