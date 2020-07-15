@@ -17,7 +17,7 @@
         <template #default="{row}">{{row.total}}元</template>
       </el-table-column>
       <el-table-column prop="distribution" label="配送方式" width="80"></el-table-column>
-      <el-table-column prop="address" label="收货地址/提货人" width="160"></el-table-column>
+      <el-table-column prop="address" label="收货地址/提货人"></el-table-column>
       <el-table-column prop="orderStatus" label="订单状态" width="100"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template #default="{row}">
@@ -68,25 +68,25 @@
           <div class="orderCount">
             <img class="orderImg" :src="v.orderImg" />
             <i>{{v.commodity}}</i>
-            <i>{{v.count}}</i>
+            <i>×{{v.count}}</i>
           </div>
         </div>
       </div>
       <div class="order-data">
         <span class="order-left">包装</span>
-        <span class="order-right">{{order.packing}}</span>
+        <span class="order-right">￥{{order.packing}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">优惠活动</span>
-        <span class="order-right">{{order.discounts}}</span>
+        <span class="order-right">￥{{order.discounts}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">优惠卷</span>
-        <span class="order-right">{{order.coupon}}</span>
+        <span class="order-right">￥{{order.coupon}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">配送费</span>
-        <span class="order-right">{{order.shippingFee}}</span>
+        <span class="order-right">￥{{order.shippingFee}}</span>
       </div>
       <div class="total">合计 ￥{{total}}</div>
     </el-dialog>
@@ -100,7 +100,8 @@ export default {
   data() {
     return {
       orderDialogTableVisible: false,
-      order: {}
+      order: {},
+      loading: true
     };
   },
   methods: {
@@ -109,6 +110,7 @@ export default {
       const {
         data: { data }
       } = await detailedMock();
+      this.loading = false;
       this.order = data.array;
     }
   },

@@ -16,3 +16,4 @@ Mock.setup({
 mock(/\/api\/ratings\/list/, 'post', ratings.list)
 mock(/\/api\/orders\/orderList/, 'get', orders.orderList)
 mock(/\/api\/orders\/detailedData/, 'get', orders.detailedData)
+mock(/\/api\/orders\/calculationData/, 'get', orders.calculationData)

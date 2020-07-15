@@ -45,6 +45,26 @@ var detailed = Mock.mock({
     }
   ]
 })
+var orderStatistics = Mock.mock({
+  'data|10': [
+    {
+      'id|1': /\d{10}/,
+      'name|1': `美佳宜-${Mock.Random.cword(3)}`,
+      'business|+1': [
+        '便利百货',
+        '电竞外设',
+        '生活用品',
+        '家用电器',
+        '生鲜水果'
+      ],
+      'orderCount|1-500': 1,
+      'orderTotal|1000-5000': 1,
+      'reimburseCount|1-10': 1,
+      'affirmReimburse|1-10': 1,
+      'reimburseTotal|100-1000': 1
+    }
+  ]
+})
 function orderList(res) {
   // res是一个请求对象，包含: url, type, body
   return {
@@ -60,8 +80,16 @@ function detailedData(res) {
     message: '请求成功'
   }
 }
+function calculationData(res) {
+  return {
+    code: 200,
+    data: orderStatistics,
+    message: '请求成功'
+  }
+}
 
 export default {
   orderList,
-  detailedData
+  detailedData,
+  calculationData
 }
