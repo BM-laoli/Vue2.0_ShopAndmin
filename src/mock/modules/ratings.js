@@ -12,7 +12,7 @@ const listData = Mock.mock({
   }]
 })
 
-function list (res) {
+function list(res) {
   // res是一个请求对象，包含: url, type, body
   return {
     code: 200,

@@ -9,6 +9,7 @@ import orders from './modules/order'
 import prodcut from './modules/product'
 import shop_discount from './modules/shop_discount'
 import zjc from './modules/zjc'
+import tsl from './modules/tsl'
 
 // Mock函数
 const { mock } = Mock
@@ -41,3 +42,4 @@ mock(/\/api\/product\/form/, 'get', prodcut.form)
 mock(/\/api\/product\/cateForm/, 'get', prodcut.cateForm)
 mock(/\/api\/zjc\/material/, 'get', zjc.materialManag)
 mock(/\/api\/zjc\/classMaterial/, 'get', zjc.getMaterialClass)
+mock(/\/api\/tsl\/finance/, 'get', tsl.finance)
