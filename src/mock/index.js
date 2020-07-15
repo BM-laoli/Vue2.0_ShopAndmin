@@ -3,6 +3,12 @@ import Mock from 'mockjs'
 // 引入模板函数类
 import ratings from './modules/ratings'
 import hwm from './modules/hwm'
+import businiess from './modules/lsz'
+import cuz from './modules/cuz'
+import orders from './modules/order'
+import prodcut from './modules/product'
+import shop_discount from './modules/shop_discount'
+
 
 // Mock函数
 const { mock } = Mock
@@ -19,3 +25,14 @@ mock(/\/api\/rest\/coupons\/single/, 'get', hwm.getCoupon)
 mock(/\/api\/rest\/coupons/, 'get', hwm.list)
 mock(/\/api\/rest\/coupons/, 'put', hwm.updateCoupon)
 mock(/\/api\/rest\/coupons/, 'delete', hwm.deleteCoupon)
+mock(/\/api\/rest\/shopCoupon/, 'get', shop_discount.getShopCouPonList)
+
+mock(/\/rest\/peronale/, 'get', businiess.getPersinalData)
+mock(/\/rest\/peronale\/gethehe/, 'get', businiess.getpaersonalCousData)
+
+// 推广列表请求
+mock(/\/api\/cuz\/userList/, 'get', cuz.userList)
+mock(/\/api\/cuz\/shopList/, 'get', cuz.shopList)
+mock(/\/api\/orders\/orderList/, 'get', orders.orderList)
+mock(/\/api\/product\/form/, 'get', prodcut.form)
+mock(/\/api\/product\/cateForm/, 'get', prodcut.cateForm)

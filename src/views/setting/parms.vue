@@ -1,4 +1,5 @@
-<template>
+
+ <template>
   <div>
     <bread-crumbs :level="this.$route.meta"></bread-crumbs>
     <el-card class="box-card">
@@ -43,6 +44,7 @@ export default {
 
     input {
       width: 30px;
+      height: 20px;
       margin: 0 10px;
     }
   }

@@ -3,24 +3,12 @@
     <div class="login_box">
       <h2>系统登录</h2>
       <div class="box">
-        <el-form
-          :model="loginForm"
-          :rules="loginFormRules"
-          ref="loginFormRef"
-          size="small"
-        >
+        <el-form :model="loginForm" :rules="loginFormRules" ref="loginFormRef" size="small">
           <el-form-item prop="username">
-            <el-input
-              v-model="loginForm.username"
-              prefix-icon="el-icon-user-solid"
-            ></el-input>
+            <el-input v-model="loginForm.username" prefix-icon="el-icon-user-solid"></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input
-              prefix-icon="el-icon-lock"
-              show-password
-              v-model="loginForm.password"
-            ></el-input>
+            <el-input prefix-icon="el-icon-lock" show-password v-model="loginForm.password"></el-input>
           </el-form-item>
         </el-form>
         <el-button type="primary" @click="login">登录</el-button>
@@ -33,7 +21,7 @@
 import { checkEmail } from "../lib/utils";
 export default {
   name: "login",
-  data() {
+  data () {
     return {
       loginForm: {
         username: "admin",
@@ -52,7 +40,7 @@ export default {
     };
   },
   methods: {
-    async login() {
+    async login () {
       // 发请求要做三件事
       // 1. 进行表表当数据的验证
       this.$refs.loginFormRef.validate(async valid => {
@@ -62,7 +50,7 @@ export default {
         }
 
         // 2.验证通过开始发请求
-          let {data:res} =  await this.$http.post( '/login',this.loginForm )
+        let { data: res } = await this.$http.post('/login', this.loginForm)
         // 3. 拿到数据之后开始做处理 是存还是抛出错误====> 请拦截器中判断错误
 
         window.sessionStorage.setItem("token", res.token);
@@ -72,10 +60,12 @@ export default {
           message: "登录成功"
         });
         this.$router.push("/home");
-      });
+      })
+      this.$router.push("/home");
+
     }
   }
-};
+}
 </script>
 
 <style  scoped>
