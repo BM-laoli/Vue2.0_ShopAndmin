@@ -1,14 +1,10 @@
 <template>
-    <el-table :data="list" style="width: 100%" :border="false">
-        <el-table-column prop="username" label="账号" width="350">
-        </el-table-column>
-        <el-table-column prop="name" label="姓名" width="300">
-        </el-table-column>
-        <el-table-column prop="phone" label="联系电话" width="300">
-        </el-table-column>
-        <el-table-column prop="role" label="职位" width="300">
-        </el-table-column>
-        <el-table-column prop="status" label="状态" width="200">
+    <el-table class="table-list" :data="list" :border="false">
+        <el-table-column prop="username" label="账号"> </el-table-column>
+        <el-table-column prop="name" label="姓名"> </el-table-column>
+        <el-table-column prop="phone" label="联系电话"> </el-table-column>
+        <el-table-column prop="role" label="职位"> </el-table-column>
+        <el-table-column prop="status" label="状态">
             {{ list.status == true ? '启用' : '停用' }}
         </el-table-column>
         <el-table-column label="操作" #default="{row}">
@@ -51,9 +47,9 @@ export default {
         },
     },
     data() {
-        return {}
+        return {};
     },
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -74,5 +70,15 @@ export default {
 }
 ::v-deep .el-table td {
     border: 0;
+}
+
+.table-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.el-button {
+    margin: 1px;
 }
 </style>
