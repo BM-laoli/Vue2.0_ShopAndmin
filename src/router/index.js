@@ -44,6 +44,7 @@ const parms = () => import('../views/setting/parms')
 
 Vue.use(VueRouter)
 
+
 const routes = [
     {
         path: '/',
@@ -119,12 +120,12 @@ const routes = [
                 meta: { levelOne: '商铺管理', levelTow: '商品类别管理' },
             },
              {
-                path: '/home/shops/productSubCategroy/:id',
-                name: 'productSubCategroy',
-                component: productSubCategroy,
-                meta: { levelOne: '商铺管理', levelTow: '商品子类别管理' },
-                props: true
-            },
+                  path: '/home/shops/productSubCategroy/:id',
+                  name: 'productSubCategroy',
+                  component: productSubCategroy,
+                  meta: { levelOne: '商铺管理', levelTow: '商品子类别管理' },
+                  props: true
+                },
             // 商圈管理模块
             {
                 path: '/home/publicBusinessDistrict',
@@ -228,8 +229,9 @@ const routes = [
                 name: 'parms',
                 component: parms,
                 meta: { levelOne: '系统设置', levelTow: '参数设置' },
+          
             },
-        ],
+          ],
     },
 ]
 

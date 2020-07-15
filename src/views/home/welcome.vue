@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <bread-crumbs :level="this.$route.meta"></bread-crumbs>
     <el-card class="box-card">
       <el-row>
