@@ -154,16 +154,17 @@ export default {
         },
         // 点击确定查询推广用户
         async findUser() {
-            this.$refs.findFormRef.validate((valid) => {
+            await this.$refs.findFormRef.validate((valid) => {
                 if (!valid) return;
 
                 this.loadUserList();
+                this.resetForm();
             });
         },
         // 加载推广用户列表
         async loadUserList() {
             const { data: res } = await getUserList(this.findForm);
-            //   console.log(res);
+            console.log(res);
             if (res.code !== 200) {
                 this.$message.error('获取推广用户列表失败');
             }

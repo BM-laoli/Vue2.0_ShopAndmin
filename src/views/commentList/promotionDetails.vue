@@ -43,7 +43,10 @@
 
                 <div style="margin-left:800px; margin-top:20px">
                     <span style="line-height:35px">
-                        <el-button type="primary" size="mini" @click="findShop"
+                        <el-button
+                            type="primary"
+                            size="mini"
+                            @click="toFindShop"
                             >查询</el-button
                         >
                         <el-button
@@ -146,6 +149,15 @@ export default {
         };
     },
     methods: {
+        // 点击查询店铺
+        async toFindShop() {
+            await this.$refs.findFormRef.validate((valid) => {
+                if (!valid) return;
+
+                this.loadShopList();
+                this.resetForm();
+            });
+        },
         // 点击重置查询表单
         resetForm() {
             this.$refs.findFormRef.resetFields();
@@ -163,7 +175,7 @@ export default {
         async loadShopList() {
             // console.log(this.$route.params.id);
             const { data: res } = await getShopListById(this.findForm);
-            // console.log(res);
+            console.log(res);
             this.list = res.data;
             this.total = res.total;
             this.earnings = res.earnings_count;
