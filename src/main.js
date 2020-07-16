@@ -38,7 +38,14 @@ import './filters/LSZ-text-abbreviation'
 // mock
 import '@/mock'
 
+// animateCSS
+import animated from 'animate.css'
 
+// ecahrs
+import Echarts from 'echarts'
+Vue.prototype.$echarts = Echarts
+
+Vue.use(animated)
 Vue.config.productionTip = false
 new Vue({
     router,

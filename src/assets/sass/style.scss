@@ -1,4 +1,23 @@
 /* 全局样式表 */
+// =========
+@import './variables';  // 注意啊，这里的命名是有点奇怪的，写文件的时候需要加下划线，但是引入的时候不需要，这个是别的
+
+
+* {
+    box-sizing: border-box;
+    outline: none;
+    list-style: none;
+}
+
+a {
+    color: #999;
+    text-decoration: none;
+}
+
+
+h-100{
+    height: 100%;
+}
 
 html,
 body,
@@ -6,20 +25,151 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #eee;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.2em;
 }
 
 // 重置一些 ele里面固有的样式
+// 面包屑
 .el-breadcrumb {
   margin-bottom: 15px;
   font-size: 12px;
 }
 
+// 卡片的默认颜色
 .el-card {
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.15) !important;
 }
 
 img {
   display: block;
   width: 50%;
+}
+
+// 圆角
+.box-radius {
+    border-radius: $box-radius;
+}
+
+
+// text-red就能获得red的颜色字体，bg-red就能获得red的背景
+@each $colorKey, $color in $colors {
+    .text-#{$colorKey}{
+        color:$color;
+    }
+    .bg-#{$colorKey}{
+        background-color: $color;
+    }
+}
+
+// text-left 就能获取文字的左边对齐
+@each $var in (left,conter,right) {
+    .text-#{$var}{
+        text-align: $var !important;
+    }
+}   
+
+// font-sm 就能获取sm对应的字体大小，sm具体是多大，请查看，_variables里的变量设置
+@each $sizeKey,$size in $font-sizes {
+    .font-#{$sizeKey}{
+        font-size: $size;
+    }
+};
+
+
+// 加上类名之后就能直接获取到felx布局
+.d-flex{
+    display: flex;
+};
+
+// 加上类名之后就能改变成colum的flex布局方向
+.flex-column{
+    flex-direction: column;
+};
+
+
+// js-start j就能获取flex-start的布局方式，具体查看_variables里的变量设置
+@each $key,$value in $flex-js {
+    .js-#{$key}{
+        justify-content: $value;
+    }
+};
+
+
+//  ai-start j就能获取flex-start的布局方式，具体查看_variables里的变量设置,注意这个是设置纵向的一个布局方式
+@each $key,$value in $flex-ai {
+    .ai-#{$key}{
+        justify-content: $value;
+    }
+};
+
+// 实际上就是 felx:1
+.flex-grow-1{
+    flex-grow:1
+};
+
+
+
+// 以下样式可以不写
+// ====== 边距
+// .mt-1 => margin top .pb-2，整个2表示级别的意思，
+
+$spacing-types:(
+  m:margin,
+  p:padding
+);
+
+$spacing-directions:(
+  t:top,
+  r:right,
+  b:bottom,
+  l:left,
+);
+
+$spacing-base-size:1px;
+// ===> 我们希望 .mx-1：{margin-left:0.25rem,margin-right:0.25rem,}
+// ===> 我们希望 .my-1：{margin-top:0.25rem,margin-bottom:0.25rem,}
+// ===> 我们希望 .m-1：{margin：0.25rem,}
+// ===> 我们希望 .mt-1：{margin-top:0.25rem,}
+
+@each $typeKey,$type in $spacing-types{
+    
+    @each $directionKey,$direction  in $spacing-directions {
+        @each $sizeKey,$size in $spacing-sizes {
+
+    // ===> 我们希望 .m-1：{margin：0.25rem,}
+    .#{$typeKey}-#{$sizeKey}{
+        #{$type}: $size * $spacing-base-size;
+    }
+    
+    // ===> 我们希望 .mx-1：{margin-left:0.25rem,margin-right:0.25rem,}
+    // ===> 我们希望 .my-1：{margin-top:0.25rem,margin-bottom:0.25rem,}
+    .#{$typeKey}x-#{$sizeKey}{
+        #{$type}-left: $size * $spacing-base-size;
+        #{$type}-rigth: $size * $spacing-base-size;
+    }
+
+    .#{$typeKey}y-#{$sizeKey}{
+        #{$type}-top: $size * $spacing-base-size;
+        #{$type}-bottom: $size * $spacing-base-size;
+    }
+
+            // ===> 我们希望 .mt-1：{margin-top:0.25rem,}
+            .#{$typeKey}#{$directionKey}-#{$sizeKey}{
+                #{$type}-#{$direction}: $size * $spacing-base-size;
+            }
+        }
+    }
+};
+
+
+.nav {
+    .nav-item {
+        /*边框是为了让文字更好的对齐*/
+        border-bottom: 3px solid transparent;
+        &.active {
+            border-bottom: 3px solid #ffff;
+        }
+    }
 }

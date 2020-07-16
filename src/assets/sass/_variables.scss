@@ -1,0 +1,63 @@
+//  把原来在style.scss中的变量都抽离出来
+
+
+// color_类似于map结构
+$colors:(
+  "grey":#999,
+  "deepgrey":#2d3a4b,
+  "bule":#409eff,
+  "red":red,
+  "defaultPink":#e6e6fa,
+  "dark":#2222,
+  "bgc":#e6e6fa
+  );
+
+$box-radius:10px;
+
+$font-sizes:(
+  "sm":14px, 
+  "md":16px, 
+  "xm":18px, 
+  "lg":20px, 
+);
+
+// 2. 设置主轴还有侧轴
+$flex-js:(
+  "start":flex-start,
+  "end":flex-end,
+  "center":center,
+  "between":space-between,
+  "around":space-around,  
+);
+
+
+// 3. 设置主轴还有侧轴
+$flex-ai:(
+  "start":flex-start,
+  "end":flex-end,
+  "center":center,
+  "stretch":stretch,
+);
+
+$spacing-types:(
+  m:margin,
+  p:padding
+);
+
+$spacing-directions:(
+  t:top,
+  r:right,
+  b:bottom,
+  l:left,
+);
+
+
+// 等级
+$spacing-sizes:(
+  0:5,
+  1:10,
+  2:15,
+  3:20,
+  4:25,
+  5:30,
+);

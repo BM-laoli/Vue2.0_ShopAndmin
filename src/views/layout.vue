@@ -254,7 +254,8 @@ import  {testMock }  from '../api/mock/test'
 
 // 自定义样式
 .home-container {
-  height: 100%;
+  height: auto;
+  // height: 100%;
 }
 .toggle-button {
   // background-color:#67C23A;
