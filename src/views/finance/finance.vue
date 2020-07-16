@@ -80,9 +80,10 @@
         <el-table-column label="提现时间" prop="time"> </el-table-column>
         <el-table-column label="提现备注" prop="remake"> </el-table-column>
         <el-table-column label="操作" :span="2">
-          <template>
-            <el-button type="danger" size="mini">修改</el-button>
-            <el-button type="primary" size="mini">删除</el-button>
+          <template slot-scope="scope">
+            <el-button type="danger" size="mini" @click="editUser(scope.row.id)"
+              >处理</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -90,13 +91,43 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="queryInfo.pagenum"
-        :page-sizes="[2, 5, 10, 15]"
+        :page-sizes="[10, 20]"
         :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
       >
       </el-pagination>
     </el-card>
+    <!-- 弹出层 -->
+    <el-dialog
+      title="确认用户/商户“xxxxx”提现申请已打款"
+      :visible.sync="dialogFormVisible"
+    >
+      <el-form
+        :model="editaForm"
+        :rules="editarules"
+        ref="editaRef"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <el-form-item label="备注:">
+          <el-input
+            type="textarea"
+            placeholder="请输入内容"
+            v-model="editaForm.remake"
+            maxlength="30"
+            show-word-limit
+          >
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -110,7 +141,16 @@ export default {
   data() {
     return {
       userlist: [],
+      editaForm: {},
+      editarules: {
+        remake: [
+          { required: true, message: "请输入提现备注", trigger: "blur" },
+          { min: 3, max: 10, message: "长度在 3 到 20个字符", trigger: "blur" }
+        ]
+      },
       total: 0,
+      dialogFormVisible: false,
+      textarea: "",
       queryInfo: {
         query: "",
         pagenum: 1,
@@ -125,16 +165,22 @@ export default {
         date2: ""
       },
       financeRules: {
-        userName: {
-          required: true,
-          message: "请输入店铺ID/名称",
-          trigger: "blur"
-        },
-        shopName: {
-          required: true,
-          message: "请输入用户ID/昵称",
-          trigger: "blur"
-        },
+        userName: [
+          {
+            required: true,
+            message: "请输入店铺ID/名称",
+            trigger: "blur"
+          },
+          { min: 3, max: 10, message: "长度在 3 到 10个字符", trigger: "blur" }
+        ],
+        shopName: [
+          {
+            required: true,
+            message: "请输入用户ID/昵称",
+            trigger: "blur"
+          },
+          { min: 3, max: 10, message: "长度在 3 到 10个字符", trigger: "blur" }
+        ],
         state: [{ required: true, message: "请选择状态", trigger: "change" }],
         orderNumber: {
           required: true,
@@ -149,24 +195,28 @@ export default {
   },
   methods: {
     async onFinanceList() {
-      const { data } = await getFinanceList({
-        params: this.queryInfo
-      });
-      this.userlist = data.data;
-      this.total = data.total;
-      console.log(data);
+      const { data: res } = await getFinanceList(this.queryInfo);
+      this.userlist = res.data;
+      this.total = res.total;
+      console.log(res);
     },
     // 监听pagesize事件
     handleSizeChange(newsize) {
       console.log(newsize);
       this.queryInfo.pagesize = newsize;
-      this.getGoodsList();
+      this.onFinanceList();
     },
     // 监听页面
     handleCurrentChange(newnum) {
       console.log(newnum);
       this.queryInfo.pagenum = newnum;
-      this.getGoodsList();
+      this.onFinanceList();
+    },
+    async editUser(id) {
+      console.log(id);
+      const { data: res } = await getFinanceList(id);
+      this.editaForm = res.data;
+      this.dialogFormVisible = true;
     }
   }
 };
@@ -177,15 +227,5 @@ export default {
   margin: 15px;
   margin-top: 22px;
   background-color: #e6e6fa;
-}
-::v-deep .el-table__header-wrapper {
-  border: 3px solid #000;
-  border-radius: 10px;
-  width: 100%;
-  box-sizing: border-box;
-}
-::v-deep .el-table th,
-::v-deep .el-table td {
-  text-align: center !important;
 }
 </style>

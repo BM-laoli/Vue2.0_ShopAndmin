@@ -2,9 +2,9 @@
 import Mock from 'mockjs'
 let financeList = Mock.mock(
   {
-    "total": 8,
-    'data|8': [
+    'data|20': [
       {
+        'id|+1': 1,
         "type|1": ['店铺提现', '用户提现'],
         "shopName": "@cname",
         "userName": "@cname",
@@ -24,7 +24,11 @@ function finance(res) {
   return {
     code: 200,
     data: financeList.data,
-    message: '请求成功'
+    message: '请求成功',
+    total: 20,
+    pagesize: 10,
+    pagenum: 10
+
   }
 }
 export default { finance }
