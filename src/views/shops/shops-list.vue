@@ -4,7 +4,7 @@
     <el-card class="box-card colors_dark">
       <!-- heder头部 -->
       <div class="hedaer-box">
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
           <el-form-item label="店铺名称/编号">
             <el-input v-model="formInline.query" placeholder="店铺名称/编号"></el-input>
           </el-form-item>
@@ -17,12 +17,13 @@
           <el-form-item></el-form-item>
         </el-form>
         <div class="box2">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="primary" @click="onCancel">重置</el-button>
+          <el-button size="mini" type="primary" @click="onSubmit">查询</el-button>
+          <el-button size="mini" type="primary" @click="onCancel">重置</el-button>
         </div>
       </div>
 
-      <div class="border-middleware" v-if="shopsData.shopsList.length !== 0">
+      <!-- <div class="border-middleware" v-if="shopsData.shopsList.length !== 0"> -->
+      <div class="border-middleware">
         <div>
           商铺数量：
           <span>{{shopsData.shopsList.length}}</span>
@@ -161,24 +162,29 @@ export default {
 .el-card {
   margin: 15px;
   margin-top: 22px;
-  background-color: #e6e6fa;
+  background-color: #fff;
   padding: 8px;
 }
 .hedaer-box {
   width: 100%;
-  height: 150px;
-  background-color: pink;
+  border-radius: 10px;
+  background-color: #e6e6fa;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 20px 0;
+  // background-color: pink;
 }
 .tabbe-box {
   width: 100%;
-  height: 1000px;
-  background-color: cornflowerblue;
+  border-radius: 10px;
+  background-color: #e6e6fa;
+  padding: 20px;
+  // background-color: cornflowerblue;
 }
 
 .border-middleware {
   width: 100%;
-  height: 80px;
-  background-color: yellowgreen;
+  // background-color: yellowgreen;
   margin: 10px 0;
 }
 

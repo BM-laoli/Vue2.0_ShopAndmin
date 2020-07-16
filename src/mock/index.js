@@ -45,6 +45,7 @@ mock(/\/api\/product\/cateForm/, 'get', prodcut.cateForm)
 //  陈娟的mock请求
 // mock('https://tess.utools.club/api/rest/products/byid', 'get', cj.productListc)
 // 使用mock的坑一：如果单纯只写实际请求去掉baseURL的地址不会获得mock的地址，所以以字符串的方式写的话必须写全地址，如果想用没加baseURL的地址的话，可以使用正则匹配的方式
+
 // 获取全部商铺的商品分页数据
 mock(/\/rest\/products\/byid/, 'get', cj.productListc)
 
@@ -56,3 +57,8 @@ mock(/\/api\/product\/cateForm/, 'get', prodcut.cateForm)
 mock(/\/api\/zjc\/material/, 'get', zjc.materialManag)
 mock(/\/api\/zjc\/classMaterial/, 'get', zjc.getMaterialClass)
 mock(/\/api\/tsl\/finance/, 'get', tsl.finance)
+// 获取所有商品类别
+mock(/\/rest\/product\/type/, 'get', cj.productType)
+
+// 根据商品名查询商品
+mock(/\/rest\/product\/byname/, 'get', cj.getProductByName)
