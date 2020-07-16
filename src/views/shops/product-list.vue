@@ -39,12 +39,12 @@
       <div class="tabbe-box">
         <el-table :data="tableData" style="width: 100%;" size="mini">
           <el-table-column align="center" prop="_id" label="商品编号"></el-table-column>
-          <el-table-column align="center" prop="uid.shopname" label="所属店铺"></el-table-column>
-          <el-table-column align="center" prop="image" label="商品图" #default="{row}">
+          <el-table-column align="center" prop="uid.shop_name" label="所属店铺"></el-table-column>
+          <el-table-column align="center" label="商品图" #default="{row}">
             <el-image
               style="width: 60px; height: 60px;"
-              :src="row.images[0]"
-              :preview-src-list="row.images"
+              :src="row.image[0]"
+              :preview-src-list="row.image"
             ></el-image>
           </el-table-column>
           <el-table-column align="center" prop="name" label="商品名称" :min-width="100"></el-table-column>
@@ -52,7 +52,7 @@
             align="center"
             label="商品类型"
             #default="{row}"
-          >{{row.type.parent.name}}/{{row.type.name}}</el-table-column>
+          >{{row.parent.parent.name}}/{{row.parent.name}}</el-table-column>
           <el-table-column align="center" prop="cost" label="成本价" :formatter="formatter"></el-table-column>
           <el-table-column align="center" prop="o_price" label="原价" :formatter="formatter"></el-table-column>
           <el-table-column align="center" prop="price" label="销售价" :formatter="formatter"></el-table-column>
@@ -87,10 +87,10 @@
             prop="is_public"
             label="状态"
             #default="{row}"
-          >{{row.is_public?'上架':'下架'}}</el-table-column>
+          >{{row.is_approved?'上架':'下架'}}</el-table-column>
           <el-table-column align="center" label="操作" #default="{row}">
-            <span class="cut-down">{{row.is_public?'下架':'上架'}}</span>
-            <span class="delete">删除</span>
+            <span class="cut-down" @click="upToggle(row._id)">{{row.is_approved?'下架':'上架'}}</span>
+            <span class="delete" @click="delProduct(row._id)">删除</span>
           </el-table-column>
         </el-table>
         <el-pagination
@@ -111,9 +111,11 @@
 import breadCrumbs from "../../components/common/bread-crumbs";
 import {
   getProductList,
+  getProductById,
   getProductType,
   getProductByName
 } from "../../api/mock/cjhttp";
+import { filterImg } from "../../filters/LSZ-text-abbreviation";
 export default {
   components: {
     breadCrumbs
@@ -148,26 +150,28 @@ export default {
     },
     // 当前页变化时获取商品列表
     async handleCurrentChange(page) {
-      this.query.page = page;
-      const { data: res } = await getProductList({
-        page: this.query.page,
-        size: this.size
-      });
-      console.log("product", res.records);
-      this.tableData = res.records;
-      this.query.total = res.total;
-      // array
-      const records = res.records;
-      records.map(v => {
-        let imgs = v.images;
-        let arr = [];
-        for (var k in imgs) {
-          arr.push(imgs[k]);
-        }
-        return (v.images = arr);
-      });
-
-      console.log("imgs", records);
+      this.query.page = page || 1;
+      const id = this.$route.query.id;
+      if (id) {
+        const { data: res } = await getProductById({
+          page: this.query.page,
+          size: this.query.size,
+          id: id
+        });
+        console.log("productbyid", res.records);
+        this.query.total = res.total;
+        let records = res.records;
+        filterImg(records);
+        this.tableData = records;
+      } else {
+        const { data: res } = await getProductList(this.query);
+        console.log("product", res.records);
+        this.query.total = res.total;
+        let records = res.records;
+        filterImg(records);
+        this.tableData = records;
+        console.log("records", records);
+      }
     },
     // 表格数据格式化
     formatter(row, column, cellValue, index) {
@@ -179,10 +183,56 @@ export default {
       this.productType = res.data;
       console.log("ProductType", res.data);
     },
+    // 商品查询
     async onSubmit() {
       console.log(this.form);
-      const res = await getProductByName(this.form);
-      console.log(res);
+      const { data: res } = await getProductByName(this.form);
+      console.log("查询", res);
+      this.query.total = 1;
+      // array
+      const records = res.records;
+      filterImg(records);
+      // records.map(v => {
+      //   let imgs = v.images;
+      //   let arr = [];
+      //   for (var k in imgs) {
+      //     if (!(k === "_id")) {
+      //       arr.push(imgs[k]);
+      //     }
+      //   }
+      //   return (v.images = arr);
+      // });
+      this.tableData = res.records;
+    },
+    // 上架下架切换
+    async upToggle(id) {
+      // 前端对数组进行操作实现切换
+      const table = this.tableData;
+      table.forEach(v => {
+        if (v._id === id) {
+          return (v.is_approved = !v.is_approved);
+        }
+      });
+    },
+    // 删除商品
+    async delProduct(id) {
+      this.$msgbox({
+        type: "info",
+        message: "你确认要删除该商品吗？",
+        showClose: true,
+        showCancelButton: true,
+        callback: action => {
+          if (action === "confirm") {
+            const table = this.tableData;
+            this.tableData = table.filter(v => {
+              return v._id != id;
+            });
+            this.$message.success("删除成功！");
+          } else {
+            return;
+          }
+        }
+      });
     }
   }
 };
@@ -213,10 +263,12 @@ export default {
     text-decoration: underline;
     display: inline-block;
     margin-right: 10px;
+    cursor: pointer;
   }
   .delete {
     color: red;
     text-decoration: underline;
+    cursor: pointer;
   }
 }
 

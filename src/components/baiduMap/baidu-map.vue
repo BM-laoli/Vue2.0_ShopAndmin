@@ -12,11 +12,16 @@
       <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT"></bm-city-list>
     </baidu-map>
     <el-input
+      disabled
       style="width:250px; display: inline-block; margin-right:50px; margin-top:20px"
       v-model="preAddress"
       @on-blur="getMapPoint"
     ></el-input>
-    <el-input style="width:250px; display: inline-block;margin-top:20px" v-model="detailAddress"></el-input>
+    <el-input
+      disabled
+      style="width:250px; display: inline-block;margin-top:20px"
+      v-model="detailAddress"
+    ></el-input>
   </div>
 </template>
 

@@ -48,7 +48,10 @@ mock(/\/api\/product\/cateForm/, 'get', prodcut.cateForm)
 
 // 获取全部商铺的商品分页数据
 mock(/\/rest\/products\/byid/, 'get', cj.productListc)
-
+// 获取所有商品类别
+mock(/\/rest\/product\/type/, 'get', cj.productType)
+// 根据商品名查询商品
+mock(/\/rest\/product\/byname/, 'get', cj.getProductByName)
 
 mock(/\/api\/orders\/detailedData/, 'get', orders.detailedData)
 mock(/\/api\/orders\/calculationData/, 'get', orders.calculationData)
@@ -57,8 +60,4 @@ mock(/\/api\/product\/cateForm/, 'get', prodcut.cateForm)
 mock(/\/api\/zjc\/material/, 'get', zjc.materialManag)
 mock(/\/api\/zjc\/classMaterial/, 'get', zjc.getMaterialClass)
 mock(/\/api\/tsl\/finance/, 'get', tsl.finance)
-// 获取所有商品类别
-mock(/\/rest\/product\/type/, 'get', cj.productType)
 
-// 根据商品名查询商品
-mock(/\/rest\/product\/byname/, 'get', cj.getProductByName)

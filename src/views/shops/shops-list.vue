@@ -6,7 +6,7 @@
       <div class="hedaer-box">
         <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
           <el-form-item label="店铺名称/编号">
-            <el-input v-model="formInline.query" placeholder="店铺名称/编号"></el-input>
+            <el-input v-model="formInline.name" placeholder="店铺名称"></el-input>
           </el-form-item>
           <el-form-item label="行业">
             <el-select v-model="formInline.industry" placeholder="选择所属行业">
@@ -93,11 +93,13 @@
         <el-link :underline="false" icon="el-icon-s-marketing">经营分析</el-link>
         <el-link :underline="false" icon="el-icon-refresh">启用</el-link>
             <el-link :underline="false" icon="el-icon-delete">删除</el-link>-->
-            <router-link :to="{path:'/home/shops/shopDetail', query:{id: shopbase.uid}}">详情</router-link>
-            <router-link :to="{path:'/rest/public_shop_base/byId', query:{id: shopbase.uid}}">查看商品</router-link>
-            <router-link :to="{path:'/home/shops/businessAnalysis', query:{id: shopbase.uid}}">经营分析</router-link>
-            <router-link :to="{path:'/rest/public_shop_base/byId', query:{id: shopbase.uid}}">启用</router-link>
-            <router-link to="{path:'//rest/public_shop_base/byId', query:{id: uid}}">删除</router-link>
+            <router-link :to="{path:'/home/shops/shopDetail', query:{id: shopbase._id}}">详情</router-link>
+            <router-link :to="{path:'/home/shops/productList', query:{id: shopbase._id}}">查看商品</router-link>
+            <router-link
+              :to="{path:'/home/shops/businessAnalysis', query:{id: shopbase._id+''}}"
+            >经营分析</router-link>
+            <router-link :to="{path:'/rest/public_shop_base/byId', query:{id: shopbase._id}}">启用</router-link>
+            <router-link to="{path:'//rest/public_shop_base/byId', query:{id: _id}}">删除</router-link>
           </el-table-column>
         </el-table>
         <!-- 分页器 -->
@@ -118,17 +120,21 @@
 
 <script>
 import breadCrumbs from "../../components/common/bread-crumbs";
+import { getShopList } from "../../api/mock/cjhttp";
 export default {
   name: "shopList",
   components: {
     breadCrumbs
   },
   created() {
-    this.getShoplist();
+    this.getShoplistFn();
   },
   data() {
     return {
-      formInline: {},
+      formInline: {
+        name: "",
+        industry: ""
+      },
       shopsData: {
         shopsList: []
       },
@@ -140,16 +146,15 @@ export default {
     };
   },
   methods: {
-    async getShoplist() {
-      const { data: res } = await this.$http.get("/rest/public_shop_base/all", {
-        params: this.queryInfo
-      });
+    async getShoplistFn() {
+      const { data: res } = await getShopList(this.queryInfo);
       this.shopsData.shopsList = res.records;
       // 为分页器传输配置
       (this.queryInfo.total = res.total),
         (this.queryInfo.size = res.size),
         (this.queryInfo.page = res.page);
     },
+    // 根据商铺名和行业查询商铺
     onSubmit() {
       console.log(this.formInline);
     },
