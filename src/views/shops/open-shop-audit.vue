@@ -25,14 +25,14 @@
         <el-row :gutter="20">
           <el-col class="text-style" :span="3" style="height:60px;line-height:60px">主要产品图</el-col>
           <el-col :span="4">
-            <el-image style="width: 60px; height: 60px" :src="formLabelAlign.shop_product_images.image1" fit="cover"></el-image>
+            <el-image style="width: 60px; height: 60px" :src="formLabelAlign.shop_id_image_reverse" :lazy="true" fit="cover"></el-image>
           </el-col>
           <el-col class="text-style" :span="3" style="height:60px;line-height:60px">营业证照</el-col>
           <el-col :span="4">
-            <el-image style="width: 60px; height: 60px" :src="formLabelAlign.shop_product_images.image2" fit="cover"></el-image>
+            <el-image style="width: 60px; height: 60px" :src="formLabelAlign.shop_id_image_reverse" fit="cover"></el-image>
           </el-col>
           <el-col :span="4">
-            <el-image style="width: 60px; height: 60px" :src="formLabelAlign.shop_product_images.image3" fit="cover"></el-image>
+            <el-image style="width: 60px; height: 60px" :src="formLabelAlign.shop_id_image_reverse" fit="cover"></el-image>
           </el-col>
         </el-row>
         <el-row>
@@ -204,24 +204,47 @@ export default {
       textareaBeiZhu: '',
       labelPosition: 'left',
       formLabelAlign: {
-        peisongTime: [start_time, end_time],
-        // avatar: '',
-        // name: '',
-        // region: '',
-        // type: '',
-        // uname: '',
-        // unum: '',
-        // umobile: '',
-        peisongQuyuTime: [start_time, end_time],
-        // inviteCode: ''
+        peisongTime: [],
+        peisongQuyuTime: [],
+        avatar: '',
+        shop_id_image_positive: '',
+        shop_id_image_reverse: '',
+        shop_name: '',
+        shop_level_name: '',
+        shop_id: '',
+        phone: '',
+        shop_license_images: {
+          _id: ''
+        },
+        delivery: {
+          is_self: {
+            flag: ''
+          },
+          sime_city: {
+            flag: '',
+            start_price: '',
+            total_price: ''
+          },
+          region: {
+            flag: '',
+            start_price: '',
+            total_price: '',
+            over: ''
+          },
+          cross_city: {
+            flag: '',
+            total_price: '',
+          },
+        },
       }
     }
   },
   async created () {
     try {
       const { data: res } = await shopAuditDetail(this.$route.query.id)
-      console.log(res)
       this.formLabelAlign = res
+      this.formLabelAlign.peisongTime = [res.delivery.sime_city.start_time, res.delivery.sime_city.end_time]
+      this.formLabelAlign.peisongQuyuTime = [res.delivery.region.start_time, res.delivery.region.end_time]
     } catch (error) {
       console.log(error)
     }

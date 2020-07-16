@@ -152,14 +152,21 @@ export default {
   methods: {
     // 店铺查询
     async shopSearch () {
-      const { data: res } = await searchShopAudit({
-        params: {
-          keyword2: "中南大学",
-          keyword1: '国防制造业'
-        }
-      })
-      // console.log(res)
-      this.tableData = res
+      if (this.shopNumberinput === '' || this.secondValue === '') {
+        this.$message.error('参数请输入完整')
+      }
+      try {
+        const { data: res } = await searchShopAudit({
+          params: {
+            keyword2: this.shopNumberinput,
+            keyword1: this.secondValue
+          }
+        })
+        // console.log(res)
+        this.tableData = res
+      } catch (error) {
+        console.log(error)
+      }
     },
     // 审核
     handleEdit (index, row) {
@@ -168,10 +175,10 @@ export default {
     },
     async getShopAuditList () {
       try {
-        // console.log(data.array)
         const { data } = await getShopAudit(
           { params: this.queryInfo }
         )
+        // console.log(data)
         this.tableData = data.records
         this.queryInfo.page = data.pages
         this.queryInfo.size = data.size
