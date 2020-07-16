@@ -10,7 +10,7 @@
       <el-row>
         <el-col :span="8">
           <div style="font-size:14px; margin-bottom:5px">店铺编号：{{info.uid}}</div>
-          <div style="font-size:14px;">行业：{{info.industry}}</div>
+          <div style="font-size:14px;">行 业:{{info.industry}}</div>
         </el-col>
         <el-col :span="16">
           <div
