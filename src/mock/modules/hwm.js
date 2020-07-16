@@ -25,7 +25,7 @@ const getCouponData = Mock.mock({
   }]
 })
 
-function list (res) {
+function list(res) {
   return {
     code: 200,
     data: listData.data,
@@ -34,7 +34,7 @@ function list (res) {
 }
 
 // 添加优惠券
-function addCouPon (res) {
+function addCouPon(res) {
   return {
     code: 200,
     message: '请求成功'
@@ -42,7 +42,7 @@ function addCouPon (res) {
 }
 
 // 更新优惠券
-function updateCoupon (res) {
+function updateCoupon(res) {
   return {
     code: 200,
     message: '更新成功'
@@ -50,7 +50,7 @@ function updateCoupon (res) {
 }
 
 // 查询优惠券
-function getCoupon (res) {
+function getCoupon(res) {
   return {
     code: 200,
     data: getCouponData.data,
@@ -59,7 +59,7 @@ function getCoupon (res) {
 }
 
 // 删除优惠券
-function deleteCoupon (res) {
+function deleteCoupon(res) {
   return {
     code: 200,
     message: '删除成功'
