@@ -2,10 +2,15 @@
 import axios from 'axios'
 import Vue from 'vue'
 
+// 线上接口1-v1版本
 const http = axios.create({
-  // baseURL: 'https://tess.utools.club/api'
-  baseURL: 'http://192.168.29.243:3030'
+  baseURL: 'https://tess.utools.club'
 
+})
+
+// 线上接口v2 
+const Nesthttp = axios.create({
+  baseURL: 'https://nestjsapi.utools.club'
 })
 
 // 请求拦截 两个错误,配置token
@@ -14,12 +19,6 @@ http.interceptors.request.use(
     if (sessionStorage.token) {
       config.headers.Authorization = sessionStorage.token
     }
-    
-    // 接口连调说明,如果你mock的数据中没有rest那么我就任务这个是调用正在的线上解控
-    if( !(/\/api\//.test(config.baseURL)) ){
-      config.baseURL = 'http://nestjsapi.utools.club'
-    }
-    
     return config
 
   },
