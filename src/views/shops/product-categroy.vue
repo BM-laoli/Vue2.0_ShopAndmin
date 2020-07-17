@@ -22,14 +22,14 @@
         class="js-start"
         :data="tableData"
         style="width: 100%"
-        row-key="cateId"
-        default-expand-all
+        row-key="_id"
+        height="500"
         :tree-props="{children: 'children', hasChildren: true}"
-        :default-sort="{prop: 'cateId', order: 'cateName'}"
+        :default-sort="{prop: 'sortnumber', order: 'name'}"
       >
-        <el-table-column prop="cateName" label="类别名称" sortable></el-table-column>
-        <el-table-column prop="cateId" label="排序" sortable></el-table-column>
-        <el-table-column prop="cateChildNum" label="子类别数量" sortable></el-table-column>
+        <el-table-column prop="name" label="类别名称" sortable></el-table-column>
+        <el-table-column prop="sortnumber" label="排序" sortable></el-table-column>
+        <el-table-column prop="sortnumber" label="子类别数量" sortable></el-table-column>
         <el-table-column label="操作" #default="{row:shopData}">
           <el-button
             @click="editData(shopData)"
@@ -97,7 +97,8 @@
 </template>
 
 <script>
-import { categroyData } from "@/api/mock/test";
+// import { categroyData } from "@/api/mock/test";
+import { getAllCategroy, getCategroyByName } from "@/api/shops/categroy";
 import breadCrumbs from "../../components/common/bread-crumbs";
 export default {
   components: {
@@ -115,25 +116,77 @@ export default {
       editIndustrySortValue: "",
       cateNum: 0,
       cateChildNum: 0,
+      parent: [],
+      child: [],
       tableData: []
     };
   },
   created() {
-    this.categroyData();
+    this.AllcategroyData();
   },
   methods: {
-    async categroyData() {
-      const { data: res } = await categroyData();
-      this.cateNum = res.data.length;
-      res.data.forEach(v => {
-        let i = v.children.length;
-        this.cateChildNum += i;
-      });
-      this.tableData = res.data;
-      console.log(res);
+    async AllcategroyData() {
+      const { data: res } = await getAllCategroy();
+      this.formData(res);
+      this.cateNum = this.tableData.length;
+      this.cateChildNum = this.child.length;
+      console.log(this.parent, this.child);
     },
-    onSelect() {
-      console.log(this.input);
+    //数组对象去重
+    deteleObject(obj) {
+      var uniques = [];
+      var stringify = {};
+      for (var i = 0; i < obj.length; i++) {
+        var keys = Object.keys(obj[i]);
+        keys.sort(function(a, b) {
+          return Number(a) - Number(b);
+        });
+        var str = "";
+        for (var j = 0; j < keys.length; j++) {
+          str += JSON.stringify(keys[j]);
+          str += JSON.stringify(obj[i][keys[j]]);
+        }
+        if (!stringify.hasOwnProperty(str)) {
+          uniques.push(obj[i]);
+          stringify[str] = true;
+        }
+      }
+      uniques = uniques;
+      return uniques;
+    },
+    //类别数据处理
+    formData(res) {
+      this.parent = res.records.map(v => {
+        return v.parent;
+      });
+      this.child = res.records;
+      this.parent = this.deteleObject(this.parent);
+      this.parent.forEach(v => {
+        v.children = [];
+        this.child.forEach(s => {
+          if (v._id === s.parent._id) {
+            v.children.push(s);
+          }
+        });
+      });
+      this.parent.forEach(v => {
+        v.children.forEach((s, i) => {
+          delete s.parent;
+          s.sortnumber = i + 1;
+        });
+      });
+      this.tableData = this.parent;
+    },
+    async onSelect() {
+      try {
+        const { data: res } = await getCategroyByName({
+          keyword1: this.input
+        });
+        // this.formData(res)
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
     },
     onResetForm() {
       this.input = "";

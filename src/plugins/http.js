@@ -3,7 +3,7 @@ import axios from 'axios'
 import Vue from 'vue'
 
 const http = axios.create({
-  baseURL: 'http://192.168.29.243:3030'
+  baseURL: 'http://192.168.29.243:3045'
 })
 
 // 请求拦截 两个错误,配置token
@@ -15,7 +15,7 @@ http.interceptors.request.use(
     
     // 接口连调说明,如果你mock的数据中没有rest那么我就任务这个是调用正在的线上解控
     if( !(/\/api\//.test(config.baseURL)) ){
-      config.baseURL = 'http://nestjsapi.utools.club'
+      config.baseURL = 'http://nestapi.utools.club'
     }
     
     return config

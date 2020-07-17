@@ -17,29 +17,29 @@
       <el-button type="primary" round slot="reference" @click="addindustryInfo">新增行业</el-button>
     </div>
     <el-card class="bg-dark js-start">
+      <el-table :data="tableData" style="width: 100%" :default-sort="{prop: 'id', order: 'name'}">
+        <el-table-column prop="name" label="行业名称" sortable></el-table-column>
+        <el-table-column prop="sort" label="排序" sortable></el-table-column>
+        <el-table-column label="操作" #default="{row:shopData}">
+          <el-button @click="editData(shopData)" icon="el-icon-edit" type="text">编 辑</el-button>
+          <el-button
+            type="text"
+            icon="el-icon-delete"
+            style="color: red"
+            @click="deleteData(shopData)"
+          >删 除</el-button>
+        </el-table-column>
+      </el-table>
+      <!-- 分页 -->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[3, 5, 10, 15]"
-        :page-size="3"
+        :current-page="qurey.page"
+        :page-sizes="[4, 5, 10, 15]"
+        :page-size="qurey.size"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
-      >
-        <el-table :data="tableData" style="width: 100%" :default-sort="{prop: 'id', order: 'name'}">
-          <el-table-column prop="name" label="行业名称" sortable></el-table-column>
-          <el-table-column prop="sort" label="排序" sortable></el-table-column>
-          <el-table-column label="操作" #default="{row:shopData}">
-            <el-button @click="editData(shopData)" icon="el-icon-edit" type="text">编 辑</el-button>
-            <el-button
-              type="text"
-              icon="el-icon-delete"
-              style="color: red"
-              @click="deleteData(shopData)"
-            >删 除</el-button>
-          </el-table-column>
-        </el-table>
-      </el-pagination>
+        :total="total"
+      ></el-pagination>
     </el-card>
     <!-- 新增行业弹框 -->
     <el-dialog title="新增行业" :visible.sync="addDialogFormVisible">
@@ -78,7 +78,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="editIndustryClose()">取 消</el-button>
-        <el-button type="primary" @click="editIndustryData">确 定</el-button>
+        <el-button type="primary" @click="editIndustryData(cid)">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -90,8 +90,7 @@ import {
   getIndustryByName,
   addIndustry,
   editIndustryInfo
-} from "@/api/shops/index";
-import { industryData } from "@/api/mock/test";
+} from "@/api/shops/industry";
 import breadCrumbs from "../../components/common/bread-crumbs";
 export default {
   components: {
@@ -108,8 +107,13 @@ export default {
       editIndustryValue: "",
       editIndustrySortValue: "",
       tableData: [],
+      total: 0,
       count: 0,
-      
+      qurey: {
+        size: 4,
+        page: 1
+      },
+      cid: 0
     };
   },
   created() {
@@ -117,20 +121,20 @@ export default {
   },
   methods: {
     async getIndustryData() {
-      const { data: res } = await getAllIndustry({
-        size: 4,
-        page: 1
-      });
+      const { data: res } = await getAllIndustry(this.qurey);
       this.tableData = res.records;
       this.count = res.records.length;
-      console.log(res.records);
+      this.total = res.total;
+      console.log(res);
     },
     onSelect() {
       const { data: res } = getIndustryByName({
         keyword1: this.input
       });
       this.tableData = res.records;
+      console.log(res);
     },
+    //添加
     async addIndustryData() {
       if (
         this.addIndustryValue.trim() === "" ||
@@ -153,13 +157,28 @@ export default {
       this.editDialogFormVisible = true;
       this.editIndustryValue = v.name;
       this.editIndustrySortValue = v.sort;
+      this.cid = v._id;
       console.log(v);
     },
-    async editIndustryData() {
-      const { data: res } = await editIndustryInfo();
+    //修改
+    async editIndustryData(id) {
+      try {
+        const { data: res } = await editIndustryInfo(id, {
+          name: this.editIndustryValue,
+          sort: this.editIndustrySortValue
+        });
+        this.getIndustryData();
+      } catch (err) {
+        console.log(err);
+      }
+      this.editDialogFormVisible = false;
+      this.getIndustryData();
+      console.log(res);
     },
-    deleteData() {
-      console.log(1);
+    deleteData(v) {
+      var index = this.tableData.indexOf(v);
+      this.tableData.splice(index, 1);
+      console.log(this.tableData);
     },
     addindustryInfo() {
       this.addDialogFormVisible = true;
@@ -179,10 +198,14 @@ export default {
     editIndustryClose() {
       this.editDialogFormVisible = false;
       //不知道为什么，这个重置方法没作用
-      this.$nextTick(() => {
-        this.$refs.editIndustryFrom.resetFields();
-        console.log(this.$refs.editIndustryFrom);
-      });
+    },
+    handleSizeChange(v) {
+      this.qurey.size = v;
+      this.getIndustryData();
+    },
+    handleCurrentChange(v) {
+      this.qurey.page = v;
+      this.getIndustryData();
     }
   }
 };
@@ -207,5 +230,8 @@ export default {
 }
 .el-form--inline {
   height: 40px;
+}
+.el-pagination {
+  margin-top: 20px;
 }
 </style>
