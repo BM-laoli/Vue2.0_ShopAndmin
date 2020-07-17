@@ -40,7 +40,7 @@
       <!-- body 身体 -->
       <div class="tabbe-box">
         <!-- 数据统计项 -->
-        <el-table :data="shopsData.shopsList" style="width: 100%">
+        <el-table :data="shopsData.shopsList" style="width: 100%" v-loading="loading">
           <el-table-column label="店铺编号" width="80" #default="{row:shopbase}">
             <span>{{shopbase._id.slice(0,5)}}</span>
           </el-table-column>
@@ -93,25 +93,38 @@
         <el-link :underline="false" icon="el-icon-s-marketing">经营分析</el-link>
         <el-link :underline="false" icon="el-icon-refresh">启用</el-link>
             <el-link :underline="false" icon="el-icon-delete">删除</el-link>-->
-            <router-link :to="{path:'/home/shops/shopDetail', query:{id: shopbase._id}}">详情</router-link>
-            <router-link :to="{path:'/home/shops/productList', query:{id: shopbase._id}}">查看商品</router-link>
             <router-link
+              class="cut-down"
+              :to="{path:'/home/shops/shopDetail', query:{id: shopbase._id}}"
+            >详情</router-link>
+            <router-link
+              class="cut-down"
+              :to="{path:'/home/shops/productList', query:{id: shopbase._id}}"
+            >查看商品</router-link>
+            <router-link
+              class="cut-down"
               :to="{path:'/home/shops/businessAnalysis', query:{id: shopbase._id+''}}"
             >经营分析</router-link>
-            <router-link :to="{path:'/rest/public_shop_base/byId', query:{id: shopbase._id}}">启用</router-link>
-            <router-link to="{path:'//rest/public_shop_base/byId', query:{id: _id}}">删除</router-link>
+            <router-link
+              class="cut-down"
+              :to="{path:'/rest/public_shop_base/byId', query:{id: shopbase._id}}"
+            >启用</router-link>
+            <router-link
+              class="cut-down"
+              to="{path:'//rest/public_shop_base/byId', query:{id: _id}}"
+            >删除</router-link>
           </el-table-column>
         </el-table>
         <!-- 分页器 -->
 
         <el-pagination
-          @size-change="getShoplist()"
-          @current-change="getShoplist()"
-          :current-page.sync="queryInfo.page"
-          :page-sizes="[2, 5, 10]"
-          :page-size.sync="queryInfo.size"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="query.page"
+          :page-sizes="[1, 3, 5, 10]"
+          :page-size="query.size"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="queryInfo.total"
+          :total="query.total"
         ></el-pagination>
       </div>
     </el-card>
@@ -127,10 +140,12 @@ export default {
     breadCrumbs
   },
   created() {
-    this.getShoplistFn();
+    // this.getShoplistFn();
+    this.handleCurrentChange();
   },
   data() {
     return {
+      loading: false,
       formInline: {
         name: "",
         industry: ""
@@ -138,7 +153,7 @@ export default {
       shopsData: {
         shopsList: []
       },
-      queryInfo: {
+      query: {
         total: 0,
         size: 5,
         page: 1
@@ -146,13 +161,21 @@ export default {
     };
   },
   methods: {
-    async getShoplistFn() {
-      const { data: res } = await getShopList(this.queryInfo);
+    // 分页展示每页的数据size变化时
+    handleSizeChange(size) {
+      this.query.size = size;
+      this.handleCurrentChange();
+    },
+    // 当前页变化时获取商品列表
+    async handleCurrentChange(page) {
+      this.query.page = page || 1;
+      // this.getShoplistFn();
+      this.loading = true;
+      const { data: res } = await getShopList(this.query);
       this.shopsData.shopsList = res.records;
       // 为分页器传输配置
-      (this.queryInfo.total = res.total),
-        (this.queryInfo.size = res.size),
-        (this.queryInfo.page = res.page);
+      this.query.total = res.total;
+      this.loading = false;
     },
     // 根据商铺名和行业查询商铺
     onSubmit() {
@@ -164,6 +187,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.cut-down {
+  color: blue;
+  text-decoration: underline;
+  display: inline-block;
+  margin-right: 10px;
+  cursor: pointer;
+}
 .el-card {
   margin: 15px;
   margin-top: 22px;

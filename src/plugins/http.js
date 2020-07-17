@@ -10,7 +10,7 @@ const http = axios.create({
 
 // 线上接口v2 
 const Nesthttp = axios.create({
-  baseURL: 'https://nestjsapi.utools.club'
+  baseURL: 'http://192.168.29.243:3045'
 })
 
 // 请求拦截 两个错误,配置token
@@ -53,4 +53,4 @@ http.interceptors.response.use(
   }
 )
 
-export default http
+export { http, Nesthttp }

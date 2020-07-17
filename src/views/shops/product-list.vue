@@ -33,11 +33,11 @@
       </div>
 
       <div class="border-middleware">
-        <el-button type="info" style="float: right" size="mini">导出</el-button>
+        <el-button type="info" style="float: right" size="mini" @click="excel">导出</el-button>
       </div>
       <!-- body 身体 -->
       <div class="tabbe-box">
-        <el-table :data="tableData" style="width: 100%;" size="mini">
+        <el-table id="table" :data="tableData" style="width: 100%;" size="mini" v-loading="loading">
           <el-table-column align="center" prop="_id" label="商品编号"></el-table-column>
           <el-table-column align="center" prop="uid.shop_name" label="所属店铺"></el-table-column>
           <el-table-column align="center" label="商品图" #default="{row}">
@@ -76,9 +76,9 @@
             :formatter="formatter"
           ></el-table-column>
           <el-table-column align="center" label="参与活动" #default="{row}">
-            {{row.active.second_kill?'限时秒杀':''}}
-            {{row.active.is_discount?'打折促销':''}}
-            {{(!row.active.second_kill && !row.active.is_discount) ? '暂无活动':''}}
+            {{row.active.is_active?'限时秒杀':''}}
+            {{row.active.is_first?'打折促销':''}}
+            {{(!row.active.is_active && !row.active.is_first) ? '暂无活动':''}}
           </el-table-column>
           <el-table-column align="center" label="热销" #default="{row}">{{row.is_hot?'是':'否'}}</el-table-column>
           <el-table-column align="center" label="推荐" #default="{row}">{{row.is_recommed?'是':'否'}}</el-table-column>
@@ -97,7 +97,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="query.page"
-          :page-sizes="[5, 10, 15, 20]"
+          :page-sizes="[1, 3, 5, 10]"
           :page-size="query.size"
           layout="total, sizes, prev, pager, next, jumper"
           :total="query.total"
@@ -116,19 +116,24 @@ import {
   getProductByName
 } from "../../api/mock/cjhttp";
 import { filterImg } from "../../filters/LSZ-text-abbreviation";
+import table2excel from "element-ui-excel2table";
 export default {
   components: {
     breadCrumbs
   },
   data() {
     return {
+      loading: false,
+      // 查询商品时的传参表单
       form: {
         name: "",
         shopname: "",
         type1: "",
         type2: ""
       },
+      // 表格数据
       tableData: [],
+      // 分页数据
       query: {
         total: 0,
         size: 5,
@@ -143,13 +148,19 @@ export default {
     // this.getProductListFn();
   },
   methods: {
+    // 导出表格
+    excel() {
+      table2excel.tableToExcel("#table", "商品列表.xls");
+    },
     // 分页展示每页的数据size变化时
     handleSizeChange(size) {
       this.query.size = size;
-      console.log(this.query.size);
+      // console.log(this.query.size);
+      this.handleCurrentChange();
     },
     // 当前页变化时获取商品列表
     async handleCurrentChange(page) {
+      this.loading = true;
       this.query.page = page || 1;
       const id = this.$route.query.id;
       if (id) {
@@ -158,19 +169,21 @@ export default {
           size: this.query.size,
           id: id
         });
-        console.log("productbyid", res.records);
+        // console.log("productbyid", res.records);
         this.query.total = res.total;
         let records = res.records;
         filterImg(records);
         this.tableData = records;
+        this.loading = false;
       } else {
         const { data: res } = await getProductList(this.query);
-        console.log("product", res.records);
+        // console.log("product", res.records);
         this.query.total = res.total;
         let records = res.records;
         filterImg(records);
         this.tableData = records;
-        console.log("records", records);
+        // console.log("records", records);
+        this.loading = false;
       }
     },
     // 表格数据格式化
