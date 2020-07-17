@@ -1,6 +1,6 @@
 <template>
   <div class="hander-container">
-      <div class="hander-box">
+      <div class="hander-box box-radius">
         <div>
          <el-button type="primary" @click="$emit('close')">返回列表</el-button>
         </div>
@@ -10,7 +10,7 @@
           <div>用户昵称:联系电话</div>
         </div>
       </div>
-      <div class="conter-box">
+      <div class="conter-box box-radius">
         <span>用户消费情况</span>
         <div class="data-box">日期: 
            <el-date-picker
@@ -23,16 +23,17 @@
             align="right">
           </el-date-picker>
         </div>
-        <div id="myChart" class="Chartbox" :style="{width: '420px', height: '100%'}"></div>
+       <div id="main-sale" style="width: 500px;height:500px;"></div>
         <div class="totalBOX">
           <div>总  订  单:10w</div>
           <div>总消费额：150w</div>
         </div>
       </div>
       <!-- 数据报表统计模块 -->
-     <div class="tabbe-box">
+     <div class="tabbe-box box-radius">
         <div>
            <el-table
+              class="box-radius"
               :data="tableData.list"
               style="width: 100%">
               <el-table-column
@@ -85,145 +86,41 @@
 </template>
 
 <script>
-var weatherIcons = {
-    'Sunny':  'https://echarts-www.cdn.bcebos.com/examples/data/asset/img/weather/sunny_128.png',
-    'Cloudy': 'https://echarts-www.cdn.bcebos.com/examples/data/asset/img/weather/cloudy_128.png',
-    'Showers': 'https://echarts-www.cdn.bcebos.com/examples/data/asset/img/weather/showers_128.png'
-};
-
-let  option = {
-    tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)'
-    },  
-    legend: {
-        orient: 'vertical',
-        top: 'middle',
-        bottom: 10,
-        left: 'right',
-        data: ['居家', '益州', '兖州', '荆州', '幽州']
-    },
-    series: [
-        {
-            type: 'pie',
-            radius: '65%',
-            center: ['50%', '50%'],
-            selectedMode: 'single',
-            data: [
-                {
-                    value: 1548,
-                    name: '幽州',
-                    label: {
-                        formatter: [
-                            '{title|{b}}{abg|}',
-                            '  {weatherHead|天气}{valueHead|天数}{rateHead|占比}',
-                            '{hr|}',
-                            '  {Sunny|}{value|202}{rate|55.3%}',
-                            '  {Cloudy|}{value|142}{rate|38.9%}',
-                            '  {Showers|}{value|21}{rate|5.8%}'
-                        ].join('\n'),
-                        backgroundColor: '#eee',
-                        borderColor: '#777',
-                        borderWidth: 1,
-                        borderRadius: 4,
-                        rich: {
-                            title: {
-                                color: '#eee',
-                                align: 'center'
-                            },
-                            abg: {
-                                backgroundColor: '#333',
-                                width: '100%',
-                                align: 'right',
-                                height: 25,
-                                borderRadius: [4, 4, 0, 0]
-                            },
-                            Sunny: {
-                                height: 30,
-                                align: 'left',
-                                backgroundColor: {
-                                    image: weatherIcons.Sunny
-                                }
-                            },
-                            Cloudy: {
-                                height: 30,
-                                align: 'left',
-                                backgroundColor: {
-                                    image: weatherIcons.Cloudy
-                                }
-                            },
-                            Showers: {
-                                height: 30,
-                                align: 'left',
-                                backgroundColor: {
-                                    image: weatherIcons.Showers
-                                }
-                            },
-                            weatherHead: {
-                                color: '#333',
-                                height: 24,
-                                align: 'left'
-                            },
-                            hr: {
-                                borderColor: '#777',
-                                width: '100%',
-                                borderWidth: 0.5,
-                                height: 0
-                            },
-                            value: {
-                                width: 20,
-                                padding: [0, 20, 0, 30],
-                                align: 'left'
-                            },
-                            valueHead: {
-                                color: '#333',
-                                width: 20,
-                                padding: [0, 20, 0, 30],
-                                align: 'center'
-                            },
-                            rate: {
-                                width: 40,
-                                align: 'right',
-                                padding: [0, 10, 0, 0]
-                            },
-                            rateHead: {
-                                color: '#333',
-                                width: 40,
-                                align: 'center',
-                                padding: [0, 10, 0, 0]
-                            }
-                        }
-                    }
-                },
-                {value: 535, name: '荆州',
-                    
-                },
-                {value: 510, name: '兖州'},
-                {value: 634, name: '益州'},
-                {value: 735, name: '西凉'}
-            ],
-            emphasis: {
-                itemStyle: {
-                    shadowBlur: 10,
-                    shadowOffsetX: 0,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                }
-            }
-        }
-    ]
-};
 import { getBusinessListPublic,getPersinalData } from '../../api/mock/business-district'
   export default {
     name:'PersonalAnalysis',
     mounted () {
-      let myChart = this.$echarts.init(document.getElementById('myChart'));
-      myChart.setOption(option);
+      this.drawSale() 
     },
     created () {
       this.onLoadList()
     },
     data() {
       return {
+          info: {
+            uid: "5ee77d61ca8c9a7398261dc7",
+            shop_name: "美佳宜",
+            shop_level_name: "保利店",
+            phone: 18376621755,
+            industry: "航天制造业",
+            saleSituation: {
+              total_order: 1234,
+              total_money: 3425789,
+              start_date: "2019-07-14T03:13:17.821Z",
+              end_date: "2020-07-14T03:13:17.821Z",
+              shopType: {
+                男装: 200.0,
+                女装: 300.0,
+                男鞋: 400.0,
+                女鞋: 367.0
+              }
+            },
+            consumSituation: {
+              模板费: 100.0,
+              素材费: 200.0,
+              收益费: 300.0
+            }
+          },
          pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -264,21 +161,83 @@ import { getBusinessListPublic,getPersinalData } from '../../api/mock/business-d
     },
       methods: {
         async onLoadList(){
-        try {
-          // const {data:res } = await getBusinessListPublic( this.tableData.queryInfo)
-          // this.tableData.list = res.records
-          //   // 为分页器传输配置
-          // this.tableData.queryInfo.total = res.total,
-          // this.tableData.queryInfo.size = res.size,
-          // this.tableData.queryInfo.page = res.page
-          const {data:res} = await getPersinalData()
-          console.log(res);
-          this.tableData.list = res.data.data
-          
-        } catch (error) {
-          console.log(error);
-        }
-      },
+          try {
+            // const {data:res } = await getBusinessListPublic( this.tableData.queryInfo)
+            // this.tableData.list = res.records
+            //   // 为分页器传输配置
+            // this.tableData.queryInfo.total = res.total,
+            // this.tableData.queryInfo.size = res.size,
+            // this.tableData.queryInfo.page = res.page
+            const {data:res} = await getPersinalData()
+            console.log(res,'heheh');
+            this.tableData.list = res.data.data
+            
+          } catch (error) {
+            console.log(error);
+          }
+       },
+        drawSale() {
+          var saleEchart = this.$echarts.init(document.getElementById("main-sale"));
+          var data = [];
+          const shopType = this.info.saleSituation.shopType;
+          for (var k in shopType) {
+            var obj = {};
+            obj.name = k + " : " + shopType[k] + "元";
+            obj.value = shopType[k];
+            data.push(obj);
+          }
+
+          var option = {
+            tooltip: {
+              trigger: "item",
+              formatter: "{a} <br/>{b}({d}%)"
+            },
+
+            visualMap: {
+              show: false,
+              min: 80,
+              max: 600,
+              inRange: {
+                colorLightness: [0, 1]
+              }
+            },
+            series: [
+              {
+                name: "销售情况",
+                type: "pie",
+                radius: "65%",
+                center: ["50%", "50%"],
+                data: data.sort(function(a, b) {
+                  return a.value - b.value;
+                }),
+                roseType: "radius",
+                label: {
+                  color: "#1E1E1E"
+                },
+                labelLine: {
+                  lineStyle: {
+                    color: "#1E1E1E"
+                  },
+                  smooth: 0.2,
+                  length: 10,
+                  length2: 20
+                },
+                itemStyle: {
+                  color: "#c23531",
+                  shadowBlur: 200,
+                  shadowColor: "rgba(0, 0, 0, 0.5)"
+                },
+
+                animationType: "scale",
+                animationEasing: "elasticOut",
+                animationDelay: function(idx) {
+                  return Math.random() * 200;
+                }
+              }
+            ]
+          };
+          saleEchart.setOption(option);
+        },
     }
 
   }
@@ -298,8 +257,7 @@ import { getBusinessListPublic,getPersinalData } from '../../api/mock/business-d
   justify-content: space-between;
   align-items: center;
   padding-left: 25px;
-  // border: 1px solid #cccccc;
-  background-color: pink;
+  background-color: #fff;
     .el-button{
     margin-top: 15px;
   }
@@ -355,8 +313,10 @@ import { getBusinessListPublic,getPersinalData } from '../../api/mock/business-d
   div{
     margin: 15px;
   }
-
-  
 }
 
+#main-sale {
+  left: 50%;
+  transform: translate(-50%,-15%);
+}
 </style>
