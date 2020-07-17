@@ -8,13 +8,12 @@ import Vue from 'vue'
 
 // })
 const http = axios.create({
-  baseURL: 'http://192.168.29.243:3045'
+  baseURL: 'http://testli.utools.club/api'
+})  
 
-})
-
-// 线上接口v2 
+// 线上接口v2  
 const Nesthttp = axios.create({
-  baseURL: 'https://nestjsapi.utools.club'
+  baseURL: 'http://nestapi.utools.club'
 })
 
 // 请求拦截 两个错误,配置token
@@ -31,6 +30,7 @@ http.interceptors.request.use(
     return Promise.reject(err)
   }
 )
+
 
 // 拦截调请求
 //我们在这里全局捕获错误，进行统一的错误处理,定义一个拦截器,response
@@ -57,4 +57,5 @@ http.interceptors.response.use(
   }
 )
 
+export {Nesthttp}
 export default http

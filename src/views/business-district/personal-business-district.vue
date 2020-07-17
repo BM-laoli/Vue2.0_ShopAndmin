@@ -3,14 +3,14 @@
    <bread-crumbs :level="this.$route.meta"></bread-crumbs>
     <!-- 切换之前 -->
     <el-card class="box-card">
-       <personal-hader-from></personal-hader-from>
+       <personal-hader-from @data-change="(value)=>{ tableData.list = value}"></personal-hader-from>
      </el-card>
       <!-- 中间 -->
       <el-card class="box-card">
         <div class="border-middleware bg-defaultPink">
-          <div> 用户数量：<span> 15111  </span> </div>
-          <div> 订单数量：<span> 1511131 </span> </div>
-          <div> 消费总额：<span> 1555w </span> </div>
+          <div> 用户数量：<span> {{ tableData.countToatal.usernumber}}  </span> </div>
+          <div> 订单数量：<span> {{ tableData.countToatal.ordernumber}} </span> </div>
+          <div> 消费总额：<span> {{ tableData.countToatal.total_price}} </span> </div>
         </div>
      </el-card>
 
@@ -28,7 +28,7 @@
               </el-table-column>
              <el-table-column
                 label="用户昵称"
-                prop="username"
+                prop="name"
                 >
               </el-table-column>
               <el-table-column
@@ -37,12 +37,12 @@
                >
               </el-table-column>
               <el-table-column
-                  prop="business_district"
+                  prop="businesnumber"
                   label="商圈店铺数量"
                   >
                 </el-table-column>
               <el-table-column
-                prop="order"
+                prop="ordernumber"
                 width="150" 
                 label="订单数量">
               </el-table-column>
@@ -58,17 +58,18 @@
               </el-table-column>
               <el-table-column
                 label="消费频次"
-                prop="frequency"
+                prop="consumptionnumber"
                 width="150"
                 #default="{row:personal}"
               >
-              <span>{{personal.frequency}}次/天</span>
+              <span>{{personal.consumptionnumber}}次/天</span>
               </el-table-column>
 
                 <el-table-column
                   label="操作"
+                  #default="{row}"
                   >
-                <el-link :underline="false" icon="el-icon-s-marketing" @click="switchPage = true">消费分析</el-link>
+                <el-link  :underline="false" icon="el-icon-s-marketing"  @click="showAnakysis(row._id)">消费分析</el-link>
               </el-table-column>
             </el-table>
         </div>
@@ -83,7 +84,7 @@
             </el-pagination> -->
       </div>
 
-        <el-pagination
+      <el-pagination
               @size-change="onLoadList()"
               @current-change="onLoadList()"
               :current-page.sync="tableData.queryInfo.page"
@@ -103,7 +104,7 @@
       @closed="switchPageOver = false"
       @open="switchPageOver = true"
       >
-      <personal-analysis v-if="switchPageOver" @close=" () => {switchPage = false}"></personal-analysis>
+      <personal-analysis :crent-id="crentId" v-if="switchPageOver" @close=" () => {switchPage = false}"></personal-analysis>
     </el-dialog>
 
 
@@ -112,9 +113,10 @@
 
 <script>
 import breadCrumbs from '../../components/common/bread-crumbs'
-import { getBusinessListPublic,getPersinalData } from '../../api/mock/business-district'
+import { getPersinaBusinessList} from '../../api/mock/business-district'
 import  PersonalHaderFrom from '../../components/business-district/personal-hader-from'
 import PersonalAnalysis from '../../components/business-district/personal-analysis'
+import { log } from 'util'
   export default {
     name:'Personal',
     components: {
@@ -126,6 +128,11 @@ import PersonalAnalysis from '../../components/business-district/personal-analys
       return {
           tableData:{
             list:[],
+            countToatal:{
+             usernumber: 0,
+             ordernumber: 0,
+             total_price: 0 
+            },
             queryInfo:{
               total:0,
               size:5,
@@ -133,7 +140,8 @@ import PersonalAnalysis from '../../components/business-district/personal-analys
             }
           },
           switchPageOver:false,
-          switchPage:false
+          switchPage:false,
+          crentId:''
         }
     },
   created () {
@@ -142,19 +150,31 @@ import PersonalAnalysis from '../../components/business-district/personal-analys
    methods: {
     async onLoadList(){
       try {
-        // const {data:res } = await getBusinessListPublic( this.tableData.queryInfo)
-        // this.tableData.list = res.records
-        //   // 为分页器传输配置
-        // this.tableData.queryInfo.total = res.total,
-        // this.tableData.queryInfo.size = res.size,
-        // this.tableData.queryInfo.page = res.page
-        const {data:res} = await getPersinalData()
-        console.log(res);
-        this.tableData.list = res.data.data
+        let { data:res } = await getPersinaBusinessList( this.tableData.queryInfo)
+        this.tableData.list = res.querydata.records
+
+        // 为分页器传输配置
+        this.tableData.queryInfo.total = res.querydata.total,
+        this.tableData.queryInfo.size = res.querydata.size,
+        this.tableData.queryInfo.page = res.querydata.page
+
+        // 统计
+        this.tableData.countToatal.usernumber = res.usernumber
+        this.tableData.countToatal.ordernumber = res.ordernumber
+        this.tableData.countToatal.total_price = res.total_price
+
+        // const {data:res} = await getPersinalData()
+        // console.log(res);
+        // this.tableData.list = res.data.data
         
       } catch (error) {
         console.log(error);
       }
+
+    },
+    showAnakysis(value){
+      this.switchPage = true
+      this.crentId = value
 
     },
     handleClose(){},
