@@ -34,7 +34,10 @@
 
                 <div style="margin-left:800px; margin-top:20px">
                     <span style="line-height:35px">
-                        <el-button type="primary" size="mini" @click="findUser"
+                        <el-button
+                            type="primary"
+                            size="mini"
+                            @click="findUserByName"
                             >查询</el-button
                         >
                         <el-button
@@ -62,19 +65,19 @@
         <!-- 推广用户列表start -->
         <el-card class="box-card">
             <el-table :data="list" class="table-list" :border="false">
-                <el-table-column prop="id" label="用户ID"> </el-table-column>
-                <el-table-column prop="nickName" label="用户昵称">
+                <el-table-column prop="_id" label="用户ID"> </el-table-column>
+                <el-table-column prop="name" label="用户昵称">
                 </el-table-column>
-                <el-table-column prop="phone" label="推广人联系电话">
+                <el-table-column prop="parent" label="推广人联系电话">
                 </el-table-column>
-                <el-table-column prop="tgCount" label="推广数量">
+                <el-table-column prop="Pro_number" label="推广数量">
                 </el-table-column>
                 <el-table-column
-                    prop="earnings"
+                    prop="Pro_total_perice"
                     label="推广收益"
                     #default="{row}"
                 >
-                    {{ row.earnings + '元' }}
+                    {{ row.Pro_total_perice + '元' }}
                 </el-table-column>
                 <el-table-column label="操作" #default="{row}">
                     <el-button
@@ -104,7 +107,7 @@
 
 <script>
 import breadCrumbs from '../../components/common/bread-crumbs';
-import { getUserList } from '../../api/mock/cuzHttp';
+import { getUserList, findUser } from '../../api/mock/cuzHttp';
 export default {
     name: 'CommentList',
     components: {
@@ -129,12 +132,12 @@ export default {
                 ],
             }, // 验证查询参数表单
             userCount: 0, // 推广人数量
-            shopCount: 0, // 推广店铺总数
+            shopCount: 45, // 推广店铺总数
             list: [], // 推广人列表
 
             findForm: {
                 query: '',
-                date: null,
+                date: [],
                 page: 1,
                 size: 10,
             },
@@ -145,34 +148,46 @@ export default {
         this.loadUserList();
     },
     methods: {
+        // 点击推广详情跳转
         goDetails(row) {
-            this.$router.push(`/home/commentList/details/${row.id}`);
+            const id = row._id;
+            this.$router.push(`/home/commentList/details/${id}`);
         },
         // 点击重置查询表单
         resetForm() {
             this.$refs.findFormRef.resetFields();
+            this.loadUserList();
         },
+
         // 点击确定查询推广用户
-        async findUser() {
-            await this.$refs.findFormRef.validate((valid) => {
+        findUserByName() {
+            this.$refs.findFormRef.validate(async (valid) => {
                 if (!valid) return;
 
-                this.loadUserList();
-                this.resetForm();
+                const { data: res } = await findUser({
+                    keyword1: this.findForm.query,
+                    keyword2: this.findForm.date[0],
+                    keyword3: this.findForm.date[1],
+                    size: 10,
+                    page: 1,
+                });
+
+                this.list = res.records;
             });
         },
         // 加载推广用户列表
         async loadUserList() {
-            const { data: res } = await getUserList(this.findForm);
+            const { data: res } = await getUserList();
             console.log(res);
-            if (res.code !== 200) {
-                this.$message.error('获取推广用户列表失败');
-            }
+            // if (res.code !== 200) {
+            //     this.$message.error('获取推广用户列表失败');
+            // }
 
-            this.list = res.data;
+            this.list = res.records;
             this.total = res.total;
-            this.shopCount = res.shop_count;
-            this.userCount = res.user_count;
+            this.userCount = res.records.length;
+            // 通过遍历拿到总推广收入
+            res.records.forEach((v) => (this.shopCount += v.Pro_number));
         },
         // 监听size变化
         handleSizeChange(newSize) {
