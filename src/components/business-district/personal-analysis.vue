@@ -5,9 +5,9 @@
          <el-button type="primary" @click="$emit('close')">返回列表</el-button>
         </div>
         <div class="mymessage">
-          <div>用户ID:4544654</div>
-          <div>用户昵称:4544654</div>
-          <div>用户昵称:联系电话</div>
+          <div>用户ID:  {{tableData.userid}}</div>
+          <div>用户昵称:{{tableData.username}}</div>
+          <div>联系电话:{{tableData.userphone }}</div>
         </div>
       </div>
       <div class="conter-box box-radius">
@@ -43,16 +43,16 @@
               </el-table-column>
              <el-table-column
                 label="商户名"
-                prop="username"
+                prop="shop_name"
                 >
               </el-table-column>
               <el-table-column
-                prop="phone"
+                prop="industry"
                 label="行业"
                >
               </el-table-column>
               <el-table-column
-                prop="order"
+                prop="shop_sales"
                 width="150" 
                 label="订单商品数量">
               </el-table-column>
@@ -62,13 +62,13 @@
                 #default="{row:personal}"
               >
               <div>
-                <span>{{personal.consumption}}元</span>
+                <span>{{( Math.random() * 150).toFixed(2)}}元</span>
               </div>
               </el-table-column>
               <el-table-column
+                prop="shop_hours_start"
                 label="消费日期"
                 >
-                <span>2020-1-25</span>
             </el-table-column>
             </el-table>
         </div>
@@ -86,9 +86,14 @@
 </template>
 
 <script>
-import { getBusinessListPublic,getPersinalData } from '../../api/mock/business-district'
+import { getConsumpPersonById,getPersinalData } from '../../api/mock/business-district'
   export default {
     name:'PersonalAnalysis',
+    props: {
+      crentId: {
+        type: String,
+      },
+    },
     mounted () {
       this.drawSale() 
     },
@@ -97,30 +102,30 @@ import { getBusinessListPublic,getPersinalData } from '../../api/mock/business-d
     },
     data() {
       return {
-          info: {
-            uid: "5ee77d61ca8c9a7398261dc7",
-            shop_name: "美佳宜",
-            shop_level_name: "保利店",
-            phone: 18376621755,
-            industry: "航天制造业",
-            saleSituation: {
-              total_order: 1234,
-              total_money: 3425789,
-              start_date: "2019-07-14T03:13:17.821Z",
-              end_date: "2020-07-14T03:13:17.821Z",
-              shopType: {
-                男装: 200.0,
-                女装: 300.0,
-                男鞋: 400.0,
-                女鞋: 367.0
-              }
-            },
-            consumSituation: {
-              模板费: 100.0,
-              素材费: 200.0,
-              收益费: 300.0
+        info: {
+          uid: "5ee77d61ca8c9a7398261dc7",
+          shop_name: "美佳宜",
+          shop_level_name: "保利店",
+          phone: 18376621755,
+          industry: "航天制造业",
+          saleSituation: {
+            total_order: 1234,
+            total_money: 3425789,
+            start_date: "2019-07-14T03:13:17.821Z",
+            end_date: "2020-07-14T03:13:17.821Z",
+            shopType: {
+              男装: 200.0,
+              女装: 300.0,
+              男鞋: 400.0,
+              女鞋: 367.0
             }
           },
+          consumSituation: {
+            模板费: 100.0,
+            素材费: 200.0,
+            收益费: 300.0
+          }
+        },
          pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -151,26 +156,35 @@ import { getBusinessListPublic,getPersinalData } from '../../api/mock/business-d
         value: '',
         tableData:{
           list:[],
+          userid:'',
+          username:'',
+          userphone:'',
           queryInfo:{
             total:0,
             size:5,
             page:1
           }
         },
+        
       }
     },
       methods: {
         async onLoadList(){
           try {
-            // const {data:res } = await getBusinessListPublic( this.tableData.queryInfo)
-            // this.tableData.list = res.records
+            const {data:res } = await getConsumpPersonById({id:this.crentId})
+            console.log(res);
+            this.tableData.list = res.records[0].shop_id
+            console.log();
+            this.tableData.userid =  res.records[0]._id
+            this.tableData.username = res.records[0].name
+            this.tableData.userphone = res.records[0].phone
             //   // 为分页器传输配置
             // this.tableData.queryInfo.total = res.total,
             // this.tableData.queryInfo.size = res.size,
             // this.tableData.queryInfo.page = res.page
-            const {data:res} = await getPersinalData()
-            console.log(res,'heheh');
-            this.tableData.list = res.data.data
+            // const {data:res} = await getPersinalData()
+            // console.log(res,'heheh');
+            // this.tableData.list = res.data.data
             
           } catch (error) {
             console.log(error);
