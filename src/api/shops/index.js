@@ -15,3 +15,6 @@ export const searchShopAudit = params => {
 export const shopAuditDetail = id => {
   return http.get(`/shopmanage/shoplist/queryinfobyid?id=${id}`)
 }
+export const passShopAudit = (id, query) => {
+  return http.put(`/shopmanage/shoplist/queryshopstatus?id=${id}`, query)
+}

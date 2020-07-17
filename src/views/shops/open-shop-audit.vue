@@ -173,7 +173,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="审核备注">
-              <el-input type="textarea" :rows="4" placeholder="请输入内容" size="medium" :autosize="{ minRows: 4, maxRows: 8}" v-model="textareaBeiZhu">
+              <el-input type="textarea" :rows="4" placeholder="请输入内容" size="medium" :autosize="{ minRows: 4, maxRows: 8}" v-model="formLabelAlign.textareaBeiZhu">
               </el-input>
             </el-form-item>
           </el-col>
@@ -185,8 +185,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item>
-              <el-button type="primary">审核通过</el-button>
-              <el-button type="warning">审核不通过</el-button>
+              <el-button type="primary" @click="passAudit">审核通过</el-button>
+              <el-button type="warning" @click="notPassAudit">审核不通过</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -196,14 +196,15 @@
 </template>
 
 <script>
-import { shopAuditDetail } from '@/api/shops/index'
+import { shopAuditDetail, passShopAudit } from '@/api/shops/index'
 export default {
   name: 'ShopAudit',
   data () {
     return {
-      textareaBeiZhu: '',
       labelPosition: 'left',
       formLabelAlign: {
+        is_approved: '',
+        textareaBeiZhu: '',
         peisongTime: [],
         peisongQuyuTime: [],
         avatar: '',
@@ -247,6 +248,35 @@ export default {
       this.formLabelAlign.peisongQuyuTime = [res.delivery.region.start_time, res.delivery.region.end_time]
     } catch (error) {
       console.log(error)
+    }
+  },
+  methods: {
+    async passAudit () {
+      if (this.textareaBeiZhu === '') {
+        return this.$message.error('请填写备注')
+      }
+      try {
+        this.formLabelAlign.is_approved = true
+        const { data: res } = await passShopAudit(this.$route.query.id, this.formLabelAlign)
+        // console.log(res)
+        this.$message.success('审核通过')
+        this.$router.back(-1)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async notPassAudit () {
+      if (this.textareaBeiZhu === '') {
+        return this.$message.error('请填写备注')
+      }
+      try {
+        this.formLabelAlign.is_approved = false
+        const { data: res } = await passShopAudit(this.$route.query.id, this.formLabelAlign)
+        this.$message.error('审核不通过')
+        this.$router.back(-1)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
