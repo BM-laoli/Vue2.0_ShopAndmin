@@ -3,7 +3,7 @@ import axios from 'axios'
 import Vue from 'vue'
 
 const http = axios.create({
-  baseURL: 'https://tess.utools.club/api'
+  baseURL: 'http://192.168.29.243:3030'
 })
 
 // 请求拦截 两个错误,配置token

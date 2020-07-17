@@ -13,23 +13,33 @@
       </el-form>
     </el-card>
     <div class="title_box">
-      <div class="num">行业数量：xxx</div>
-      <el-button type="primary" round slot="reference" @click="addindustry">新增行业</el-button>
+      <div class="num">行业数量：{{count}}</div>
+      <el-button type="primary" round slot="reference" @click="addindustryInfo">新增行业</el-button>
     </div>
     <el-card class="bg-dark js-start">
-      <el-table :data="tableData" style="width: 100%" :default-sort="{prop: 'id', order: 'name'}">
-        <el-table-column prop="uname" label="行业名称" sortable></el-table-column>
-        <el-table-column prop="uid" label="排序" sortable></el-table-column>
-        <el-table-column prop="address" label="操作" #default="{row:shopData}">
-          <el-button @click="editData(shopData)" icon="el-icon-edit" type="text">编 辑</el-button>
-          <el-button
-            type="text"
-            icon="el-icon-delete"
-            style="color: red"
-            @click="deleteData(shopData)"
-          >删 除</el-button>
-        </el-table-column>
-      </el-table>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage4"
+        :page-sizes="[3, 5, 10, 15]"
+        :page-size="3"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="400"
+      >
+        <el-table :data="tableData" style="width: 100%" :default-sort="{prop: 'id', order: 'name'}">
+          <el-table-column prop="name" label="行业名称" sortable></el-table-column>
+          <el-table-column prop="sort" label="排序" sortable></el-table-column>
+          <el-table-column label="操作" #default="{row:shopData}">
+            <el-button @click="editData(shopData)" icon="el-icon-edit" type="text">编 辑</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              style="color: red"
+              @click="deleteData(shopData)"
+            >删 除</el-button>
+          </el-table-column>
+        </el-table>
+      </el-pagination>
     </el-card>
     <!-- 新增行业弹框 -->
     <el-dialog title="新增行业" :visible.sync="addDialogFormVisible">
@@ -48,7 +58,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addindustryClose()">取 消</el-button>
-        <el-button type="primary" @click="addDialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addIndustryData">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 编辑行业弹框 -->
@@ -68,13 +78,19 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="editIndustryClose()">取 消</el-button>
-        <el-button type="primary" @click="editDialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="editIndustryData">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import {
+  getAllIndustry,
+  getIndustryByName,
+  addIndustry,
+  editIndustryInfo
+} from "@/api/shops/index";
 import { industryData } from "@/api/mock/test";
 import breadCrumbs from "../../components/common/bread-crumbs";
 export default {
@@ -91,7 +107,9 @@ export default {
       editDialogFormVisible: false,
       editIndustryValue: "",
       editIndustrySortValue: "",
-      tableData: []
+      tableData: [],
+      count: 0,
+      
     };
   },
   created() {
@@ -99,34 +117,60 @@ export default {
   },
   methods: {
     async getIndustryData() {
-      const { data: res } = await industryData();
-      this.tableData = res.data;
-      console.log(res);
+      const { data: res } = await getAllIndustry({
+        size: 4,
+        page: 1
+      });
+      this.tableData = res.records;
+      this.count = res.records.length;
+      console.log(res.records);
     },
     onSelect() {
-      console.log(this.input);
+      const { data: res } = getIndustryByName({
+        keyword1: this.input
+      });
+      this.tableData = res.records;
+    },
+    async addIndustryData() {
+      if (
+        this.addIndustryValue.trim() === "" ||
+        isNaN(this.addIndustrySortValue)
+      )
+        return;
+      const { data: res } = await addIndustry({
+        name: this.addIndustryValue.trim(),
+        sort: this.addIndustrySortValue.trim()
+      });
+      this.addDialogFormVisible = false;
+      this.getIndustryData();
+      console.log(res);
     },
     onResetForm() {
       this.input = "";
+      this.getIndustryData();
     },
     editData(v) {
       this.editDialogFormVisible = true;
-      this.editIndustryValue = v.uname;
-      this.editIndustrySortValue = v.uid;
+      this.editIndustryValue = v.name;
+      this.editIndustrySortValue = v.sort;
       console.log(v);
+    },
+    async editIndustryData() {
+      const { data: res } = await editIndustryInfo();
     },
     deleteData() {
       console.log(1);
     },
-    addindustry() {
+    addindustryInfo() {
       this.addDialogFormVisible = true;
     },
     addindustryClose() {
       this.addDialogFormVisible = false;
       //不知道为什么，这个重置方法没作用
+      this.addIndustryValue = "";
+      this.addIndustrySortValue = "";
       this.$nextTick(() => {
         this.$refs.addIndustryFrom.resetFields();
-        console.log(this.$refs.addIndustryFrom);
       });
     },
     editIndustry() {

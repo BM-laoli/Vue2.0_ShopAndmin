@@ -14,7 +14,7 @@
     </el-card>
     <div class="title_box">
       <div class="num">类别数量：{{cateNum}}</div>
-      <div class="num">类别数量：{{cateChildNum}}</div>
+      <div class="num">子类别数量：{{cateChildNum}}</div>
       <el-button type="primary" round @click="addindustry">新增类别</el-button>
     </div>
     <el-card class="bg-dark">
@@ -29,7 +29,7 @@
       >
         <el-table-column prop="cateName" label="类别名称" sortable></el-table-column>
         <el-table-column prop="cateId" label="排序" sortable></el-table-column>
-        <el-table-column prop="cateChildNum" label="类别数量" sortable></el-table-column>
+        <el-table-column prop="cateChildNum" label="子类别数量" sortable></el-table-column>
         <el-table-column label="操作" #default="{row:shopData}">
           <el-button
             @click="editData(shopData)"
@@ -130,7 +130,7 @@ export default {
         this.cateChildNum += i;
       });
       this.tableData = res.data;
-      console.log(res, this.cateNum, this.cateChildNum);
+      console.log(res);
     },
     onSelect() {
       console.log(this.input);
