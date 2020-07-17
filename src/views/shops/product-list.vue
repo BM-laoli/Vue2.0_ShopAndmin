@@ -6,7 +6,7 @@
       <div class="hedaer-box">
         <el-form :inline="true" :model="form" class="demo-form-inline" size="mini">
           <el-form-item label="商品：" prop="name">
-            <el-input v-model="form.name" placeholder="商品名称" style="width:150px"></el-input>
+            <el-input v-model="form.keyword3" placeholder="商品名称" style="width:150px"></el-input>
           </el-form-item>
           <el-form-item label="所属店铺：">
             <el-input v-model="form.shopname" placeholder="店铺名称" style="width:150px"></el-input>
@@ -17,10 +17,10 @@
               placeholder="分类1"
               style="width:150px; margin-right:10px"
             >
-              <el-option :label="v" :value="k" v-for="(v,k,i) in productType.type1" :key="i"></el-option>
+              <el-option :label="v.name" :value="v._id" v-for="(v,i) in productType1" :key="i"></el-option>
             </el-select>
             <el-select v-model="form.type2" placeholder="分类2" style="width:150px">
-              <el-option :label="v" :value="k" v-for="(v,k,i) in productType.type2" :key="i"></el-option>
+              <el-option :label="v.name" :value="v._id" v-for="(v,i) in productType2" :key="i"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -112,7 +112,8 @@ import breadCrumbs from "../../components/common/bread-crumbs";
 import {
   getProductList,
   getProductById,
-  getProductType,
+  getProductType1,
+  getProductType2,
   getProductByName
 } from "../../api/mock/cjhttp";
 import { filterImg } from "../../filters/LSZ-text-abbreviation";
@@ -126,7 +127,7 @@ export default {
       loading: false,
       // 查询商品时的传参表单
       form: {
-        name: "",
+        keyword3: "",
         shopname: "",
         type1: "",
         type2: ""
@@ -139,7 +140,8 @@ export default {
         size: 5,
         page: 1
       },
-      productType: []
+      productType1: [],
+      productType2: []
     };
   },
   created() {
@@ -192,9 +194,14 @@ export default {
     },
     // 获取所有商品类别
     async getProductTypeFn() {
-      const res = await getProductType();
-      this.productType = res.data;
-      console.log("ProductType", res.data);
+      // 获取商品一级分类
+      const { data: result } = await getProductType1();
+      this.productType1 = result.records;
+      console.log("ProductType1", result.records);
+      // 获取商品二级分类
+      const { data: res } = await getProductType2();
+      this.productType2 = res.records;
+      console.log("ProductType2", res.records);
     },
     // 商品查询
     async onSubmit() {
@@ -205,16 +212,6 @@ export default {
       // array
       const records = res.records;
       filterImg(records);
-      // records.map(v => {
-      //   let imgs = v.images;
-      //   let arr = [];
-      //   for (var k in imgs) {
-      //     if (!(k === "_id")) {
-      //       arr.push(imgs[k]);
-      //     }
-      //   }
-      //   return (v.images = arr);
-      // });
       this.tableData = res.records;
     },
     // 上架下架切换
@@ -240,6 +237,8 @@ export default {
             this.tableData = table.filter(v => {
               return v._id != id;
             });
+            this.query.total--;
+            this.query.size--;
             this.$message.success("删除成功！");
           } else {
             return;

@@ -7,6 +7,17 @@ export const getShopList = (data) => {
     params: data
   })
 }
+// 获取所有行业
+export const getAllIndustry = () => {
+  return Nesthttp.get('/shopmanage/shoplist/queryallindustry')
+}
+// 根据商铺名和行业查询商铺ju
+export const getIndustry = (form) => {
+  console.log('hhh');
+  return Nesthttp.get('/shopmanage/shoplist/queryinfo', {
+    params: form
+  })
+}
 // 根据商铺id查询商铺详情
 export const getShopDetail = (id) => {
   return Nesthttp.get('/shopmanage/shoplist/queryinfobyid', {
@@ -40,14 +51,19 @@ export const getProductList = (data) => {
   })
 }
 
-// 获取所有商品类别
-export const getProductType = () => {
-  return Nesthttp.get('/rest/product/type')
+// 获取所有商品一级分类
+export const getProductType1 = () => {
+  return Nesthttp.get('/shopmanage/shoplist/queryallcategory')
+}
+
+// 获取所有商品二级分类
+export const getProductType2 = () => {
+  return Nesthttp.get('/shopmanage/shoplist/queryallcategoryto')
 }
 
 // 根据商品信息查询商品
 export const getProductByName = (form) => {
-  return Nesthttp.get('/rest/product/byname', {
+  return Nesthttp.get('/shopmanage/shoplist/queryallprodut', {
     params: form
   })
 }

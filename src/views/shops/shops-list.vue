@@ -6,27 +6,30 @@
       <div class="hedaer-box">
         <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
           <el-form-item label="店铺名称/编号">
-            <el-input v-model="formInline.name" placeholder="店铺名称"></el-input>
+            <el-input v-model="formInline.keyword2" placeholder="店铺名称"></el-input>
           </el-form-item>
           <el-form-item label="行业">
-            <el-select v-model="formInline.industry" placeholder="选择所属行业">
-              <el-option label="航天制造业" value="航天制造业"></el-option>
-              <el-option label="生鲜" value="生鲜"></el-option>
+            <el-select v-model="formInline.keyword1" placeholder="选择所属行业">
+              <el-option :label="v.name" :value="v.name" v-for="(v,i) in industries" :key="i"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item></el-form-item>
+          <div class="box2">
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit">查询</el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button native-type="reset" @click="handleCurrentChange()">重置</el-button>
+            </el-form-item>
+          </div>
         </el-form>
-        <div class="box2">
-          <el-button size="mini" type="primary" @click="onSubmit">查询</el-button>
-          <el-button size="mini" type="primary" @click="onCancel">重置</el-button>
-        </div>
       </div>
 
       <!-- <div class="border-middleware" v-if="shopsData.shopsList.length !== 0"> -->
       <div class="border-middleware">
         <div>
           商铺数量：
-          <span>{{shopsData.shopsList.length}}</span>
+          <span>{{query.total}}</span>
         </div>
         <div>
           共享商铺数量：
@@ -34,7 +37,7 @@
         </div>
         <div>
           销售总额：
-          <span>1555w</span>
+          <span>{{(Math.random()*10000).toFixed(2)}}w</span>
         </div>
       </div>
       <!-- body 身体 -->
@@ -105,14 +108,11 @@
               class="cut-down"
               :to="{path:'/home/shops/businessAnalysis', query:{id: shopbase._id+''}}"
             >经营分析</router-link>
-            <router-link
+            <span
               class="cut-down"
-              :to="{path:'/rest/public_shop_base/byId', query:{id: shopbase._id}}"
-            >启用</router-link>
-            <router-link
-              class="cut-down"
-              to="{path:'//rest/public_shop_base/byId', query:{id: _id}}"
-            >删除</router-link>
+              @click="stateChange(shopbase._id)"
+            >{{shopbase.is_approved ? '停用' :'启用' }}</span>
+            <span class="delete" @click="delShop(shopbase._id)">删除</span>
           </el-table-column>
         </el-table>
         <!-- 分页器 -->
@@ -121,7 +121,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="query.page"
-          :page-sizes="[1, 3, 5, 10]"
+          :page-sizes="[1, 2,3,4, 5, 10]"
           :page-size="query.size"
           layout="total, sizes, prev, pager, next, jumper"
           :total="query.total"
@@ -133,22 +133,25 @@
 
 <script>
 import breadCrumbs from "../../components/common/bread-crumbs";
-import { getShopList } from "../../api/mock/cjhttp";
+import {
+  getShopList,
+  getAllIndustry,
+  getIndustry
+} from "../../api/mock/cjhttp";
 export default {
   name: "shopList",
   components: {
     breadCrumbs
   },
-  created() {
-    // this.getShoplistFn();
-    this.handleCurrentChange();
-  },
   data() {
     return {
+      industries: [],
       loading: false,
       formInline: {
-        name: "",
-        industry: ""
+        // 商铺名
+        keyword2: "",
+        // 行业
+        keyword1: ""
       },
       shopsData: {
         shopsList: []
@@ -160,7 +163,51 @@ export default {
       }
     };
   },
+  created() {
+    // this.getShoplistFn();
+    this.handleCurrentChange();
+    this.getAllIndustryFn();
+  },
   methods: {
+    // 启用和停用之间切换
+    stateChange(id) {
+      const table = this.shopsData.shopsList;
+      table.map(v => {
+        if (v._id === id) {
+          v.is_approved = !v.is_approved;
+        }
+      });
+    },
+    // 获取所有行业
+    async getAllIndustryFn() {
+      this.industries = [];
+      const { data: res } = await getAllIndustry();
+      console.log("industries", res);
+      this.industries = res.records;
+    },
+    // 删除商铺
+    delShop(id) {
+      this.$msgbox({
+        type: "info",
+        message: "你确认要删除该商铺吗？",
+        showClose: true,
+        showCancelButton: true,
+        callback: action => {
+          console.log(id);
+          if (action === "confirm") {
+            const table = this.shopsData.shopsList;
+            this.shopsData.shopsList = table.filter(v => {
+              return v._id != id;
+            });
+            this.query.total--;
+            this.query.size--;
+            this.$message.success("删除成功！");
+          } else {
+            return;
+          }
+        }
+      });
+    },
     // 分页展示每页的数据size变化时
     handleSizeChange(size) {
       this.query.size = size;
@@ -168,6 +215,7 @@ export default {
     },
     // 当前页变化时获取商品列表
     async handleCurrentChange(page) {
+      this.formInline.keyword1 = "";
       this.query.page = page || 1;
       // this.getShoplistFn();
       this.loading = true;
@@ -177,11 +225,12 @@ export default {
       this.query.total = res.total;
       this.loading = false;
     },
-    // 根据商铺名和行业查询商铺
-    onSubmit() {
-      console.log(this.formInline);
-    },
-    onCancel() {}
+    // 根据商铺名和行业查询商铺ju
+    async onSubmit() {
+      const { data: res } = await getIndustry(this.formInline);
+      console.log("chaxun", res);
+      this.shopsData.shopsList = res;
+    }
   }
 };
 </script>
@@ -204,10 +253,12 @@ export default {
   width: 100%;
   border-radius: 10px;
   background-color: #e6e6fa;
-  display: flex;
-  justify-content: space-between;
   padding: 20px 20px 0;
   // background-color: pink;
+}
+.demo-form-inline {
+  display: flex;
+  justify-content: space-between;
 }
 .tabbe-box {
   width: 100%;
@@ -244,5 +295,10 @@ export default {
 .el-link {
   font-size: 12px;
   padding: 5px;
+}
+.delete {
+  color: red;
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>
