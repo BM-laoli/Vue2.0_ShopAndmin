@@ -2,16 +2,10 @@
 import axios from 'axios';
 import Vue from 'vue';
 
-// 线上接口1-v1版本
-// const http = axios.create({
-//   baseURL: 'https://tess.utools.club'
-
-// })
 const http = axios.create({
   baseURL: 'http://testli.utools.club/api'
 })  
 
-// 线上接口v2  
 const Nesthttp = axios.create({
   baseURL: 'http://nestapi.utools.club'
 })
@@ -22,10 +16,7 @@ http.interceptors.request.use(
         if (sessionStorage.token) {
             config.headers.Authorization = sessionStorage.token;
         }
-        // console.log(config);
-        // if (config.url === '/login') {
-        //     config.baseURL = 'https://tess.utools.club';
-        // }
+        
         return config;
     },
     (err) => {
