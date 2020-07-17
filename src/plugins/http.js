@@ -3,8 +3,12 @@ import axios from 'axios'
 import Vue from 'vue'
 
 // 线上接口1-v1版本
+// const http = axios.create({
+//   baseURL: 'https://tess.utools.club'
+
+// })
 const http = axios.create({
-  baseURL: 'https://tess.utools.club'
+  baseURL: 'http://192.168.29.243:3045'
 
 })
 

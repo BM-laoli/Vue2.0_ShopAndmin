@@ -22,6 +22,28 @@ var data = Mock.mock({
     }
   ]
 })
+var ruleForm = Mock.mock({
+  ruleForm: {
+    right1: {
+      "all_public_num|100-999": 100,
+      "price|100-999": 100,
+      "cheapPrice|100-999": 100,
+      level: 1
+    },
+    right2: {
+      "all_public_num|100-999": 100,
+      "price|100-999": 100,
+      "cheapPrice|100-999": 100,
+      "level": 2
+    },
+    right3: {
+      "all_public_num|100-999": 100,
+      "price|100-999": 100,
+      "cheapPrice|100-999": 100,
+      level: 3
+    },
+  },
+})
 // 输出结果
-// console.log(JSON.stringify(data, null, 4))
-export default data
+// console.log(ruleForm)
+export default ruleForm

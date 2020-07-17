@@ -11,7 +11,7 @@ import shop_discount from './modules/shop_discount'
 import zjc from './modules/zjc'
 import tsl from './modules/tsl'
 import cj from './modules/cj'
-
+import ggg from './modules/ggg'
 // Mock函数
 const { mock } = Mock
 
@@ -50,3 +50,6 @@ mock(/\/rest\/products\/byid/, 'get', cj.productListc)
 mock(/\/rest\/product\/type/, 'get', cj.productType)
 // 根据商品名查询商品
 mock(/\/rest\/product\/byname/, 'get', cj.getProductByName)
+
+// 商品权限列表参数
+mock(/\/api\/shops\/rights/, 'get', ggg.ruleForm)
