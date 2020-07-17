@@ -17,11 +17,11 @@
             <div class="grid-content bg-purple-dark">
               <span style="font-size:12px;width: 45px;line-height: 38px;">行业:</span>
               <el-select v-model="fristValue" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                <el-option v-for="(item, index) in options1" :key="index" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
               <el-select v-model="secondValue" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                <el-option v-for="(item, index) in options2" :key="index" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </div>
@@ -42,7 +42,7 @@
             <el-table :data="tableData" style="width: 100%">
               <el-table-column label="店铺编号" width="125">
                 <template slot-scope="scope">
-                  <span style="margin-left: 10px">{{ scope.row.shop_num }}</span>
+                  <span style="margin-left: 10px">{{ scope.row.shop_id }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="店铺名称" width="125">
@@ -59,32 +59,32 @@
               </el-table-column>
               <el-table-column label="店铺行业" width="125">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.shop_type }}</span>
+                  <span>{{ scope.row.shop_name }}-{{ scope.row.industry }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="店铺地址" width="125">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.shop_address }}</span>
+                  <span>{{ scope.row.address }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="联系电话" width="125">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.shop_phone }}</span>
+                  <span>{{ scope.row.phone }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="推广人ID" width="125">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.shop_id }}</span>
+                  <span>{{ scope.row.phone }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="状态" width="125">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.shop_state }}</span>
+                  <span>{{ scope.row.is_approved ? '已审核':'未审核' }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="备注" width="125">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.shop_com }}</span>
+                  <span>{{ scope.row.remarks }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="操作">
@@ -98,8 +98,7 @@
       </el-row>
       <el-row style="margin-top:20px">
         <!-- 分页 -->
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryInfo.pagenum" :page-sizes="[3, 5, 10, 15]" :page-size="queryInfo.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
-        </el-pagination>
+        <el-pagination @size-change="getShopAuditList()" @current-change="getShopAuditList()" :current-page.sync="queryInfo.page" :page-sizes="[2, 3, 5]" :page-size.sync="queryInfo.size" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
       </el-row>
     </el-card>
   </div>
@@ -107,7 +106,7 @@
 
 <script>
 import breadCrumbs from '../../components/common/bread-crumbs'
-import data from '@/mock/modules/ggg'
+import { getShopAudit, searchShopAudit } from '@/api/shops/index'
 export default {
   components: {
     breadCrumbs,
@@ -116,9 +115,8 @@ export default {
     return {
       // 查询条件
       queryInfo: {
-        query: '',
-        pagenum: 1,
-        pagesize: 10
+        size: 5,
+        page: 1
       },
       // 数据总条数
       total: 0,
@@ -129,46 +127,83 @@ export default {
       // 选择框第二个值绑定
       secondValue: '',
       // 表格数据
-      tableData: null,
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
+      tableData: [],
+      // {
+      //   value: '选项1',
+      //   label: '黄金糕'
+      // }, {
+      //   value: '选项2',
+      //   label: '双皮奶'
+      // }, {
+      //   value: '选项3',
+      //   label: '蚵仔煎'
+      // }, {
+      //   value: '选项4',
+      //   label: '龙须面'
+      // }, {
+      //   value: '选项5',
+      //   label: '北京烤鸭'
+      // }
+      options1: [],
+      options2: [],
       value: ''
     }
   },
   methods: {
     // 店铺查询
-    shopSearch () { },
+    async shopSearch () {
+      if (this.shopNumberinput === '' || this.secondValue === '') {
+        this.$message.error('参数请输入完整')
+      }
+      try {
+        const { data: res } = await searchShopAudit({
+          params: {
+            keyword2: this.shopNumberinput,
+            keyword1: this.secondValue
+          }
+        })
+        // console.log(res)
+        this.tableData = res
+      } catch (error) {
+        console.log(error)
+      }
+    },
     // 审核
     handleEdit (index, row) {
-      // console.log(index, row);
-      this.$router.push('/home/shops/openShop/audit')
+      // this.$router.push('/home/shops/openShop/audit')
+      this.$router.push({ path: '/home/shops/openShop/audit', query: { id: `${row._id}` } })
     },
-    handleSizeChange (newSize) {
-      this.queryInfo.pagesize = newSize
-      this.tableData = data.array
-    },
-    handleCurrentChange (newPage) {
-      this.queryInfo.pagenum = newPage
-      this.tableData = data.array
+    async getShopAuditList () {
+      try {
+        const { data } = await getShopAudit(
+          { params: this.queryInfo }
+        )
+        // console.log(data)
+        this.tableData = data.records
+        this.queryInfo.page = data.pages
+        this.queryInfo.size = data.size
+        this.total = data.total
+
+        data.records.forEach(v => {
+          this.options1.push({
+            value: v.shop_name,
+            label: v.shop_name
+          })
+          this.options2.push({
+            value: v.industry,
+            label: v.industry
+          })
+        })
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   created () {
-    // console.log(data.array)
-    this.tableData = data.array
+    this.getShopAuditList()
+  },
+  mounted () {
+
   }
 }
 </script>

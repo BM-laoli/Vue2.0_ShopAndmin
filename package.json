@@ -29,6 +29,7 @@
     "vuex": "^3.4.0"
   },
   "devDependencies": {
+    "@andremao/mockdb": "^1.0.2",
     "@vue/cli-plugin-babel": "~4.4.0",
     "@vue/cli-plugin-router": "~4.4.0",
     "@vue/cli-plugin-vuex": "~4.4.0",

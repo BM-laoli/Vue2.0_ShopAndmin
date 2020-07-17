@@ -1,7 +1,7 @@
 <template>
   <div>
     <bread-crumbs :level="this.$route.meta"></bread-crumbs>
-    <el-card class="box-card">
+    <el-card class="box-card" v-if="loading">
       <el-button
         type="primary"
         @click="$router.push('/home/shops/shopsList')"
@@ -10,7 +10,7 @@
       <el-row>
         <el-col :span="8">
           <div style="font-size:14px; margin-bottom:5px">店铺编号：{{info.uid}}</div>
-          <div style="font-size:14px;">行业：{{info.industry}}</div>
+          <div style="font-size:14px;">行 业:{{info.industry}}</div>
         </el-col>
         <el-col :span="16">
           <div
@@ -63,42 +63,45 @@
 <script>
 import breadCrumbs from "@/components/common/bread-crumbs";
 import ECharts from "echarts";
+import { getAnalysis } from "../../../api/mock/cjhttp";
 export default {
   components: {
     breadCrumbs
   },
   data() {
     return {
-      info: {
-        uid: "5ee77d61ca8c9a7398261dc7",
-        shop_name: "美佳宜",
-        shop_level_name: "保利店",
-        phone: 18376621755,
-        industry: "航天制造业",
-        saleSituation: {
-          total_order: 1234,
-          total_money: 3425789,
-          start_date: "2019-07-14T03:13:17.821Z",
-          end_date: "2020-07-14T03:13:17.821Z",
-          shopType: {
-            男装: 200.0,
-            女装: 300.0,
-            男鞋: 400.0,
-            女鞋: 367.0
-          }
-        },
-        consumSituation: {
-          模板费: 100.0,
-          素材费: 200.0,
-          收益费: 300.0
-        }
-      }
+      loading: false,
+      // info: {
+      //   uid: "5ee77d61ca8c9a7398261dc7",
+      //   shop_name: "美佳宜",
+      //   shop_level_name: "保利店",
+      //   phone: 18376621755,
+      //   industry: "航天制造业",
+      //   saleSituation: {
+      //     total_order: 1234,
+      //     total_money: 3425789,
+      //     start_date: "2019-07-14T03:13:17.821Z",
+      //     end_date: "2020-07-14T03:13:17.821Z",
+      //     shopType: {
+      //       男装: 200.0,
+      //       女装: 300.0,
+      //       男鞋: 400.0,
+      //       女鞋: 367.0
+      //     }
+      //   },
+      //   consumSituation: {
+      //     模板费: 100.0,
+      //     素材费: 200.0,
+      //     收益费: 300.0
+      //   }
+      // }
+      info: {}
     };
   },
   mounted() {
-    this.drawSale();
-    this.drawConsum();
+    this.getAnalysisFn();
   },
+  created() {},
   methods: {
     drawSale() {
       var saleEchart = ECharts.init(document.getElementById("main-sale"));
@@ -223,6 +226,19 @@ export default {
         ]
       };
       consumEchart.setOption(option);
+    },
+    async getAnalysisFn() {
+      const id = this.$route.query.id;
+      const { data: res } = await getAnalysis(id);
+      console.log("analysis", res);
+      this.info = res;
+      this.loading = true;
+      this.$nextTick(() => {
+        this.drawSale();
+        this.drawConsum();
+      });
+
+      // this.drawConsum();
     }
   }
 };
