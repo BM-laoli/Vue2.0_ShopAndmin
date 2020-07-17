@@ -1,8 +1,9 @@
 // 引入随机函数
-import { Random } from 'mockjs'
+import { Random } from 'mockjs';
 // 引入Mock
-const Mock = require('mockjs')
+const Mock = require('mockjs');
 
+// 用户列表
 const userListData = Mock.mock({
     'data|10': [
         {
@@ -13,7 +14,7 @@ const userListData = Mock.mock({
             earnings: () => Random.float(2000, 10000, 0, 2),
         },
     ],
-})
+});
 
 function userList(res) {
     return {
@@ -24,9 +25,10 @@ function userList(res) {
         size: 10,
         user_count: 20,
         shop_count: 20,
-    }
+    };
 }
 
+// 店铺列表
 const shopListData = Mock.mock({
     'data|10': [
         {
@@ -38,7 +40,7 @@ const shopListData = Mock.mock({
             earnings: () => Random.float(2000, 10000, 0, 2),
         },
     ],
-})
+});
 function shopList(res) {
     return {
         code: 200,
@@ -48,9 +50,37 @@ function shopList(res) {
         size: 10,
         earnings_count: 20000,
         shopCount: 20,
-    }
+    };
 }
+
+// 参数获取
+const paramsListData = Mock.mock({
+    'data|2': {
+        shop_money: () => Random.integer(0, 100),
+        user_money: () => Random.integer(0, 100),
+    },
+});
+
+function paramsList() {
+    return {
+        code: 200,
+        data: paramsListData.data,
+        message: '获取参数设置成功',
+    };
+}
+
+// 参数设置
+function saveParams(data) {
+    return {
+        code: 200,
+        data: data,
+        message: '保存参数设置成功',
+    };
+}
+
 export default {
     userList,
     shopList,
-}
+    paramsList,
+    saveParams,
+};
