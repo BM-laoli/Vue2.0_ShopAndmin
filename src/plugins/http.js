@@ -3,7 +3,7 @@ import axios from 'axios'
 import Vue from 'vue'
 
 const http = axios.create({
-  baseURL: 'https://tess.utools.club/api'
+  baseURL: 'https://tess.utools.club/api',
 })
 
 // 请求拦截 两个错误,配置token
@@ -12,14 +12,13 @@ http.interceptors.request.use(
     if (sessionStorage.token) {
       config.headers.Authorization = sessionStorage.token
     }
-    
-    // 接口连调说明,如果你mock的数据中没有rest那么我就任务这个是调用正在的线上解控
-    if( !(/\/api\//.test(config.baseURL)) ){
-      config.baseURL = 'http://nestjsapi.utools.club'
-    }
-    
-    return config
 
+    // 接口连调说明,如果你mock的数据中没有rest那么我就任务这个是调用正在的线上解控
+    if (!/\/api\//.test(config.baseURL)) {
+      config.baseURL = 'http://nestapi.utools.club'
+    }
+
+    return config
   },
   (err) => {
     console.log(err)
@@ -38,7 +37,7 @@ http.interceptors.response.use(
     if (err.response.data.message) {
       Vue.prototype.$message({
         type: 'error',
-        message: err.response.data.message
+        message: err.response.data.message,
       })
     }
     // 这里我们约定一个规则，有错就放回一个message,这个message里的就是我们要回显式的信息
