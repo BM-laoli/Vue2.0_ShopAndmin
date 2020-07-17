@@ -2,8 +2,14 @@
 import axios from 'axios'
 import Vue from 'vue'
 
+// 线上接口1-v1版本
 const http = axios.create({
-  baseURL: 'http://192.168.29.243:3045/'
+  baseURL: 'https://tess.utools.club'
+})
+
+// 线上接口v2
+const Nesthttp = axios.create({
+  baseURL: 'https://nestapi.utools.club'
 })
 
 // 请求拦截 两个错误,配置token
