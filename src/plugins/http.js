@@ -4,13 +4,13 @@ import Vue from 'vue'
 
 // 线上接口1-v1版本
 const http = axios.create({
-  baseURL: 'https://tess.utools.club'
+  baseURL: 'https://testli.utools.club'
 
 })
 
 // 线上接口v2 
 const Nesthttp = axios.create({
-  baseURL: 'https://nestjsapi.utools.club'
+  baseURL: 'http://nestapi.utools.club'
 })
 
 // 请求拦截 两个错误,配置token
@@ -52,5 +52,5 @@ http.interceptors.response.use(
     return Promise.reject(err)
   }
 )
-
+export { Nesthttp }
 export default http
