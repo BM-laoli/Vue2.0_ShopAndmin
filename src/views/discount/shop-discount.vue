@@ -12,8 +12,8 @@
           <el-input v-model="searchForm.couponName" placeholder="搜索优惠券名称"></el-input>
         </div>
         <div class="btn">
-          <el-button type="primary">查询</el-button>
-          <el-button type="danger">重置</el-button>
+          <el-button type="primary" @click="search">查询</el-button>
+          <el-button type="danger" @click="resetForm">重置</el-button>
         </div>
       </div>
     </el-card>
@@ -81,6 +81,18 @@ export default {
         v.price_count = v.coupon_count * v.coupon_price
       })
       this.couponList = data.data.data;
+      console.log(this.couponList)
+
+    },
+    resetForm () {
+      this.searchForm.shopName = '';
+      this.searchForm.couponName = ''
+    },
+    search () {
+      if (this.searchForm.shopName.trim().length === 0 && this.searchForm.couponName.trim().length === 0) {
+        return null
+      }
+      this.getShopCoupon();
     }
   },
   computed: {

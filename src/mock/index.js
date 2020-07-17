@@ -7,12 +7,10 @@ import businiess from './modules/lsz'
 import cuz from './modules/cuz'
 import orders from './modules/order'
 import prodcut from './modules/product'
-import cj from './modules/cj'
-
-
 import shop_discount from './modules/shop_discount'
 import zjc from './modules/zjc'
 import tsl from './modules/tsl'
+import cj from './modules/cj'
 
 // Mock函数
 const { mock } = Mock
@@ -39,20 +37,6 @@ mock(/\/rest\/peronale\/gethehe/, 'get', businiess.getpaersonalCousData)
 mock(/\/api\/cuz\/userList/, 'get', cuz.userList)
 mock(/\/api\/cuz\/shopList/, 'get', cuz.shopList)
 mock(/\/api\/orders\/orderList/, 'get', orders.orderList)
-mock(/\/api\/product\/form/, 'get', prodcut.form)
-mock(/\/api\/product\/cateForm/, 'get', prodcut.cateForm)
-
-//  陈娟的mock请求
-// mock('https://tess.utools.club/api/rest/products/byid', 'get', cj.productListc)
-// 使用mock的坑一：如果单纯只写实际请求去掉baseURL的地址不会获得mock的地址，所以以字符串的方式写的话必须写全地址，如果想用没加baseURL的地址的话，可以使用正则匹配的方式
-
-// 获取全部商铺的商品分页数据
-mock(/\/rest\/products\/byid/, 'get', cj.productListc)
-// 获取所有商品类别
-mock(/\/rest\/product\/type/, 'get', cj.productType)
-// 根据商品名查询商品
-mock(/\/rest\/product\/byname/, 'get', cj.getProductByName)
-
 mock(/\/api\/orders\/detailedData/, 'get', orders.detailedData)
 mock(/\/api\/orders\/calculationData/, 'get', orders.calculationData)
 mock(/\/api\/product\/form/, 'get', prodcut.form)
@@ -61,3 +45,8 @@ mock(/\/api\/zjc\/material/, 'get', zjc.materialManag)
 mock(/\/api\/zjc\/classMaterial/, 'get', zjc.getMaterialClass)
 mock(/\/api\/tsl\/finance/, 'get', tsl.finance)
 
+mock(/\/rest\/products\/byid/, 'get', cj.productListc)
+// 获取所有商品类别
+mock(/\/rest\/product\/type/, 'get', cj.productType)
+// 根据商品名查询商品
+mock(/\/rest\/product\/byname/, 'get', cj.getProductByName)
