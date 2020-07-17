@@ -25,14 +25,14 @@
         <el-row :gutter="20">
           <el-col class="text-style" :span="3" style="height:60px;line-height:60px">主要产品图</el-col>
           <el-col :span="4">
-            <el-image style="width: 60px; height: 60px" :src="formLabelAlign.shop_product_images.image1" fit="cover"></el-image>
+            <el-image style="width: 60px; height: 60px" :src="formLabelAlign.shop_id_image_reverse" :lazy="true" fit="cover"></el-image>
           </el-col>
           <el-col class="text-style" :span="3" style="height:60px;line-height:60px">营业证照</el-col>
           <el-col :span="4">
-            <el-image style="width: 60px; height: 60px" :src="formLabelAlign.shop_product_images.image2" fit="cover"></el-image>
+            <el-image style="width: 60px; height: 60px" :src="formLabelAlign.shop_id_image_reverse" fit="cover"></el-image>
           </el-col>
           <el-col :span="4">
-            <el-image style="width: 60px; height: 60px" :src="formLabelAlign.shop_product_images.image3" fit="cover"></el-image>
+            <el-image style="width: 60px; height: 60px" :src="formLabelAlign.shop_id_image_reverse" fit="cover"></el-image>
           </el-col>
         </el-row>
         <el-row>
@@ -173,7 +173,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="审核备注">
-              <el-input type="textarea" :rows="4" placeholder="请输入内容" size="medium" :autosize="{ minRows: 4, maxRows: 8}" v-model="textareaBeiZhu">
+              <el-input type="textarea" :rows="4" placeholder="请输入内容" size="medium" :autosize="{ minRows: 4, maxRows: 8}" v-model="formLabelAlign.textareaBeiZhu">
               </el-input>
             </el-form-item>
           </el-col>
@@ -185,8 +185,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item>
-              <el-button type="primary">审核通过</el-button>
-              <el-button type="warning">审核不通过</el-button>
+              <el-button type="primary" @click="passAudit">审核通过</el-button>
+              <el-button type="warning" @click="notPassAudit">审核不通过</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -196,34 +196,87 @@
 </template>
 
 <script>
-import { shopAuditDetail } from '@/api/shops/index'
+import { shopAuditDetail, passShopAudit } from '@/api/shops/index'
 export default {
   name: 'ShopAudit',
   data () {
     return {
-      textareaBeiZhu: '',
       labelPosition: 'left',
       formLabelAlign: {
-        peisongTime: [start_time, end_time],
-        // avatar: '',
-        // name: '',
-        // region: '',
-        // type: '',
-        // uname: '',
-        // unum: '',
-        // umobile: '',
-        peisongQuyuTime: [start_time, end_time],
-        // inviteCode: ''
+        is_approved: '',
+        textareaBeiZhu: '',
+        peisongTime: [],
+        peisongQuyuTime: [],
+        avatar: '',
+        shop_id_image_positive: '',
+        shop_id_image_reverse: '',
+        shop_name: '',
+        shop_level_name: '',
+        shop_id: '',
+        phone: '',
+        shop_license_images: {
+          _id: ''
+        },
+        delivery: {
+          is_self: {
+            flag: ''
+          },
+          sime_city: {
+            flag: '',
+            start_price: '',
+            total_price: ''
+          },
+          region: {
+            flag: '',
+            start_price: '',
+            total_price: '',
+            over: ''
+          },
+          cross_city: {
+            flag: '',
+            total_price: '',
+          },
+        },
       }
     }
   },
   async created () {
     try {
       const { data: res } = await shopAuditDetail(this.$route.query.id)
-      console.log(res)
       this.formLabelAlign = res
+      this.formLabelAlign.peisongTime = [res.delivery.sime_city.start_time, res.delivery.sime_city.end_time]
+      this.formLabelAlign.peisongQuyuTime = [res.delivery.region.start_time, res.delivery.region.end_time]
     } catch (error) {
       console.log(error)
+    }
+  },
+  methods: {
+    async passAudit () {
+      if (this.textareaBeiZhu === '') {
+        return this.$message.error('请填写备注')
+      }
+      try {
+        this.formLabelAlign.is_approved = true
+        const { data: res } = await passShopAudit(this.$route.query.id, this.formLabelAlign)
+        // console.log(res)
+        this.$message.success('审核通过')
+        this.$router.back(-1)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async notPassAudit () {
+      if (this.textareaBeiZhu === '') {
+        return this.$message.error('请填写备注')
+      }
+      try {
+        this.formLabelAlign.is_approved = false
+        const { data: res } = await passShopAudit(this.$route.query.id, this.formLabelAlign)
+        this.$message.error('审核不通过')
+        this.$router.back(-1)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
