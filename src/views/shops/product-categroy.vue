@@ -216,12 +216,13 @@ export default {
     },
     editData(v) {
       this.editDialogFormVisible = true;
-      this.editIndustryValue = v.cateName;
-      this.editIndustrySortValue = v.cateId;
+      this.editIndustryValue = v.name;
+      this.editIndustrySortValue = v.sortnumber;
       console.log(v);
     },
-    deleteData() {
-      console.log(this.$route.meta);
+    deleteData(v) {
+      var index = this.tableData.indexOf(v);
+      this.tableData.splice(index, 1);
     },
     addindustry() {
       this.addDialogFormVisible = true;
@@ -252,8 +253,9 @@ export default {
       this.editDialogFormVisible = false;
     },
     toSubCate(data) {
-      this.$router.push("/home/shops/productSubCategroy/" + data.cateId);
-      console.log(data.cateId);
+      var id = !data.parent ? data._id : data.parent._id
+      this.$router.push("/home/shops/productSubCategroy/" + id);
+      console.log(id);
     }
   }
 };

@@ -12,3 +12,7 @@ export const getCategroyByName = data => {
 export const addOneCategroy = data => {
     return http.post('/shopmanage/shoplist/createOneProductCategtoy', data)
 }
+//子分类
+export const selectTowCategroy = id => {
+    return http.get(`/shopmanage/shoplist/queryCategrorytobyfather?id=${id}`)
+}
