@@ -70,7 +70,7 @@
         </el-tabs>
       </div>
       <!-- 手工订单模态框 -->
-      <order-add ref="orderAddRef"></order-add>
+      <order-add ref="orderAddRef" @reset="reset"></order-add>
     </el-card>
   </div>
 </template>
@@ -124,6 +124,10 @@ export default {
     changeStatus(e) {
       const data = this.orderData.records.find(v => v._id === e.id);
       data.package = e.package;
+    },
+    // 刷新页面
+    reset() {
+      this.init();
     }
   },
   mounted() {

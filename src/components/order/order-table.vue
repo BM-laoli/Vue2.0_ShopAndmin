@@ -4,11 +4,11 @@
       <el-table-column prop="shopid[uid]" label="商户ID" width="110"></el-table-column>
       <el-table-column prop="shopid[shop_name]" label="商户名称" width="120"></el-table-column>
       <el-table-column prop="_id" label="订单号" width="100"></el-table-column>
-      <el-table-column prop="orderList" label="商品列表" width="120">
+      <el-table-column prop="delivery_price" label="商品列表" width="120">
         <template #default="{row}">
-          <div v-for="(v,i) in row.produtc_id" :key="i">
-            <span>{{v.name}}</span>
-            <span>*1</span>
+          <div v-for="(v,i) in row.delivery_price" :key="i">
+            <span>{{v[0].value}}</span>
+            <span>*{{v[0].count}}</span>
           </div>
         </template>
       </el-table-column>
@@ -161,11 +161,24 @@ export default {
       this.$emit("changeCurrent", v);
     },
     // 修改状态功能集
-    async changeStatus(id, v) {
-      try {
-        const data = await changeOrderStatus(id, v);
-        this.$emit("changeStatus", { id, package: v });
-      } catch (err) {}
+    changeStatus(id, v) {
+      this.$confirm("此操作将修改订单的状态, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          try {
+            const data = await changeOrderStatus(id, v);
+            this.$emit("changeStatus", { id, package: v });
+            this.$message.success("修改成功");
+          } catch (err) {
+            this.$message.error("修改失败");
+          }
+        })
+        .catch(() => {
+          return null;
+        });
     }
   },
   computed: {

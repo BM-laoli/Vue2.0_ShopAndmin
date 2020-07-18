@@ -21,3 +21,8 @@ export const getAllShopList = () => {
 export const getProducts = (id) => {
   return Nesthttp.get(`/shopmanage/shoplist/queryproduct?id=${id}`)
 }
+
+// 增加手工单
+export const addOrder = (data) => {
+  return Nesthttp.post('/ordermange/createOrder', data)
+}
