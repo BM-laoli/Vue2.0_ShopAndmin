@@ -9,18 +9,20 @@
               <el-menu
                 background-color="#2f4050" 
                 text-color="#ffff"
-                default-active="1" 
+                :default-active="active" 
                 @open="handleOpen" 
                 @close="handleClose" 
                 :collapse="isCollapse"
                 class="el-menu-vertical-demo"
+                :default-openeds="Arrayhehe"
+                @select="menuSelect"
                 router>
                 <!-- 标题栏 -->
                 <el-menu-item v-show="!isCollapse">
                   <h3>新零售商户管理后台</h3>
                 </el-menu-item>
 
-                <el-menu-item index="/"
+                <el-menu-item index="/home/welcome"
                 class="index_onde">
                   <i class="el-icon-s-grid"></i>
                   <span slot="title">主页</span>
@@ -30,7 +32,7 @@
                 <el-submenu  index="/Main">
                   <!-- 如果想做插槽就拿这个做就好了 -->
                   <template slot="title">
-                    <i class="el-icon-s-marketing"></i>
+                    <i class="el-icon-s-shop"></i>
                     <span slot="title">商铺管理</span>
                   </template>
                   <!-- 子列 -->
@@ -47,7 +49,7 @@
                 <el-submenu  index="/BusinessDistrict">
                   <!-- 如果想做插槽就拿这个做就好了 -->
                   <template slot="title">
-                    <i class="el-icon-s-marketing"></i>
+                    <i class="el-icon-s-goods"></i>
                     <span slot="title">商圈管理</span>
                   </template>
                   <!-- 子列 -->
@@ -60,7 +62,7 @@
                 <el-submenu  index="/order">
                   <!-- 如果想做插槽就拿这个做就好了 -->
                   <template slot="title">
-                    <i class="el-icon-s-marketing"></i>
+                    <i class="el-icon-s-claim"></i>
                     <span slot="title">订单管理</span>
                   </template>
                   <!-- 子列 -->
@@ -73,7 +75,7 @@
                 <el-submenu  index="/discount">
                   <!-- 如果想做插槽就拿这个做就好了 -->
                   <template slot="title">
-                    <i class="el-icon-s-marketing"></i>
+                    <i class="el-icon-s-ticket"></i>
                     <span slot="title">优惠卷管理</span>
                   </template>
                   <!-- 子列 -->
@@ -83,7 +85,7 @@
                   </el-menu-item-group>
                 </el-submenu>
                 <el-menu-item index="/home/commentList">
-                    <i class="el-icon-s-comment"></i>
+                    <i class="el-icon-s-flag"></i>
                     <span slot="title">推广列表</span>
                 </el-menu-item>
                 <!-- 素材库管理 -->
@@ -105,7 +107,8 @@
                 <el-submenu  index="/finance">
                   <!-- 如果想做插槽就拿这个做就好了 -->
                   <template slot="title">
-                    <i class="el-icon-s-marketing"></i>
+                    <i class="el-icon-bank-card
+"></i>
                     <span slot="title">财务管理</span>
                   </template>
                   <!-- 子列 -->
@@ -143,7 +146,6 @@
                 <div>
                   <el-button type="primary" icon="el-icon-user">修改密码</el-button>
                   <el-button el-button type='info' icon="el-icon-circle-close" @click="logout" >退出</el-button> 
-                  <el-button el-button type='info' icon="el-icon-circle-close" @click="tests" >测试接口</el-button> 
                 </div>
               </el-header>
             <router-view></router-view>
@@ -200,10 +202,17 @@ import  {testMock }  from '../api/mock/test'
   export default {
     data() {
       return {
-        isCollapse:false
+        isCollapse:false,
+        active:'/',
+        Arrayhehe:[]
       }
     },
     methods: {
+      menuSelect(index){
+        this.active = index
+        // window.localStorage.setItem('ACTIVE_MENUT_INDEV',index)
+      },
+
       async tests(){
         let {data:res}  = await testMock()
         console.log(res);
@@ -219,7 +228,10 @@ import  {testMock }  from '../api/mock/test'
         this.$router.push('/login')
       },
     },
-    created () {
+    created () {  
+    },
+    mounted () {
+      this.active =this.$route.path
     },
   }
 </script>

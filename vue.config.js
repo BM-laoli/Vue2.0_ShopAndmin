@@ -38,7 +38,7 @@ module.exports = {
         lodash: '_',
         echarts: 'echarts',
         moment: 'moment',
-        xlsx:'xlsx'
+        elementUi:'element-ui'
       }
     }
 

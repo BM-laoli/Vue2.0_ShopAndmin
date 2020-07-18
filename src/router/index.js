@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import { Message } from 'element-ui'
+import vueConfig from '../../vue.config'
 // 开始业务逻辑
 const login = () => import('../views/login')
 // 布局页
@@ -7,40 +9,40 @@ const home = () => import('../views/layout')
 // 欢迎页
 const welcome = () => import('../views/home/welcome')
 // 商铺管理
-const shopsList = () => import('../views/shops/shops-list')
-const shopDetail = () => import('../components/shops/shoplist/shop-detail')
-const businessAnalysis = () => import('../components/shops/shoplist/business-analysis')
-const productList = () => import('../views/shops/product-list')
-const openShop = () => import('../views/shops/open-shop')
-const openShopAudit = () => import('@/components/shops/open-shop-audit.vue')
-const shopRight = () => import('../views/shops/shop-right')
-const shopIndustry = () => import('../views/shops/shop-industry')
-const productCategroy = () => import('../views/shops/product-categroy')
-const productSubCategroy = () => import('../views/shops/product-subcategory')
+const shopsList = () => import( /* webpackChunkName: "shopmanage" */ '../views/shops/shops-list')
+const shopDetail = () => import( /* webpackChunkName: "shopmanage" */ '../components/shops/shoplist/shop-detail')
+const businessAnalysis = () => import( /* webpackChunkName: "shopmanage" */ '../components/shops/shoplist/business-analysis')
+const productList = () => import( /* webpackChunkName: "shopmanage" */ '../views/shops/product-list')
+const openShop = () => import( /* webpackChunkName: "shopmanage" */ '../views/shops/open-shop')
+const openShopAudit = () => import( /* webpackChunkName: "shopmanage" */ '@/components/shops/open-shop-audit.vue')
+const shopRight = () => import( /* webpackChunkName: "shopmanage" */ '../views/shops/shop-right')
+const shopIndustry = () => import( /* webpackChunkName: "shopmanage" */ '../views/shops/shop-industry')
+const productCategroy = () => import( /* webpackChunkName: "shopmanage" */ '../views/shops/product-categroy')
+const productSubCategroy = () => import( /* webpackChunkName: "shopmanage" */ '../views/shops/product-subcategory')
 // 商圈管理
-const publicBusinessDistrict = () => import('../views/business-district/public-business-district')
-const personalBusinessDistrict = () => import('../views/business-district/personal-business-district')
+const publicBusinessDistrict = () => import( /* webpackChunkName: "businiess" */ '../views/business-district/public-business-district')
+const personalBusinessDistrict = () => import( /* webpackChunkName: "businiess" */ '../views/business-district/personal-business-district')
 // 订单管理模块
-const orderList = () => import('../views/order/order-list')
-const orderCalculation = () => import('../views/order/order-calculation')
+const orderList = () => import( /* webpackChunkName: "order" */ '../views/order/order-list')
+const orderCalculation = () => import(/* webpackChunkName: "order" */ '../views/order/order-calculation')
 // 优惠卷管理
-const discount = () => import('../views/discount/discount')
-const shopDiscount = () => import('../views/discount/shop-discount')
+const discount = () => import( /* webpackChunkName: "discount" */ '../views/discount/discount')
+const shopDiscount = () => import( /* webpackChunkName: "discount" */ '../views/discount/shop-discount')
 // 推广列表
-const commentList = () => import('../views/commentList/commentList')
+const commentList = () => import( /* webpackChunkName: "commentList" */ '../views/commentList/commentList')
 // 推广详情
-const promotionDetails = () => import('../views/commentList/promotionDetails')
+const promotionDetails = () => import( /* webpackChunkName: "promot" */ '../views/commentList/promotionDetails')
 // 素材管理
-const publicMaterial = () => import('../views/material/public-material')
-const material = () => import('../views/material/material')
-const userMaterial = () => import('../views/material/user-material')
+const publicMaterial = () => import( /* webpackChunkName: "material" */ '../views/material/public-material')
+const material = () => import( /* webpackChunkName: "material" */ '../views/material/material')
+const userMaterial = () => import( /* webpackChunkName: "material" */ '../views/material/user-material')
 // 财务管理
-const finance = () => import('../views/finance/finance')
-const financeOut = () => import('../views/finance/finance-out')
-const financeJion = () => import('../views/finance/finance-jion')
+const finance = () => import( /* webpackChunkName: "finance" */ '../views/finance/finance')
+const financeOut = () => import( /* webpackChunkName: "finance" */ '../views/finance/finance-out')
+const financeJion = () => import( /* webpackChunkName: "finance" */ '../views/finance/finance-jion')
 // 系统设置
-const user = () => import('../views/setting/user')
-const parms = () => import('../views/setting/parms')
+const user = () => import( /* webpackChunkName: "systemseting" */ '../views/setting/user')
+const parms = () => import( /* webpackChunkName: "systemseting" */ '../views/setting/parms')
 
 
 Vue.use(VueRouter)
@@ -258,16 +260,17 @@ router.beforeEach((to, from, next) => {
   // 返回一个字符串 ‘ var isLogin = true; var userId=id   || var isLogin = false  ’
   const token = window.sessionStorage.getItem('token')
 
-  if (to.path === '/login' && token) {
+  if( token &&  to.path === '/login' ){
     return next('/home')
   }
-  if (to.path === '/login' || !token) {
-    return next()
-  }
 
-  if (!token || to.path === '/login') {
+  if ( token  ){ return next()  }
+
+  if( to.path !== '/login' ){ 
+      Message.warning('您还没有登录，请先登录')
     return next('/login')
   }
+
   next()
 })
 
