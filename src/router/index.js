@@ -42,9 +42,8 @@ const financeJion = () => import('../views/finance/finance-jion')
 const user = () => import('../views/setting/user')
 const parms = () => import('../views/setting/parms')
 
+
 Vue.use(VueRouter)
-
-
 const routes = [
   {
     path: '/',
@@ -56,8 +55,8 @@ const routes = [
     component: login,
   },
   {
-    path: '/home',
-    name: 'home',
+    path: '/home',  // 因为重定向 不需要再定义名称
+    // name:'name',
     component: home,
     children: [
       {

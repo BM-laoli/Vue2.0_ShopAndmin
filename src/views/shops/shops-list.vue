@@ -255,7 +255,7 @@ export default {
   margin: 15px;
   margin-top: 22px;
   background-color: #fff;
-  padding: 8px;
+  // padding: 8px;
 }
 .hedaer-box {
   width: 100%;
@@ -269,10 +269,10 @@ export default {
   justify-content: space-between;
 }
 .tabbe-box {
-  width: 100%;
+  width: 130%;
   border-radius: 10px;
   background-color: #e6e6fa;
-  padding: 20px;
+  padding: 8px;
   // background-color: cornflowerblue;
 }
 

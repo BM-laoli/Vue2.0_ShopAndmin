@@ -64,7 +64,7 @@
 import breadCrumbs from "@/components/common/bread-crumbs";
 // import ECharts from "echarts";
 import ECharts from "@/lib/echarts.js";
-import { getAnalysis } from "../../../api/mock/cjhttp";
+import { getAnalysis } from "@/api/mock/cjhttp";
 export default {
   components: {
     breadCrumbs

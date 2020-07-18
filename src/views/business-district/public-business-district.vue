@@ -84,9 +84,10 @@
                 label="操作"
                 #default="{row:shopbase}"
               >
-               <el-link :underline="false" icon="el-icon-more" @click="$router.push( {path:'/home/shops/shopDetail',query:{id: shopbase._id}} )">详情</el-link>
-               <el-link :underline="false" icon="el-icon-s-management" @click="$router.push( {path:'/home/shops/productList', query:{id: shopbase._id}} )">查看商品</el-link>
-               <el-link :underline="false" icon="el-icon-s-marketing" @click="$router.push( {path:'/home/shops/businessAnalysis', query:{id: shopbase._id+''}} )">经营分析</el-link>
+               <!-- <el-button type="primary" size="mini">详情</el-button> -->
+               <el-button  type="primary"  @click="$router.push( {path:'/home/shops/shopDetail',query:{id: shopbase._id}} )">详情</el-button>
+               <el-button  type="primary"  @click="$router.push( {path:'/home/shops/productList', query:{id: shopbase._id}} )">查看商品</el-button>
+               <el-button  type="primary"  @click="$router.push( {path:'/home/shops/businessAnalysis', query:{id: shopbase._id+''}} )">经营分析</el-button>
               </el-table-column>
             </el-table>
         </div>

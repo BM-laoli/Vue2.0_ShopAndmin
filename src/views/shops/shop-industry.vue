@@ -88,7 +88,6 @@
 import {
   getAllIndustry,
   getIndustryByName,
-  addIndustry,
   editIndustryInfo
 } from "@/api/shops/industry";
 import breadCrumbs from "../../components/common/bread-crumbs";

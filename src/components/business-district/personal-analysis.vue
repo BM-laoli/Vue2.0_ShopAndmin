@@ -68,7 +68,9 @@
               <el-table-column
                 prop="shop_hours_start"
                 label="消费日期"
+                #default="{row:personal}" 
                 >
+                <span> {{personal.shop_hours_start| dateFormat }} </span>
             </el-table-column>
             </el-table>
         </div>
@@ -86,7 +88,8 @@
 </template>
 
 <script>
-import { getConsumpPersonById,getPersinalData } from '../../api/mock/business-district'
+import ECharts from "@/lib/echarts.js";
+import { getConsumpPersonById,getPersinalData } from '@/api/mock/business-district'
   export default {
     name:'PersonalAnalysis',
     props: {
@@ -191,7 +194,7 @@ import { getConsumpPersonById,getPersinalData } from '../../api/mock/business-di
           }
        },
         drawSale() {
-          var saleEchart = this.$echarts.init(document.getElementById("main-sale"));
+          var saleEchart = ECharts.init(document.getElementById("main-sale"));
           var data = [];
           const shopType = this.info.saleSituation.shopType;
           for (var k in shopType) {

@@ -374,7 +374,7 @@ export default {
       height: 40px;
       .text {
         display: flex;
-        justify-content: end;
+        justify-content: flex-start;
         .countPrice {
           margin-left: 100px;
         }

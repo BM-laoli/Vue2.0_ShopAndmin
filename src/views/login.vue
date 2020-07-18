@@ -19,6 +19,7 @@
 
 <script>
 import { checkEmail } from "../lib/utils";
+import http from '../plugins/http'
 export default {
   name: "login",
   data () {
@@ -50,13 +51,13 @@ export default {
         }
 
         // 2.验证通过开始发请求
-        let { data: res } = await this.$http.post('/login', this.loginForm)
+        let { data: res } = await http.post('/login', this.loginForm)
         // 3. 拿到数据之后开始做处理 是存还是抛出错误====> 请拦截器中判断错误
 
         window.sessionStorage.setItem("token", res.token);
 
         this.$notify({
-          title: "标题名称",
+          title: "欢迎您，管理员",
           message: "登录成功"
         });
         this.$router.push("/home");

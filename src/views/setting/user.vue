@@ -176,6 +176,8 @@
 import breadCrumbs from '../../components/common/bread-crumbs';
 import UserList from '../../components/setting/user-list';
 import FindUser from '../../components/setting/find-user';
+
+import http from '../../plugins/http' 
 export default {
     components: {
         breadCrumbs,
@@ -333,7 +335,7 @@ export default {
         // 点击确定  重置密码
         async setNewPassword() {
             this.resetPasswordForm.password = this.newPassword;
-            const res = await this.$http.put(
+            const res = await http.put(
                 `rest/operation_user/${this.resetPasswordForm._id}`,
                 this.resetPasswordForm
             );
@@ -350,7 +352,7 @@ export default {
         // 点击停用按钮  修改账号状态
         async stopUse(row) {
             row.status = !row.status;
-            const data = await this.$http.put(
+            const data = await http.put(
                 `rest/operation_user/${row._id}`,
                 row
             );
@@ -385,7 +387,7 @@ export default {
                 }
             });
 
-            const res = await this.$http.post(
+            const res = await http.post(
                 'rest/operation_user',
                 this.userForm
             );
@@ -425,7 +427,7 @@ export default {
             if (res !== 'confirm') {
                 return this.$message.info('已经取消删除');
             }
-            const data = await this.$http.delete(`rest/operation_user/${id}`);
+            const data = await http.delete(`rest/operation_user/${id}`);
 
             if (data.status !== 200) {
                 return this.$message.error('删除失败');
@@ -438,7 +440,7 @@ export default {
         edit() {
             this.$refs.editUserFormRef.validate(async (valid) => {
                 if (!valid) return;
-                const data = await this.$http.put(
+                const data = await http.put(
                     `rest/operation_user/${this.editUserForm._id}`,
                     this.editUserForm
                 );
@@ -469,7 +471,7 @@ export default {
         async findUser(form) {
             this.findUserForm = form;
 
-            const res = await this.$http.get(
+            const res = await http.get(
                 `rest/operation_user/unitedquery/`,
                 {
                     params: this.findUserForm,
@@ -489,7 +491,7 @@ export default {
         },
         // 获取所有账号列表信息
         async getUserList() {
-            const res = await this.$http.get('rest/operation_user', {
+            const res = await http.get('rest/operation_user', {
                 params: this.findUserForm,
             });
 

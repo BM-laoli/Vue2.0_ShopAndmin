@@ -69,7 +69,8 @@
                   label="操作"
                   #default="{row}"
                   >
-                <el-link  :underline="false" icon="el-icon-s-marketing"  @click="showAnakysis(row._id)">消费分析</el-link>
+                <!-- <el-link  :underline="false" icon="el-icon-s-marketing"  ></el-link> -->
+                    <el-button  type="primary"  @click="showAnakysis(row._id)" >消费分析</el-button>
               </el-table-column>
             </el-table>
         </div>
