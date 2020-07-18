@@ -126,7 +126,7 @@
 
 <script>
 import breadCrumbs from '../../components/common/bread-crumbs'
-import { updateRight, getRight } from '../../api/shops/index'
+import { updateRight, getRight } from '../../api/shops/audit'
 export default {
   name: 'ShopRight',
   components: {

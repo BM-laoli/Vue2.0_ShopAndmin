@@ -202,7 +202,7 @@
 </template>
 
 <script>
-import { shopAuditDetail, passShopAudit } from '@/api/shops/index'
+import { shopAuditDetail, passShopAudit } from '@/api/shops/audit'
 export default {
   name: 'ShopAudit',
   data () {

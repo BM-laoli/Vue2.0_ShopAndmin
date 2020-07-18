@@ -112,7 +112,7 @@
 
 <script>
 import breadCrumbs from '../../components/common/bread-crumbs'
-import { getShopAudit, searchShopAudit } from '@/api/shops/index'
+import { getShopAudit, searchShopAudit } from '@/api/shops/audit'
 export default {
   components: {
     breadCrumbs,
