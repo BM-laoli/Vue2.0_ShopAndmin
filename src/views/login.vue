@@ -1,5 +1,5 @@
 <template>
-  <div class="contents">
+  <div class="contents" >
     <div class="login_box">
       <h2>系统登录</h2>
       <div class="box">
@@ -20,6 +20,7 @@
 <script>
 import { checkEmail } from "../lib/utils";
 import http from '../plugins/http'
+import { log } from 'util';
 export default {
   name: "login",
   data () {
@@ -53,7 +54,7 @@ export default {
         // 2.验证通过开始发请求
         let { data: res } = await http.post('/login', this.loginForm)
         // 3. 拿到数据之后开始做处理 是存还是抛出错误====> 请拦截器中判断错误
-
+        
         window.sessionStorage.setItem("token", res.token);
 
         this.$notify({
@@ -61,8 +62,7 @@ export default {
           message: "登录成功"
         });
         this.$router.push("/home");
-      })
-      this.$router.push("/home");
+      })  
 
     }
   }
@@ -77,6 +77,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: url('http://jiayihn.cn:9880/xjymanage/images/homeloge.jpg')
+
+  ;
+  background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
 }
 
 .login_box {

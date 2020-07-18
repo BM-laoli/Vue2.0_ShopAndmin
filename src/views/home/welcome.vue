@@ -9,26 +9,25 @@
             <div shadow="always" class="sonCard">
               <div class="card-box">
                 <div>
-                  总提现金额：<span>1555元</span>
+                  总提现金额：<span>{{(Math.random() * 100000).toFixed(2)}}元</span>
                 </div>
                 <div>
-                  总提现金额：<span>1555元</span>
+                  总提现金额：<span>{{(Math.random() * 100000).toFixed(2)}}元</span>
                 </div>
                 <div>
-                  总提现金额：<span>1555元</span>
+                  总提现金额：<span>{{(Math.random() * 100000).toFixed(2)}}元</span>
                 </div>
               </div>
               <div class="features">
                 <!-- <el-button size="mini" type="primary">5 </el-button> -->
                 <!-- <el-button size="mini" type="primary">5 </el-button> -->
                 <div>
-                  <el-button size="mini" type="primary">提现管理 </el-button>
+                  <el-button size="mini" type="primary" @click="()=>{$router.push('/home/finance')}">提现管理 </el-button>
                 </div>
-                <el-button size="mini" type="primary">平台支持明细 </el-button>
+                <el-button size="mini" type="primary" @click="()=>{ $router.push('/home/financeOut') }">平台支持明细 </el-button>
               </div>
             </div>
           </div>
-
         </el-col>
         <el-col :span="12">
           <!-- 提现 -->
@@ -36,22 +35,22 @@
             <div shadow="always" class="sonCard">
               <div class="card-box">
                 <div>
-                  总提现金额：<span>1555元</span>
+                  总提现金额：<span>{{(Math.random() * 100000).toFixed(2)}}元</span>
                 </div>
                 <div>
-                  总提现金额：<span>1555元</span>
+                  总提现金额：<span>{{(Math.random() * 100000).toFixed(2)}}元</span>
                 </div>
                 <div>
-                  总提现金额：<span>1555元</span>
+                  总提现金额：<span>{{(Math.random() * 100000).toFixed(2)}}元</span>
                 </div>
               </div>
               <div class="features">
                 <!-- <el-button size="mini" type="primary">5 </el-button> -->
                 <!-- <el-button size="mini" type="primary">5 </el-button> -->
                 <div>
-                  <el-button size="mini" type="primary">提现管理 </el-button>
+                  <el-button size="mini" type="primary" @click="()=>{ $router.push('/home/shops/shopsList') }">商铺列表 </el-button>
                 </div>
-                <el-button size="mini" type="primary">平台支持明细 </el-button>
+                <el-button size="mini" type="primary" @click="()=>{ $router.push('/home/shops/productList') }" >商品列表 </el-button>
               </div>
             </div>
           </div>
@@ -65,84 +64,28 @@
             <div shadow="always" class="sonCard">
               <div class="card-box">
                 <div>
-                  总提现金额：<span>1555元</span>
+                  共享商圈收益：<span>{{(Math.random() * 100000).toFixed(2)}}元</span>
                 </div>
                 <div>
-                  总提现金额：<span>1555元</span>
+                  个人商圈收益：<span>{{(Math.random() * 100000).toFixed(2)}}元</span>
                 </div>
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
+              
               </div>
               <div class="features">
                 <!-- <el-button size="mini" type="primary">5 </el-button> -->
                 <!-- <el-button size="mini" type="primary">5 </el-button> -->
                 <div>
-                  <el-button size="mini" type="primary">提现管理 </el-button>
+                  <el-button size="mini" type="primary" @click="()=>{ $router.push('/home/publicBusinessDistrict') }">共享商圈 </el-button>
                 </div>
-                <el-button size="mini" type="primary">平台支持明细 </el-button>
+                <el-button size="mini" type="primary" @click="()=>{ $router.push('/home/personalBusinessDistrict') }">个人商圈</el-button>
               </div>
             </div>
           </div>
 
         </el-col>
-        <el-col :span="12">
-          <!-- 提现 -->
-          <div class="muner font-md">
-            <div shadow="always" class="sonCard">
-              <div class="card-box">
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
-              </div>
-              <div class="features">
-                <!-- <el-button size="mini" type="primary">5 </el-button> -->
-                <!-- <el-button size="mini" type="primary">5 </el-button> -->
-                <div>
-                  <el-button size="mini" type="primary">提现管理 </el-button>
-                </div>
-                <el-button size="mini" type="primary">平台支持明细 </el-button>
-              </div>
-            </div>
-          </div>
-
-        </el-col>
+        
       </el-row>
-      <el-row>
-        <el-col :span="12">
-          <!-- 提现 -->
-          <div class="muner font-md">
-            <div shadow="always" class="sonCard">
-              <div class="card-box">
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
-                <div>
-                  总提现金额：<span>1555元</span>
-                </div>
-              </div>
-              <div class="features">
-                <!-- <el-button size="mini" type="primary">5 </el-button> -->
-                <!-- <el-button size="mini" type="primary">5 </el-button> -->
-                <div>
-                  <el-button size="mini" type="primary">提现管理 </el-button>
-                </div>
-                <el-button size="mini" type="primary">平台支持明细 </el-button>
-              </div>
-            </div>
-          </div>
-
-        </el-col>
-      </el-row>
+     
 
     </el-card>
   </div>

@@ -89,6 +89,7 @@
 
 <script>
 import ECharts from "@/lib/echarts.js";
+// import ECharts from 'echarts'
 import { getConsumpPersonById,getPersinalData } from '@/api/mock/business-district'
   export default {
     name:'PersonalAnalysis',

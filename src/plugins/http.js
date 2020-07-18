@@ -44,13 +44,17 @@ http.interceptors.response.use(
     setTimeout(() => {
       // Vue.__Shop_Scope.unloading()
         vm.$store.commit(UNLOADING)
-    }, 10);  
+    }, 500);  
 
     return res
     // 什么情况下 是会跑去err?只要不是正常的状态码
   },
   (err) => {
     if (err.response.data.message) {
+      setTimeout(() => {
+        // Vue.__Shop_Scope.unloading()
+          vm.$store.commit(UNLOADING)
+      }, 2000);  
       Vue.prototype.$message({
         type: 'error',
         message: err.response.data.message,
