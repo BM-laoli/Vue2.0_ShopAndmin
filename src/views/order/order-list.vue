@@ -39,7 +39,12 @@
       <div class="tabbe-box">
         <el-tabs v-model="activeName" type="card">
           <el-tab-pane label="全部" name="first">
-            <order-table :orderData="orderData"></order-table>
+            <order-table
+              :orderData="orderData"
+              @changeSize="($event)=>{parmas.size=$event}"
+              @changeCurrent="($event)=>{parmas.page=$event}"
+              @changeStatus="changeStatus($event)"
+            ></order-table>
           </el-tab-pane>
           <el-tab-pane label="待支付" name="second">
             <order-table></order-table>
@@ -91,7 +96,7 @@ export default {
         rules: []
       },
       activeName: "first",
-      orderData: [],
+      orderData: {},
       parmas: {
         size: 10,
         page: 1
@@ -110,11 +115,28 @@ export default {
     },
     addOrder() {
       this.$refs.orderAddRef.checkDrawer();
+    },
+    async init() {
+      const { data: res } = await getOrder(this.parmas);
+      this.orderData = res;
+    },
+    // 修改本条数据的状态
+    changeStatus(e) {
+      const data = this.orderData.records.find(v => v._id === e.id);
+      data.package = e.package;
     }
   },
-  async mounted() {
-    const { data: res } = await getOrder(this.parmas);
-    this.orderData = res;
+  mounted() {
+    this.init();
+    this.$watch(
+      "parmas",
+      () => {
+        this.init();
+      },
+      {
+        deep: true
+      }
+    );
   }
 };
 </script>

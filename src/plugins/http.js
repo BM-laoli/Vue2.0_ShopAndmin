@@ -4,7 +4,7 @@ import Vue from 'vue'
 
 // 线上接口1-v1版本
 const http = axios.create({
-  baseURL: 'https://tess.utools.club'
+  baseURL: 'https://tessli.utools.club/api'
 })
 
 // 线上接口v2
@@ -13,7 +13,7 @@ const Nesthttp = axios.create({
 })
 
 // 请求拦截 两个错误,配置token
-http.interceptors.request.use(
+Nesthttp.interceptors.request.use(
   (config) => {
     if (sessionStorage.token) {
       config.headers.Authorization = sessionStorage.token
@@ -28,7 +28,7 @@ http.interceptors.request.use(
 
 // 拦截调请求
 //我们在这里全局捕获错误，进行统一的错误处理,定义一个拦截器,response
-http.interceptors.response.use(
+Nesthttp.interceptors.response.use(
   (res) => {
     return res
     // 什么情况下 是会跑去err?只要不是正常的状态码
@@ -51,4 +51,4 @@ http.interceptors.response.use(
   }
 )
 
-export default http
+export default Nesthttp

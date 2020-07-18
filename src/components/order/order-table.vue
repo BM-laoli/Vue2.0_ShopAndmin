@@ -1,44 +1,83 @@
 <template>
-  <div>
+  <div v-if="orderData">
     <el-table :data="orderData.records" border style="width: 100%">
-      <el-table-column prop="id" label="商户ID" width="110"></el-table-column>
-      <el-table-column prop="name" label="商户名称" width="120"></el-table-column>
-      <el-table-column prop="orderId" label="订单号" width="100"></el-table-column>
+      <el-table-column prop="shopid[uid]" label="商户ID" width="110"></el-table-column>
+      <el-table-column prop="shopid[shop_name]" label="商户名称" width="120"></el-table-column>
+      <el-table-column prop="_id" label="订单号" width="100"></el-table-column>
       <el-table-column prop="orderList" label="商品列表" width="120">
         <template #default="{row}">
-          <div v-for="(v,i) in row.orderList" :key="i">
-            <span>{{v.commodity}}</span>
-            <span>*{{v.count}}</span>
+          <div v-for="(v,i) in row.produtc_id" :key="i">
+            <span>{{v.name}}</span>
+            <span>*1</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="orderTime" label="下单时间" width="180"></el-table-column>
+      <el-table-column prop="createdAt" label="下单时间" width="180">
+        <template #default="{row}">{{row.createdAt | timer('YYYY-MM-DD hh:mm:ss')}}</template>
+      </el-table-column>
       <el-table-column prop="total" label="订单总金额" width="100">
         <template #default="{row}">{{row.total}}元</template>
       </el-table-column>
-      <el-table-column prop="distribution" label="配送方式" width="80"></el-table-column>
-      <el-table-column prop="address" label="收货地址/提货人"></el-table-column>
-      <el-table-column prop="orderStatus" label="订单状态" width="100"></el-table-column>
+      <el-table-column prop="delivery" label="配送方式" width="80"></el-table-column>
+      <el-table-column prop="address" label="收货地址/提货人">
+        <template
+          #default="{row}"
+        >{{row.receipt_message.name}} {{row.receipt_message.phone}} {{row.receipt_message.location}}</template>
+      </el-table-column>
+      <el-table-column prop="orderStatus" label="订单状态" width="100">
+        <template #default="{row}">{{row.package |orderStatus }}</template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template #default="{row}">
           <el-button class="checkOrder" type="text" size="small" @click="lookDetailedData">查看订单</el-button>
           <el-button
-            v-if="row.orderStatus!=='已收货' && row.orderStatus!=='已取消'"
+            v-if="row.package<=2"
             type="text"
             size="small"
+            @click="changeStatus(row._id,8)"
           >取消订单</el-button>
-          <el-button v-if="row.orderStatus==='待发货'" type="text" size="small">确认发货</el-button>
-          <el-button v-if="row.orderStatus==='待配送'" type="text" size="small">确认配送</el-button>
-          <el-button v-if="row.orderStatus==='已发货'" type="text" size="small">查看发货单</el-button>
-          <el-button v-if="row.orderStatus==='待退款'" type="text" size="small">退款</el-button>
+          <el-button
+            v-if="row.package===5||row.package===7||row.package===8"
+            type="text"
+            size="small"
+            @click="changeStatus(row._id,9)"
+          >完成订单</el-button>
+          <el-button
+            v-if="row.package===2"
+            type="text"
+            size="small"
+            @click="changeStatus(row._id,3)"
+          >确认发货</el-button>
+          <el-button
+            v-if="row.package===1"
+            type="text"
+            size="small"
+            @click="changeStatus(row._id,2)"
+          >确认配送</el-button>
+          <el-button v-if="row.package===3" type="text" size="small">查看发货单</el-button>
+          <el-button
+            v-if="row.package===6"
+            type="text"
+            size="small"
+            @click="changeStatus(row._id,7)"
+          >退款</el-button>
+          <el-button
+            v-if="row.package===6"
+            type="text"
+            size="small"
+            @click="changeStatus(row._id,5)"
+          >拒绝退款</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
-      :page-sizes="[100, 200, 300, 400]"
-      :page-size="100"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="orderData.page"
+      :page-sizes="[5,10,20,50]"
+      :page-size.sync="orderData.size"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="400"
+      :total="orderData.total"
     ></el-pagination>
     <!-- 订单详情模态框 -->
     <el-dialog title="订单详情" :visible.sync="orderDialogTableVisible" width="40%">
@@ -94,6 +133,7 @@
 </template>
 <script>
 import { detailedMock } from "@/api/mock/test.js";
+import { changeOrderStatus } from "@/api/shops/order.js";
 export default {
   name: "OrderTable",
   props: ["orderData"],
@@ -112,6 +152,20 @@ export default {
       } = await detailedMock();
       this.loading = false;
       this.order = data.array;
+    },
+    // 分页功能
+    handleSizeChange(v) {
+      this.$emit("changeSize", v);
+    },
+    handleCurrentChange(v) {
+      this.$emit("changeCurrent", v);
+    },
+    // 修改状态功能集
+    async changeStatus(id, v) {
+      try {
+        const data = await changeOrderStatus(id, v);
+        this.$emit("changeStatus", { id, package: v });
+      } catch (err) {}
     }
   },
   computed: {
