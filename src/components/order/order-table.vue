@@ -29,7 +29,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template #default="{row}">
-          <el-button class="checkOrder" type="text" size="small" @click="lookDetailedData">查看订单</el-button>
+          <el-button class="checkOrder" type="text" size="small" @click="lookDetailedData(row)">查看订单</el-button>
           <el-button
             v-if="row.package<=2"
             type="text"
@@ -83,57 +83,60 @@
     <el-dialog title="订单详情" :visible.sync="orderDialogTableVisible" width="40%">
       <div class="order-data">
         <span class="order-left">商户ID：</span>
-        <span>{{order.id}}</span>
+        <span>{{order.shopid && order.shopid.shop_id}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">商户名称：</span>
-        <span>{{order.name}}</span>
+        <span>{{order.shopid && order.shopid.shop_name}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">订单号：</span>
-        <span>{{order.orderId}}</span>
+        <span>{{order._id}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">配送方式：</span>
-        <span>{{order.distribution}}</span>
+        <span>{{order.shopid && order.delivery}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">收货地址：</span>
-        <span>{{order.address}}</span>
+        <span>{{order.receipt_message && order.receipt_message.location}}-{{order.receipt_message && order.receipt_message.name}}-{{order.receipt_message && order.receipt_message.phone}}</span>
       </div>
       <div class="order-data">
         <span class="order-left">选购商品：</span>
-        <div v-for="(v,i) in order.orderList" :key="i">
+        <div v-for="(v,i) in order.delivery_price" :key="i">
           <div class="orderCount">
-            <img class="orderImg" :src="v.orderImg" />
-            <i>{{v.commodity}}</i>
-            <i>×{{v.count}}</i>
+            <img
+              class="orderImg"
+              src="https://t8.baidu.com/it/u=3571592872,3353494284&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1595313169&t=f9215647e3ee7b178487d0a9058bb61b"
+            />
+            <i>{{order.delivery_price[i][0].value}}</i>
+            <i>×{{order.delivery_price[i][0].count}}</i>
           </div>
         </div>
       </div>
       <div class="order-data">
         <span class="order-left">包装</span>
-        <span class="order-right">￥{{order.packing}}</span>
+        <span class="order-right">￥2</span>
       </div>
       <div class="order-data">
         <span class="order-left">优惠活动</span>
-        <span class="order-right">￥{{order.discounts}}</span>
+        <span class="order-right">￥10</span>
       </div>
       <div class="order-data">
         <span class="order-left">优惠卷</span>
-        <span class="order-right">￥{{order.coupon}}</span>
+        <span class="order-right">￥30</span>
       </div>
       <div class="order-data">
         <span class="order-left">配送费</span>
-        <span class="order-right">￥{{order.shippingFee}}</span>
+        <span class="order-right">￥10</span>
       </div>
-      <div class="total">合计 ￥{{total}}</div>
+      <div class="total">合计 ￥{{order.total}}</div>
     </el-dialog>
   </div>
 </template>
 <script>
 import { detailedMock } from "@/api/mock/test.js";
-import { changeOrderStatus } from "@/api/shops/order.js";
+import { changeOrderStatus, getOrderData } from "@/api/shops/order.js";
 export default {
   name: "OrderTable",
   props: ["orderData"],
@@ -145,13 +148,12 @@ export default {
     };
   },
   methods: {
-    async lookDetailedData() {
+    async lookDetailedData(row) {
       this.orderDialogTableVisible = true;
-      const {
-        data: { data }
-      } = await detailedMock();
+      const { data: res } = await getOrderData(row._id);
+      console.log(res);
       this.loading = false;
-      this.order = data.array;
+      this.order = res.records[0];
     },
     // 分页功能
     handleSizeChange(v) {
@@ -179,16 +181,6 @@ export default {
         .catch(() => {
           return null;
         });
-    }
-  },
-  computed: {
-    total() {
-      return (
-        this.order.total -
-        this.order.packing -
-        this.order.shippingFee -
-        this.order.coupon
-      );
     }
   }
 };
