@@ -27,7 +27,7 @@
           <el-col :span="8">
             <div class=" bg-purple-dark">
               <el-button @click="shopSearch" type="primary">查询</el-button>
-              <el-button native-type="reset" type="success">重置</el-button>
+              <el-button @click="getShopAuditList()" native-type="reset" type="success">重置</el-button>
             </div>
           </el-col>
         </el-row>
