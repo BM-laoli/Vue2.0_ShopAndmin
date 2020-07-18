@@ -26,3 +26,15 @@ export const getProducts = (id) => {
 export const addOrder = (data) => {
   return Nesthttp.post('/ordermange/createOrder', data)
 }
+
+// 根据id获取订单的所有数据
+export const getOrderData = (id) => {
+  return Nesthttp.get(`/ordermange/getOrderById?id=${id}`)
+}
+
+// 根据状态获取不同数据
+export const getOrderByStatus = (data) => {
+  return Nesthttp.get('/ordermange/queryStatus', {
+    params: data
+  })
+}
