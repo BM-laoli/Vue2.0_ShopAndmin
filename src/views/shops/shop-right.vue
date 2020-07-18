@@ -2,7 +2,7 @@
   <keep-alive>
     <div>
       <bread-crumbs :level="this.$route.meta"></bread-crumbs>
-      <el-form :inline="true" label-width="120px" :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
+      <el-form v-loading="loading" :inline="true" label-width="120px" :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
         <el-card>
           <div style="width:100%;background:#fff;padding-bottom:15px">
             <el-row>
@@ -134,6 +134,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       ruleForm: {
         right1: {
           all_public_num: '',
@@ -202,20 +203,27 @@ export default {
   },
   methods: {
     confirmRight (ruleForm) {
+      this.loading = true
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           this.$message.success('保存成功')
         } else {
-          console.log('error submit!!');
+          this.$message.error('保存失败,请稍后再试')
           return false;
         }
       });
+      this.loading = false
     }
   },
   async mounted () {
-    const { data: res } = await this.$http.get('/api/shops/rights')
-    // console.log(res)
-    this.ruleForm = res
+    this.loading = true
+    try {
+      const { data: res } = await this.$http.get('/api/shops/rights')
+      this.ruleForm = res
+    } catch (error) {
+      this.$message.error('获取数据失败,请稍后再试')
+    }
+    this.loading = false
   }
 }
 </script>

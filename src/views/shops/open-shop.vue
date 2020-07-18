@@ -14,10 +14,6 @@
           <el-col :span="6">
             <div class="grid-content bg-purple-dark">
               <span style="font-size:12px;width: 45px;line-height: 38px;">行业:</span>
-              <!-- <el-select v-model="fristValue" placeholder="请选择">
-                <el-option v-for="(item, index) in options1" :key="index" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select> -->
               <el-select v-model="secondValue" placeholder="请选择">
                 <el-option v-for="(item, index) in options2" :key="index" :label="item.label" :value="item.value">
                 </el-option>
@@ -37,7 +33,7 @@
       <el-row>
         <el-col :span="24">
           <div class="grid-content bg-purple-dark">
-            <el-table :data="tableData" style="width: 100%">
+            <el-table :data="tableData" style="width: 100%" v-loading="tableDataLoading">
               <el-table-column label="店铺编号">
                 <template slot-scope="scope">
                   <el-tooltip class="item" effect="dark" :content="scope.row.shop_id" placement="top-end">
@@ -68,9 +64,6 @@
                     <span style="margin-left: 5px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;margin:0">{{ scope.row.address }}</span>
                   </el-tooltip>
                 </template>
-                <!-- <template slot-scope="scope">
-                  <span>{{ scope.row.address }}</span>
-                </template> -->
               </el-table-column>
               <el-table-column label="联系电话">
                 <template slot-scope="scope">
@@ -119,6 +112,8 @@ export default {
   },
   data () {
     return {
+      // 加载
+      tableDataLoading: false,
       // 查询条件
       queryInfo: {
         size: 5,
@@ -128,29 +123,10 @@ export default {
       total: 0,
       // 商品编号输入
       shopNumberinput: '',
-      // 选择框第一个值绑定
-      fristValue: '',
       // 选择框第二个值绑定
       secondValue: '',
       // 表格数据
       tableData: [],
-      // {
-      //   value: '选项1',
-      //   label: '黄金糕'
-      // }, {
-      //   value: '选项2',
-      //   label: '双皮奶'
-      // }, {
-      //   value: '选项3',
-      //   label: '蚵仔煎'
-      // }, {
-      //   value: '选项4',
-      //   label: '龙须面'
-      // }, {
-      //   value: '选项5',
-      //   label: '北京烤鸭'
-      // }
-      options1: [],
       options2: [],
       value: ''
     }
@@ -159,8 +135,9 @@ export default {
     // 店铺查询
     async shopSearch () {
       if (this.shopNumberinput === '' && this.secondValue === '') {
-        this.$message.error('参数请输入完整')
+        return this.$message.error('参数请输入完整')
       }
+      this.tableDataLoading = true
       try {
         const { data: res } = await searchShopAudit({
           params: {
@@ -170,9 +147,13 @@ export default {
         })
         // console.log(res)
         this.tableData = res
+        this.shopNumberinput = ''
+        this.secondValue = ''
       } catch (error) {
-        console.log(error)
+        // console.log(error)
+        this.$message.error('查询失败,请稍后再试')
       }
+      this.tableDataLoading = false
     },
     // 审核
     handleEdit (index, row) {
@@ -180,37 +161,32 @@ export default {
       this.$router.push({ path: '/home/shops/openShop/audit', query: { id: `${row._id}` } })
     },
     async getShopAuditList () {
+      this.tableDataLoading = true
       try {
         const { data } = await getShopAudit(
           { params: this.queryInfo }
         )
-        console.log(data)
+        // console.log(data)
         this.tableData = data.records
         this.queryInfo.page = data.page
         this.queryInfo.size = data.size
         this.total = data.total
 
         data.records.forEach(v => {
-          this.options1.push({
-            value: v.shop_name,
-            label: v.shop_name
-          })
           this.options2.push({
             value: v.industry,
             label: v.industry
           })
         })
       } catch (error) {
-        console.log(error)
+        this.$message.error('获取数据失败,请稍后再试')
       }
+      this.tableDataLoading = false
     }
   },
   created () {
     this.getShopAuditList()
   },
-  mounted () {
-
-  }
 }
 </script>
 
