@@ -156,7 +156,7 @@
         >
             <el-form ref="resetPasswordForm">
                 <el-form-item>
-                    <el-input v-model="newPassword"></el-input>
+                    <el-input v-model="newPassword" type="password"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -184,7 +184,6 @@ export default {
     },
     data() {
         return {
-            // aaa: null,
             open: false,
             // 编辑用户的复选框存储点
             editFrom: null,
@@ -346,6 +345,7 @@ export default {
             this.$message.success('重置成功');
 
             this.resetPasswordDialogVisible = false;
+            this.newPassword = '';
         },
         // 点击停用按钮  修改账号状态
         async stopUse(row) {
@@ -354,7 +354,7 @@ export default {
                 `rest/operation_user/${row._id}`,
                 row
             );
-            // console.log(data);
+
             if (data.status !== 200) {
                 return this.$message.error('操作失败');
             }
@@ -370,7 +370,7 @@ export default {
         // 点击确定按钮  完成添加账户
         async add() {
             const selectArr = this.$refs.treeRef.getCheckedKeys();
-            console.log(selectArr);
+
             selectArr.forEach((v) => {
                 if (v === '共享商圈' || v === '个人商圈') {
                     this.userForm.rule.shops.children.push({ authName: v });
@@ -384,12 +384,12 @@ export default {
                     this.userForm.rule.buisness.children = [];
                 }
             });
-            console.log(this.userForm);
+
             const res = await this.$http.post(
                 'rest/operation_user',
                 this.userForm
             );
-            console.log(res);
+
             if (res.status !== 200) {
                 return this.$message.error('添加账户失败');
             }
@@ -436,28 +436,25 @@ export default {
         },
         // 点击确定  完成编辑功能
         edit() {
-            console.log(aaa);
-            console.log(this.editUserForm);
             this.$refs.editUserFormRef.validate(async (valid) => {
                 if (!valid) return;
                 const data = await this.$http.put(
                     `rest/operation_user/${this.editUserForm._id}`,
                     this.editUserForm
                 );
-                console.log(data);
 
                 this.editUserDialogVisible = false;
+                this.$message.success('修改成功');
             });
         },
         editUserDialogClosed() {
             this.$refs.editUserFormRef.resetFields();
             this.editFrom = [];
-            // this.editUserForm = null
         },
         // 点击编辑按钮  展示对话框
         showDialog(row) {
             this.editUserForm = row;
-            // console.log(this.editUserForm);
+
             let array = [];
             let obj = row.rule;
             for (let key in obj) {
@@ -471,7 +468,7 @@ export default {
         // 查找账户
         async findUser(form) {
             this.findUserForm = form;
-            console.log(this.findUserForm);
+
             const res = await this.$http.get(
                 `rest/operation_user/unitedquery/`,
                 {
@@ -487,7 +484,6 @@ export default {
         },
         // 点击重置按钮  清空查找表单输入
         resetFindUserForm() {
-            // console.log(this.$refs.findUserRef);s
             this.$refs.findUserRef.$refs.findRef.resetFields();
             this.getUserList();
         },

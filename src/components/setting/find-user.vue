@@ -64,7 +64,7 @@ export default {
         return {
             findUserFormRules: {
                 username: [
-                    // { required: true, meeage: "请输入账号", trigger: "blur" },
+                    { required: true, meeage: '请输入账号', trigger: 'blur' },
                     {
                         mix: 4,
                         max: 15,
@@ -75,9 +75,11 @@ export default {
                 name: [
                     { required: true, mesage: '请输入姓名', trigger: 'blur' },
                 ],
-                // phone: [{ required: true, meeage: "请输入手机号", trigger: "blur" }]
+                phone: [
+                    { required: true, meeage: '请输入手机号', trigger: 'blur' },
+                ],
             },
-        }
+        };
     },
-}
+};
 </script>

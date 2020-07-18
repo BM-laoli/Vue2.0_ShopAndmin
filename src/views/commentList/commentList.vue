@@ -171,14 +171,18 @@ export default {
                     size: 10,
                     page: 1,
                 });
-
+                console.log(res);
                 this.list = res.records;
+                this.total = res.total;
+                this.userCount = res.records.length;
+
+                this.shopCount = res.records[0].Pro_number;
             });
         },
         // 加载推广用户列表
         async loadUserList() {
             const { data: res } = await getUserList();
-            console.log(res);
+            // console.log(res);
             // if (res.code !== 200) {
             //     this.$message.error('获取推广用户列表失败');
             // }
