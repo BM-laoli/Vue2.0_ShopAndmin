@@ -15,10 +15,7 @@
         <!-- 查询用户表单end -->
 
         <!-- 新增账号start -->
-        <el-button
-            type="success"
-            style="margin:0 0 0 40px"
-            @click="addUserDialogVisible = true"
+        <el-button type="success" style="margin:0 0 0 40px" @click="openAdd"
             >新增账号</el-button
         >
         <!-- 新增账号end -->
@@ -75,7 +72,7 @@
                 <el-form-item label="职位" prop="role">
                     <el-input v-model="userForm.role"></el-input>
                 </el-form-item>
-                <el-form-item label="权限" prop="rule">
+                <el-form-item label="权限" prop="rule" v-if="open">
                     <!-- 树形控件 -->
                     <el-tree
                         ref="treeRef"
@@ -129,6 +126,7 @@
                 <el-form-item label="权限" prop="rule">
                     <!-- 树形控件 -->
                     <el-tree
+                        current-node-key="id"
                         ref="treeRef"
                         :data="treedata"
                         show-checkbox
@@ -186,6 +184,8 @@ export default {
     },
     data() {
         return {
+            // aaa: null,
+            open: false,
             // 编辑用户的复选框存储点
             editFrom: null,
             ruleProps: {
@@ -323,6 +323,10 @@ export default {
         };
     },
     methods: {
+        openAdd() {
+            this.addUserDialogVisible = true;
+            this.open = true;
+        },
         // 监听重置密码对话框关闭事件
         resetPasswordClosed() {
             this.$refs.resetPasswordForm.resetFields();
@@ -361,8 +365,7 @@ export default {
         // 监听添加账号对话框的关闭事件
         addUserDialogClosed() {
             this.$refs.userFormRef.resetFields();
-            this.userForm.rule.buisness = {};
-            this.userForm.rule.shops = {};
+            this.open = false;
         },
         // 点击确定按钮  完成添加账户
         async add() {
@@ -432,10 +435,18 @@ export default {
             this.$message.success('删除成功');
         },
         // 点击确定  完成编辑功能
-        async edit() {
-            const res = await this.$refs.editUserFormRef.validate((valid) => {
-                console.log(this.userForm);
-                this.editFrom = [];
+        edit() {
+            console.log(aaa);
+            console.log(this.editUserForm);
+            this.$refs.editUserFormRef.validate(async (valid) => {
+                if (!valid) return;
+                const data = await this.$http.put(
+                    `rest/operation_user/${this.editUserForm._id}`,
+                    this.editUserForm
+                );
+                console.log(data);
+
+                this.editUserDialogVisible = false;
             });
         },
         editUserDialogClosed() {
@@ -446,6 +457,7 @@ export default {
         // 点击编辑按钮  展示对话框
         showDialog(row) {
             this.editUserForm = row;
+            // console.log(this.editUserForm);
             let array = [];
             let obj = row.rule;
             for (let key in obj) {

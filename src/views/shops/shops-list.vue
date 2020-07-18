@@ -4,28 +4,32 @@
     <el-card class="box-card colors_dark">
       <!-- heder头部 -->
       <div class="hedaer-box">
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
           <el-form-item label="店铺名称/编号">
-            <el-input v-model="formInline.query" placeholder="店铺名称/编号"></el-input>
+            <el-input v-model="formInline.keyword2" placeholder="店铺名称"></el-input>
           </el-form-item>
           <el-form-item label="行业">
-            <el-select v-model="formInline.industry" placeholder="选择所属行业">
-              <el-option label="航天制造业" value="航天制造业"></el-option>
-              <el-option label="生鲜" value="生鲜"></el-option>
+            <el-select v-model="formInline.keyword1" placeholder="选择所属行业">
+              <el-option :label="v.name" :value="v.name" v-for="(v,i) in industries" :key="i"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item></el-form-item>
+          <div class="box2">
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit">查询</el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button native-type="reset" @click="handleCurrentChange()">重置</el-button>
+            </el-form-item>
+          </div>
         </el-form>
-        <div class="box2">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="primary" @click="onCancel">重置</el-button>
-        </div>
       </div>
 
-      <div class="border-middleware" v-if="shopsData.shopsList.length !== 0">
+      <!-- <div class="border-middleware" v-if="shopsData.shopsList.length !== 0"> -->
+      <div class="border-middleware">
         <div>
           商铺数量：
-          <span>{{shopsData.shopsList.length}}</span>
+          <span>{{query.total}}</span>
         </div>
         <div>
           共享商铺数量：
@@ -33,13 +37,13 @@
         </div>
         <div>
           销售总额：
-          <span>1555w</span>
+          <span>{{(Math.random()*10000).toFixed(2)}}w</span>
         </div>
       </div>
       <!-- body 身体 -->
       <div class="tabbe-box">
         <!-- 数据统计项 -->
-        <el-table :data="shopsData.shopsList" style="width: 100%">
+        <el-table :data="shopsData.shopsList" style="width: 100%" v-loading="loading">
           <el-table-column label="店铺编号" width="80" #default="{row:shopbase}">
             <span>{{shopbase._id.slice(0,5)}}</span>
           </el-table-column>
@@ -92,23 +96,35 @@
         <el-link :underline="false" icon="el-icon-s-marketing">经营分析</el-link>
         <el-link :underline="false" icon="el-icon-refresh">启用</el-link>
             <el-link :underline="false" icon="el-icon-delete">删除</el-link>-->
-            <router-link :to="{path:'/home/shops/shopDetail', query:{id: shopbase.uid}}">详情</router-link>
-            <router-link :to="{path:'/rest/public_shop_base/byId', query:{id: shopbase.uid}}">查看商品</router-link>
-            <router-link :to="{path:'/home/shops/businessAnalysis', query:{id: shopbase.uid}}">经营分析</router-link>
-            <router-link :to="{path:'/rest/public_shop_base/byId', query:{id: shopbase.uid}}">启用</router-link>
-            <router-link to="{path:'//rest/public_shop_base/byId', query:{id: uid}}">删除</router-link>
+            <router-link
+              class="cut-down"
+              :to="{path:'/home/shops/shopDetail', query:{id: shopbase._id}}"
+            >详情</router-link>
+            <router-link
+              class="cut-down"
+              :to="{path:'/home/shops/productList', query:{id: shopbase._id}}"
+            >查看商品</router-link>
+            <router-link
+              class="cut-down"
+              :to="{path:'/home/shops/businessAnalysis', query:{id: shopbase._id+''}}"
+            >经营分析</router-link>
+            <span
+              class="cut-down"
+              @click="stateChange(shopbase._id)"
+            >{{shopbase.is_approved ? '停用' :'启用' }}</span>
+            <span class="delete" @click="delShop(shopbase._id)">删除</span>
           </el-table-column>
         </el-table>
         <!-- 分页器 -->
 
         <el-pagination
-          @size-change="getShoplist()"
-          @current-change="getShoplist()"
-          :current-page.sync="queryInfo.page"
-          :page-sizes="[2, 5, 10]"
-          :page-size.sync="queryInfo.size"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="query.page"
+          :page-sizes="[1, 2,3,4, 5, 10]"
+          :page-size="query.size"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="queryInfo.total"
+          :total="query.total"
         ></el-pagination>
       </div>
     </el-card>
@@ -117,68 +133,144 @@
 
 <script>
 import breadCrumbs from "../../components/common/bread-crumbs";
+import {
+  getShopList,
+  getAllIndustry,
+  getIndustry
+} from "../../api/mock/cjhttp";
 export default {
   name: "shopList",
   components: {
     breadCrumbs
   },
-  created() {
-    this.getShoplist();
-  },
   data() {
     return {
-      formInline: {},
+      industries: [],
+      loading: false,
+      formInline: {
+        // 商铺名
+        keyword2: "",
+        // 行业
+        keyword1: ""
+      },
       shopsData: {
         shopsList: []
       },
-      queryInfo: {
+      query: {
         total: 0,
         size: 5,
         page: 1
       }
     };
   },
+  created() {
+    // this.getShoplistFn();
+    this.handleCurrentChange();
+    this.getAllIndustryFn();
+  },
   methods: {
-    async getShoplist() {
-      const { data: res } = await this.$http.get("/rest/public_shop_base/all", {
-        params: this.queryInfo
+    // 启用和停用之间切换
+    stateChange(id) {
+      const table = this.shopsData.shopsList;
+      table.map(v => {
+        if (v._id === id) {
+          v.is_approved = !v.is_approved;
+        }
       });
+    },
+    // 获取所有行业
+    async getAllIndustryFn() {
+      this.industries = [];
+      const { data: res } = await getAllIndustry();
+      console.log("industries", res);
+      this.industries = res.records;
+    },
+    // 删除商铺
+    delShop(id) {
+      this.$msgbox({
+        type: "info",
+        message: "你确认要删除该商铺吗？",
+        showClose: true,
+        showCancelButton: true,
+        callback: action => {
+          console.log(id);
+          if (action === "confirm") {
+            const table = this.shopsData.shopsList;
+            this.shopsData.shopsList = table.filter(v => {
+              return v._id != id;
+            });
+            this.query.total--;
+            this.query.size--;
+            this.$message.success("删除成功！");
+          } else {
+            return;
+          }
+        }
+      });
+    },
+    // 分页展示每页的数据size变化时
+    handleSizeChange(size) {
+      this.query.size = size;
+      this.handleCurrentChange();
+    },
+    // 当前页变化时获取商品列表
+    async handleCurrentChange(page) {
+      this.formInline.keyword1 = "";
+      this.query.page = page || 1;
+      // this.getShoplistFn();
+      this.loading = true;
+      const { data: res } = await getShopList(this.query);
       this.shopsData.shopsList = res.records;
       // 为分页器传输配置
-      (this.queryInfo.total = res.total),
-        (this.queryInfo.size = res.size),
-        (this.queryInfo.page = res.page);
+      this.query.total = res.total;
+      this.loading = false;
     },
-    onSubmit() {
-      console.log(this.formInline);
-    },
-    onCancel() {}
+    // 根据商铺名和行业查询商铺ju
+    async onSubmit() {
+      const { data: res } = await getIndustry(this.formInline);
+      console.log("chaxun", res);
+      this.shopsData.shopsList = res;
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.cut-down {
+  color: blue;
+  text-decoration: underline;
+  display: inline-block;
+  margin-right: 10px;
+  cursor: pointer;
+}
 .el-card {
   margin: 15px;
   margin-top: 22px;
-  background-color: #e6e6fa;
+  background-color: #fff;
   padding: 8px;
 }
 .hedaer-box {
   width: 100%;
-  height: 150px;
-  background-color: pink;
+  border-radius: 10px;
+  background-color: #e6e6fa;
+  padding: 20px 20px 0;
+  // background-color: pink;
+}
+.demo-form-inline {
+  display: flex;
+  justify-content: space-between;
 }
 .tabbe-box {
   width: 100%;
-  height: 1000px;
-  background-color: cornflowerblue;
+  border-radius: 10px;
+  background-color: #e6e6fa;
+  padding: 20px;
+  // background-color: cornflowerblue;
 }
 
 .border-middleware {
   width: 100%;
-  height: 80px;
-  background-color: yellowgreen;
+  // background-color: yellowgreen;
   margin: 10px 0;
 }
 
@@ -203,5 +295,10 @@ export default {
 .el-link {
   font-size: 12px;
   padding: 5px;
+}
+.delete {
+  color: red;
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

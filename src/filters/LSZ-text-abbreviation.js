@@ -12,6 +12,22 @@ Vue.filter('reduceText', (value, agr1, arg2) => {
   }
 })
 
+// 去掉返回数据里images的_id键值对
+export const filterImg = (records) => {
+  records.forEach((v) => {
+    let imgs = v.image
+    let arr = []
+
+    for (var k in imgs) {
+      if (!(k === '_id')) {
+        arr.push(imgs[k])
+      }
+    }
+    console.log(arr, '1123123')
+    return (v.image = arr)
+  })
+}
+
 // 商铺字段的过滤器，要过滤的参数放在第一个，,
 Vue.filter('totalFilter', (value, agr1, arg2) => {
   let arr = value.filter((v) => {

@@ -74,22 +74,22 @@
         <!-- 推广店铺start -->
         <el-card class="box-card">
             <el-table class="table-list" :data="list" :border="false">
-                <el-table-column prop="shop_id" label="店铺ID">
+                <el-table-column prop="shopebaseid._id" label="店铺ID">
                 </el-table-column>
-                <el-table-column prop="shop_name" label="店铺名称">
+                <el-table-column prop="shopebaseid.shop_name" label="店铺名称">
                 </el-table-column>
-                <el-table-column prop="address" label="店铺地址">
+                <el-table-column prop="shopebaseid.address" label="店铺地址">
                 </el-table-column>
-                <el-table-column prop="shop_tel" label="店铺联系电话">
+                <el-table-column prop="shopebaseid.phone" label="店铺联系电话">
                 </el-table-column>
-                <el-table-column prop="open_date" label="推广开店日期">
+                <el-table-column prop="start_time" label="推广开店日期">
                 </el-table-column>
                 <el-table-column
                     prop="earnings"
                     label="推广收益"
                     #default="{row}"
                 >
-                    {{ row.earnings + '元' }}
+                    {{ row.pro_perice + '元' }}
                 </el-table-column>
             </el-table>
 
@@ -112,7 +112,7 @@
 
 <script>
 import breadCrumbs from '../../components/common/bread-crumbs';
-import { getShopListById } from '../../api/mock/cuzHttp';
+import { getShopListById, getPromoteByName } from '../../api/mock/cuzHttp';
 export default {
     name: 'PromotionDetails',
     components: { breadCrumbs },
@@ -150,17 +150,24 @@ export default {
     },
     methods: {
         // 点击查询店铺
-        async toFindShop() {
-            await this.$refs.findFormRef.validate((valid) => {
+        toFindShop() {
+            this.$refs.findFormRef.validate(async (valid) => {
                 if (!valid) return;
 
-                this.loadShopList();
-                this.resetForm();
+                const data = await getPromoteByName({
+                    keyword1: this.findForm.query,
+                    keyword2: this.findForm.date[0],
+                    keyword3: this.findForm.date[1],
+                });
+                console.log(data);
+                let res = data.data.filter((v) => v.inventory_docs.length > 0);
+                console.log(res);
             });
         },
         // 点击重置查询表单
         resetForm() {
             this.$refs.findFormRef.resetFields();
+            this.loadShopList();
         },
         // 监听size变化
         handleSizeChange(newSize) {
@@ -173,13 +180,16 @@ export default {
             this.loadShopList();
         },
         async loadShopList() {
-            // console.log(this.$route.params.id);
-            const { data: res } = await getShopListById(this.findForm);
-            console.log(res);
-            this.list = res.data;
+            const { data: res } = await getShopListById({
+                id: this.$route.params.id,
+            });
+
+            this.list = res.records;
             this.total = res.total;
-            this.earnings = res.earnings_count;
-            this.shopCount = res.shopCount;
+
+            this.shopCount = res.records.length;
+            // 通过遍历拿到总收益金额
+            res.records.forEach((v) => (this.earnings += v.pro_perice));
         },
     },
     async created() {

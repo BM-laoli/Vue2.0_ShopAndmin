@@ -3,7 +3,11 @@ import axios from 'axios'
 import Vue from 'vue'
 
 const http = axios.create({
-  baseURL: 'https://tess.utools.club/api',
+  baseURL: 'http://testli.utools.club/api',
+})
+
+const Nesthttp = axios.create({
+  baseURL: 'http://nestapi.utools.club',
 })
 
 // 请求拦截 两个错误,配置token
@@ -11,11 +15,6 @@ http.interceptors.request.use(
   (config) => {
     if (sessionStorage.token) {
       config.headers.Authorization = sessionStorage.token
-    }
-
-    // 接口连调说明,如果你mock的数据中没有rest那么我就任务这个是调用正在的线上解控
-    if (!/\/api\//.test(config.baseURL)) {
-      config.baseURL = 'http://nestapi.utools.club'
     }
 
     return config
@@ -51,4 +50,5 @@ http.interceptors.response.use(
   }
 )
 
+export { Nesthttp }
 export default http

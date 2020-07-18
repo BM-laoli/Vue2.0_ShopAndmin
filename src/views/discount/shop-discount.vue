@@ -5,11 +5,11 @@
       <div class="search">
         <div class="shopName">
           <span>店铺ID/名称</span>
-          <el-input v-model="searchForm.shopName" placeholder="搜索店铺ID/名称"></el-input>
+          <el-input v-model="searchForm.keyword2" placeholder="搜索店铺ID"></el-input>
         </div>
         <div class="couponName">
           <span>优惠券</span>
-          <el-input v-model="searchForm.couponName" placeholder="搜索优惠券名称"></el-input>
+          <el-input v-model="searchForm.keyword1" placeholder="搜索优惠券名称"></el-input>
         </div>
         <div class="btn">
           <el-button type="primary" @click="search">查询</el-button>
@@ -20,47 +20,40 @@
     <el-card class="tabel-card">
       <div class="count">
         <div class="couponCount">
-          发放总数量：{{ couponCount }}张
+          发放总数量：{{ countNum }}张
         </div>
         <div class="priceCount">
-          领取总金额：{{ priceCount }}元
+          领取总金额：{{ countPrice }}元
         </div>
       </div>
       <el-table :data="couponList" style="width: 100%">
-        <el-table-column prop="id" label="店铺id" width="100">
+        <el-table-column prop="shopebaseid._id" label="店铺id" width="200">
         </el-table-column>
-        <el-table-column prop="shop_name" label="店铺名称">
+        <el-table-column prop="shopebaseid.shop_name" label="店铺名称">
         </el-table-column>
-        <el-table-column prop="coupon_name" label="优惠券名称">
+        <el-table-column prop="name" label="优惠券名称">
         </el-table-column>
         <el-table-column prop="coupon_price" label="优惠券金额/元">
         </el-table-column>
-        <el-table-column label="使用金额限制">
-          <template v-slot="scope">
-            <div>
-              {{ scope.row.price_limit ? scope.row.price_limit :'无' }}
-            </div>
-          </template>
+        <el-table-column prop="coupon_limit" label="使用金额限制">
         </el-table-column>
-        <el-table-column label="使用时限/天">
-          <template v-slot="scope">
-            <div>
-              {{ scope.row.coupon_day ? scope.row.coupon_day :'无' }}
-            </div>
-          </template>
+        <el-table-column prop="coupon_time" label="使用时限/天">
         </el-table-column>
-        <el-table-column prop="coupon_count" label="发放总数量/张">
+        <el-table-column prop="push_coupon_limt" label="发放总数量/张">
         </el-table-column>
-        <el-table-column prop="price_count" label="领取金额/元">
+        <el-table-column prop="receive_coupon_limt" label="领取金额/元">
         </el-table-column>
       </el-table>
+      <el-pagination @current-change="handleCurrentChange" :current-page.sync="pagationData.page"
+        :page-size="pagationData.size" layout="total, prev, pager, next, jumper" :total="total">
+      </el-pagination>
     </el-card>
   </div>
 </template>
 
 <script>
 import breadCrumbs from '../../components/common/bread-crumbs'
-import { getShopCouponAPI } from '@/api/mock/shop_discount'
+import { getShopCouponListApi, getQueryShopCouponApi } from '@/api/coupon/coupon_shop'
 export default {
   components: {
     breadCrumbs,
@@ -71,39 +64,51 @@ export default {
         shopName: '',
         couponName: ''
       },
-      couponList: []
+      pagationData: {
+        size: 10,
+        page: 1
+      },
+      couponList: [],
+      total: 0,
     }
   },
   methods: {
+    // 获取商铺优惠券列表
     async getShopCoupon () {
-      const { data } = await getShopCouponAPI();
-      data.data.data.map(v => {
-        v.price_count = v.coupon_count * v.coupon_price
-      })
-      this.couponList = data.data.data;
-      console.log(this.couponList)
-
+      const { data } = await getShopCouponListApi(this.pagationData);
+      this.total = data.total
+      this.couponList = data.records
     },
+    // 重置表单
     resetForm () {
-      this.searchForm.shopName = '';
-      this.searchForm.couponName = ''
+      this.searchForm = {
+        keyword2: '',  //店铺名称
+        keyword1: ''    // 优惠券名称
+      }
+      this.getShopCoupon()
     },
-    search () {
-      if (this.searchForm.shopName.trim().length === 0 && this.searchForm.couponName.trim().length === 0) {
+    // 搜索
+    async search () {
+      if (this.searchForm.keyword2.trim().length === 0 && this.searchForm.keyword1.trim().length === 0) {
         return null
       }
-      this.getShopCoupon();
+      let res = await getQueryShopCouponApi(this.searchForm)
+      this.couponList = res.data
+    },
+    handleCurrentChange (newPage) {
+      this.pagationData.page = newPage
+      this.getShopCoupon()
     }
   },
   computed: {
-    couponCount () {
-      return this.couponList.reduce((count, cur, i) => {
-        return count += cur.coupon_count
+    countNum () {
+      return this.couponList.reduce((countNum, cur, i) => {
+        return countNum += cur.push_coupon_limt
       }, 0)
     },
-    priceCount () {
-      return this.couponList.reduce((count, cur, i) => {
-        return count += cur.price_count
+    countPrice () {
+      return this.couponList.reduce((countNum, cur, i) => {
+        return countNum += cur.receive_coupon_limt * cur.push_coupon_limt
       }, 0)
     }
   },

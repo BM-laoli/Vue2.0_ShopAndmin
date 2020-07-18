@@ -3,17 +3,8 @@
     <bread-crumbs :level="this.$route.meta"></bread-crumbs>
     <el-card>
       素材名称
-      <el-input
-        v-model="input"
-        placeholder="请输入内容"
-        class="publicInput"
-      ></el-input
-      >素材类别
-      <el-select
-        v-model="selectDad"
-        placeholder="请选择"
-        @change="changeDad($event)"
-      >
+      <el-input v-model="input" placeholder="请输入内容" class="publicInput"></el-input>素材类别
+      <el-select v-model="selectDad" placeholder="请选择" @change="changeDad($event)">
         <el-option
           v-for="item in dataSelect[0]"
           :key="item.id"
@@ -27,21 +18,25 @@
     </el-card>
 
     <el-card style="margin-top:15px">
-      <el-button type="success" @click="addPic.dialogVisible = true"
-        >上传</el-button
-      >
+      <el-button type="success" @click="addPic.dialogVisible = true">上传</el-button>
       <el-table :data="tableData" style="width: 100%;margin-top:25px">
         <el-table-column prop="name" label="素材名称"></el-table-column>
-        <el-table-column label="素材图" #default="{row}">{{
+        <el-table-column label="素材图" #default="{row}">
+          {{
           row.image
-        }}</el-table-column>
-        <el-table-column label="素材类别 " #default="{row}">{{
+          }}
+        </el-table-column>
+        <el-table-column label="素材类别 " #default="{row}">
+          {{
           row.category
-        }}</el-table-column>
+          }}
+        </el-table-column>
         <el-table-column prop="price" label="价格"></el-table-column>
-        <el-table-column label="上传日期 " #default="{row}">{{
+        <el-table-column label="上传日期 " #default="{row}">
+          {{
           row.public_date | dateFormat
-        }}</el-table-column>
+          }}
+        </el-table-column>
         <el-table-column label="操作" width="180" #default="{row}">
           <el-button @click="editPicUpload(row._id)">操作</el-button>
         </el-table-column>
@@ -72,18 +67,10 @@
         label-width="80px"
       >
         <el-form-item label="素材名称" prop="name">
-          <el-input
-            v-model="addPic.form.data.name"
-            placeholder="请输入内容"
-            style="width:100%"
-          ></el-input>
+          <el-input v-model="addPic.form.data.name" placeholder="请输入内容" style="width:100%"></el-input>
         </el-form-item>
         <el-form-item label="素材分类" prop="category">
-          <el-select
-            v-model="addPic.form.data.category"
-            placeholder="请选择"
-            style="width:100%"
-          >
+          <el-select v-model="addPic.form.data.category" placeholder="请选择" style="width:100%">
             <el-option
               v-for="item in dataSelect[0]"
               :key="item.id"
@@ -98,8 +85,7 @@
             placeholder="请输入内容"
             class="publicInput"
             style="width:95%"
-          ></el-input
-          >元
+          ></el-input>元
         </el-form-item>
         <el-form-item label="素材上传">
           <el-upload
@@ -144,18 +130,10 @@
         label-width="80px"
       >
         <el-form-item label="素材名称" prop="name">
-          <el-input
-            v-model="editPic.form.data.name"
-            placeholder="请输入内容"
-            style="width:100%"
-          ></el-input>
+          <el-input v-model="editPic.form.data.name" placeholder="请输入内容" style="width:100%"></el-input>
         </el-form-item>
         <el-form-item label="素材分类" prop="category">
-          <el-select
-            v-model="editPic.form.data.category"
-            placeholder="请选择"
-            style="width:100%"
-          >
+          <el-select v-model="editPic.form.data.category" placeholder="请选择" style="width:100%">
             <el-option
               v-for="item in dataSelect[0]"
               :key="item.id"
@@ -170,8 +148,7 @@
             placeholder="请输入内容"
             class="publicInput"
             style="width:95%"
-          ></el-input
-          >元
+          ></el-input>元
         </el-form-item>
         <el-form-item label="素材上传">
           <el-upload
@@ -207,276 +184,290 @@
 </template>
 
 <script>
-import breadCrumbs from '../../components/common/bread-crumbs'
+import breadCrumbs from "../../components/common/bread-crumbs";
 import {
   getMaterial,
   createStyleQuery,
   getStyleEdit,
-  getStyleQuery,
-} from '../../api/mock/zjc'
+  getStyleQuery
+} from "../../api/mock/zjc";
 export default {
   components: {
-    breadCrumbs,
+    breadCrumbs
   },
   data() {
     return {
-      input: '',
-      selectDad: '',
-      selectSon: '',
+      input: "",
+      selectDad: "",
+      selectSon: "",
 
       tableData: [],
       addPic: {
         dialogVisible: false,
         handleClose(done) {
-          this.$confirm('确认关闭？')
-            .then((_) => {
-              done()
+          this.$confirm("确认关闭？")
+            .then(_ => {
+              done();
             })
-            .catch((_) => {})
+            .catch(_ => {});
         },
-        onOK: () => {
-          console.log(this.addPic.form.data)
+        onOK: async () => {
+          console.log(this.addPic.form.data);
           try {
-            createStyleQuery(this.addPic.form.data)
+            await createStyleQuery(this.addPic.form.data);
           } catch (err) {
-            console.log(err)
+            console.log(err);
           }
-          this.addPic.dialogVisible = false
+          // this.addPic.form.data.name = "";
+          // this.addPic.form.data.category = "";
+          // this.addPic.form.data.file = "";
+          // this.addPic.form.data.price = "";
+          this.$refs["addPicform"].resetFields();
+          this.loader();
+
+          this.addPic.dialogVisible = false;
         },
         form: {
           data: {
-            name: '',
-            category: '',
+            name: "",
+            category: "",
             price: 0,
-            file: '',
-            image: 'hehehe',
+            file: "",
+            image: "hehehe",
             is_free: true,
-            css_name: 'heheh',
-            updateId: '5f0dc762e9e6c49180f3c382',
+            css_name: "heheh",
+            updateId: "5f0dc762e9e6c49180f3c382",
             ispublic: false,
-            public_date: '2020-07-17T10:38:55.957Z',
-            remarks: 'asdadsasd',
-            createdAt: '2020-07-17T10:38:55.957Z',
-            updatedAt: '2020-07-17T10:38:55.957Z',
+            public_date: "2020-07-17T10:38:55.957Z",
+            remarks: "asdadsasd",
+            createdAt: "2020-07-17T10:38:55.957Z",
+            updatedAt: "2020-07-17T10:38:55.957Z"
           },
           rules: {
             name: [
-              { required: true, message: '请输入素材名称', trigger: 'blur' },
+              { required: true, message: "请输入素材名称", trigger: "blur" },
               {
                 min: 2,
                 max: 8,
-                message: '长度在 2 到 8 个字符',
-                trigger: 'blur',
-              },
+                message: "长度在 2 到 8 个字符",
+                trigger: "blur"
+              }
             ],
             category: [
-              { required: true, message: '请选择素材分类', trigger: 'change' },
+              { required: true, message: "请选择素材分类", trigger: "change" }
             ],
             price: [
               {
                 required: true,
                 min: 1,
                 max: 999,
-                type: 'number',
-                message: '请输入1-999之间的价格',
-                trigger: 'blur',
-              },
-            ],
-          },
+                type: "number",
+                message: "请输入1-999之间的价格",
+                trigger: "blur"
+              }
+            ]
+          }
         },
         uploadPic: {
-          dialogImageUrl: '',
+          dialogImageUrl: "",
           dialogVisible: false,
           disabled: false,
           handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url
-            this.dialogVisible = false
-            console.log(file)
-          },
-        },
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = false;
+            console.log(file);
+          }
+        }
       },
       editPic: {
         dialogVisible: false,
         handleClose(done) {
-          this.$confirm('确认关闭？')
-            .then((_) => {
-              done()
+          this.$confirm("确认关闭？")
+            .then(_ => {
+              done();
             })
-            .catch((_) => {})
+            .catch(_ => {});
         },
-        onOK: () => {
-          console.log(this.addPic.form.data)
+        onOK: async () => {
+          console.log(this.addPic.form.data);
           try {
-            getStyleEdit(
+            await getStyleEdit(
               this.editPic.form.data.updateId,
               this.editPic.form.data
-            )
+            );
           } catch (err) {
-            console.log(err)
+            console.log(err);
           }
-          this.editPic.dialogVisible = false
+          this.loader();
+          this.$refs["editPicform"].resetFields();
+          this.editPic.dialogVisible = false;
         },
         form: {
           data: {
-            name: '',
-            category: '',
+            name: "",
+            category: "",
             price: 0,
-            file: '',
-            image: 'hehehe',
+            file: "",
+            image: "hehehe",
             is_free: true,
-            css_name: 'heheh',
-            updateId: '',
+            css_name: "heheh",
+            updateId: "",
             ispublic: false,
-            public_date: '2020-07-17T10:38:55.957Z',
-            remarks: 'asdadsasd',
-            createdAt: '2020-07-17T10:38:55.957Z',
-            updatedAt: '2020-07-17T10:38:55.957Z',
+            public_date: "2020-07-17T10:38:55.957Z",
+            remarks: "asdadsasd",
+            createdAt: "2020-07-17T10:38:55.957Z",
+            updatedAt: "2020-07-17T10:38:55.957Z"
           },
           rules: {
             name: [
-              { required: true, message: '请输入素材名称', trigger: 'blur' },
+              { required: true, message: "请输入素材名称", trigger: "blur" },
               {
                 min: 2,
                 max: 8,
-                message: '长度在 2 到 8 个字符',
-                trigger: 'blur',
-              },
+                message: "长度在 2 到 8 个字符",
+                trigger: "blur"
+              }
             ],
             category: [
-              { required: true, message: '请选择素材分类', trigger: 'change' },
+              { required: true, message: "请选择素材分类", trigger: "change" }
             ],
             price: [
               {
                 required: true,
                 min: 1,
                 max: 999,
-                type: 'number',
-                message: '请输入1-999之间的价格',
-                trigger: 'blur',
-              },
-            ],
-          },
+                type: "number",
+                message: "请输入1-999之间的价格",
+                trigger: "blur"
+              }
+            ]
+          }
         },
         uploadPic: {
-          dialogImageUrl: '',
+          dialogImageUrl: "",
           dialogVisible: false,
           disabled: false,
           handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url
-            this.dialogVisible = false
-            console.log(file)
-          },
-        },
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = false;
+            console.log(file);
+          }
+        }
       },
       dataSelect: [
         [
           {
-            id: '1',
-            value: '父分类',
-            label: '父分类',
+            id: "1",
+            value: "父分类",
+            label: "父分类"
           },
           {
-            id: '2',
-            value: '父分类1',
-            label: '父分类1',
+            id: "2",
+            value: "父分类1",
+            label: "父分类1"
           },
           {
-            id: '3',
-            value: '父分类2',
-            label: '父分类2',
-          },
+            id: "3",
+            value: "父分类2",
+            label: "父分类2"
+          }
         ],
         [
           {
-            id: '1',
-            value: '子分类',
-            label: '子分类',
+            id: "1",
+            value: "子分类",
+            label: "子分类"
           },
           {
-            id: '2',
-            value: '子分类1',
-            label: '子分类1',
+            id: "2",
+            value: "子分类1",
+            label: "子分类1"
           },
           {
-            id: '3',
-            value: '子分类2',
-            label: '子分类2',
-          },
-        ],
+            id: "3",
+            value: "子分类2",
+            label: "子分类2"
+          }
+        ]
       ],
       currentPage: 1,
       total: 20,
       pageSizes: [2, 5, 8, 10],
       pageSize: 10,
-      saveArr: [],
-    }
+      saveArr: []
+    };
   },
   methods: {
     async queryData() {
       const { data: res } = await getStyleQuery({
         keyword2: this.selectDad,
         keyword1: this.input,
-        page: 1,
-        size: 2,
-      })
-      console.log(res)
-      this.tableData = res.records
+        page: this.currentPage,
+        size: this.pageSize
+      });
+      console.log(res);
+      this.total = res.total;
+      this.currentPage = res.page;
+      this.pageSize = res.size;
+
+      this.tableData = res.records;
     },
     addChange(file, fileList) {
-      this.addPic.form.data.file = file.url
-      console.log(file, fileList)
+      this.addPic.form.data.file = file.url;
+      console.log(file, fileList);
     },
     editPicUpload(id) {
-      this.editPic.dialogVisible = true
-      console.log(id)
-      const data = this.tableData.find((v) => v._id === id)
-      console.log(data)
-      this.editPic.form.data.name = data.name
-      this.editPic.form.data.price = data.price
-      this.editPic.form.data.category = data.category
-      this.editPic.form.data.updateId = id
+      this.editPic.dialogVisible = true;
+      console.log(id);
+      const data = this.tableData.find(v => v._id === id);
+      console.log(data);
+      this.editPic.form.data.name = data.name;
+      this.editPic.form.data.price = data.price;
+      this.editPic.form.data.category = data.category;
+      this.editPic.form.data.updateId = id;
     },
     changeDad(e) {
-      console.log(e)
+      console.log(e);
       // this.tableData = this.saveArr;
       // this.tableData = this.tableData.filter(v => v.sort === e);
     },
     changeSon(e) {
-      console.log(e)
+      console.log(e);
       // this.tableData = this.saveArr;
       // this.tableData = this.tableData.filter(v => v.sort1 === e);
     },
     async handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
-      this.pageSize = val
-      const { data: res } = await getMaterial({
-        page: this.currentPage,
-        size: this.pageSize,
-      })
-      this.tableData = res.records
+      console.log(`每页 ${val} 条`);
+      this.pageSize = val;
+      if (!this.input) {
+        this.loader();
+      } else {
+        this.queryData();
+      }
     },
     async handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
-      this.currentPage = val
-      const { data: res } = await getMaterial({
-        page: this.currentPage,
-        size: this.pageSize,
-      })
-      this.tableData = res.records
+      console.log(`当前页: ${val}`);
+      this.currentPage = val;
+
+      if (!this.input) {
+        this.loader();
+      } else {
+        this.queryData();
+      }
     },
     async loader() {
       const { data: res } = await getMaterial({
         page: this.currentPage,
-        size: this.pageSize,
-      })
-      this.tableData = res.records
-      this.total = res.total
-    },
+        size: this.pageSize
+      });
+      this.tableData = res.records;
+      this.total = res.total;
+    }
   },
   mounted() {
-    this.loader()
-  },
-}
+    this.loader();
+  }
+};
 </script>
 
 <style lang="scss" scoped>
