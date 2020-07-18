@@ -165,7 +165,7 @@ export default {
       try {
         const { data: res } = await editIndustryInfo(id, {
           name: this.editIndustryValue,
-          sort: this.editIndustrySortValue
+          sort: this.editIndustrySortValue - 0
         });
         this.getIndustryData();
       } catch (err) {
@@ -173,7 +173,6 @@ export default {
       }
       this.editDialogFormVisible = false;
       this.getIndustryData();
-      console.log(res);
     },
     deleteData(v) {
       var index = this.tableData.indexOf(v);

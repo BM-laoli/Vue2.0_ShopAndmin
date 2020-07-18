@@ -41,7 +41,7 @@
             @click="toSubCate(shopData)"
             icon="el-icon-share"
             type="text"
-            v-if="!shopData.children"
+            v-if="!shopData.children || shopData.children.length == []"
           >子类别管理</el-button>
           <el-button
             type="text"
@@ -70,7 +70,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addindustryClose()">取 消</el-button>
-        <el-button type="primary" @click="addDialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addOneProductCategroy">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 编辑类别弹框 -->
@@ -98,7 +98,12 @@
 
 <script>
 // import { categroyData } from "@/api/mock/test";
-import { getAllCategroy, getCategroyByName } from "@/api/shops/categroy";
+import {
+  getAllCategroy,
+  getCategroyByName,
+  addOneCategroy,
+  getParentCategroy
+} from "@/api/shops/categroy";
 import breadCrumbs from "../../components/common/bread-crumbs";
 export default {
   components: {
@@ -127,81 +132,111 @@ export default {
   methods: {
     async AllcategroyData() {
       const { data: res } = await getAllCategroy();
-      this.formData(res);
+      const { data: ret } = await getParentCategroy();
+      this.child = res.records;
+      this.parent = ret.records;
+      this.parent.forEach(v => {
+        v.children = [];
+        this.child.forEach((s, i) => {
+          if (v._id === s.parent._id) {
+            v.children.push(s);
+          }
+          // delete s.parent;
+          s.sortnumber = i + 1;
+        });
+      });
+      // this.formData(res);
+      this.tableData = this.parent;
       this.cateNum = this.tableData.length;
       this.cateChildNum = this.child.length;
       console.log(this.parent, this.child);
     },
     //数组对象去重
-    deteleObject(obj) {
-      var uniques = [];
-      var stringify = {};
-      for (var i = 0; i < obj.length; i++) {
-        var keys = Object.keys(obj[i]);
-        keys.sort(function(a, b) {
-          return Number(a) - Number(b);
-        });
-        var str = "";
-        for (var j = 0; j < keys.length; j++) {
-          str += JSON.stringify(keys[j]);
-          str += JSON.stringify(obj[i][keys[j]]);
-        }
-        if (!stringify.hasOwnProperty(str)) {
-          uniques.push(obj[i]);
-          stringify[str] = true;
-        }
-      }
-      uniques = uniques;
-      return uniques;
-    },
+    // deteleObject(obj) {
+    //   var uniques = [];
+    //   var stringify = {};
+    //   for (var i = 0; i < obj.length; i++) {
+    //     var keys = Object.keys(obj[i]);
+    //     keys.sort(function(a, b) {
+    //       return Number(a) - Number(b);
+    //     });
+    //     var str = "";
+    //     for (var j = 0; j < keys.length; j++) {
+    //       str += JSON.stringify(keys[j]);
+    //       str += JSON.stringify(obj[i][keys[j]]);
+    //     }
+    //     if (!stringify.hasOwnProperty(str)) {
+    //       uniques.push(obj[i]);
+    //       stringify[str] = true;
+    //     }
+    //   }
+    //   uniques = uniques;
+    //   return uniques;
+    // },
     //类别数据处理
-    formData(res) {
-      this.parent = res.records.map(v => {
-        return v.parent;
-      });
-      this.child = res.records;
-      this.parent = this.deteleObject(this.parent);
-      this.parent.forEach(v => {
-        v.children = [];
-        this.child.forEach(s => {
-          if (v._id === s.parent._id) {
-            v.children.push(s);
-          }
-        });
-      });
-      this.parent.forEach(v => {
-        v.children.forEach((s, i) => {
-          delete s.parent;
-          s.sortnumber = i + 1;
-        });
-      });
-      this.tableData = this.parent;
-    },
+    // formData(res) {
+    //   this.parent = res.records.map(v => {
+    //     return v.parent;
+    //   });
+    //   this.child = res.records;
+    //   this.parent = this.deteleObject(this.parent);
+    //   this.parent.forEach(v => {
+    //     v.children = [];
+    //     this.child.forEach(s => {
+    //       if (v._id === s.parent._id) {
+    //         v.children.push(s);
+    //       }
+    //     });
+    //   });
+    //   this.parent.forEach(v => {
+    //     v.children.forEach((s, i) => {
+    //       delete s.parent;
+    //       s.sortnumber = i + 1;
+    //     });
+    //   });
+    //   this.tableData = this.parent;
+    // },
+    //查找
     async onSelect() {
       try {
         const { data: res } = await getCategroyByName({
           keyword1: this.input
         });
-        // this.formData(res)
-        console.log(res);
+        let id = res.records[0]._id;
+        var index = this.tableData.findIndex(v => v._id === id);
+        this.tableData = this.tableData.splice(index, 1);
+        console.log(this.tableData);
       } catch (err) {
         console.log(err);
       }
     },
     onResetForm() {
       this.input = "";
+      this.AllcategroyData();
     },
     editData(v) {
       this.editDialogFormVisible = true;
-      this.editIndustryValue = v.cateName;
-      this.editIndustrySortValue = v.cateId;
+      this.editIndustryValue = v.name;
+      this.editIndustrySortValue = v.sortnumber;
       console.log(v);
     },
-    deleteData() {
-      console.log(this.$route.meta);
+    deleteData(v) {
+      var index = this.tableData.indexOf(v);
+      this.tableData.splice(index, 1);
     },
     addindustry() {
       this.addDialogFormVisible = true;
+    },
+    //添加
+    async addOneProductCategroy() {
+      if (this.addIndustryValue.trim() && isNaN(this.addIndustrySortValue)) {
+        return;
+      }
+      const { data: res } = await addOneCategroy({
+        name: this.addIndustryValue,
+        sortnumber: this.addIndustrySortValue
+      });
+      console.log(res);
     },
     addindustryClose() {
       this.addDialogFormVisible = false;
@@ -216,15 +251,11 @@ export default {
     },
     editIndustryClose() {
       this.editDialogFormVisible = false;
-      //不知道为什么，这个重置方法没作用
-      this.$nextTick(() => {
-        this.$refs.editIndustryFrom.resetFields();
-        console.log(this.$refs.editIndustryFrom);
-      });
     },
     toSubCate(data) {
-      this.$router.push("/home/shops/productSubCategroy/" + data.cateId);
-      console.log(data.cateId);
+      var id = !data.parent ? data._id : data.parent._id
+      this.$router.push("/home/shops/productSubCategroy/" + id);
+      console.log(id);
     }
   }
 };

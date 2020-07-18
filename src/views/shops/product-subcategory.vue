@@ -24,8 +24,8 @@
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}"
       >
-        <el-table-column prop="cateName" label="子类别名称" sortable></el-table-column>
-        <el-table-column prop="cateId" label="排序" sortable></el-table-column>
+        <el-table-column prop="name" label="子类别名称" sortable></el-table-column>
+        <el-table-column prop="sort" label="排序" sortable></el-table-column>
         <el-table-column label="操作" #default="{row:shopData}">
           <el-button @click="editData(shopData)" icon="el-icon-edit" type="text">编 辑</el-button>
           <el-button
@@ -81,12 +81,13 @@
 </template>
 
 <script>
-import { categroyData } from "@/api/mock/test";
+import { selectTowCategroy } from "@/api/shops/categroy";
 import breadCrumbs from "../../components/common/bread-crumbs";
 export default {
   components: {
     breadCrumbs
   },
+  props: ["id"],
   data() {
     return {
       input: "",
@@ -106,15 +107,12 @@ export default {
   },
   methods: {
     async getIndustryData() {
-      const { data: res } = await categroyData();
-      res.data.forEach(v => {
-        v.children.forEach(a => {
-          this.tableData.push(a);
-        });
-        let i = v.children.length;
-      });
-      this.cateNum = this.tableData.length;
-      console.log(res);
+      const { data: res } = await selectTowCategroy(this.id);
+      res.records.forEach((v,i) => {
+        v.sort = i + 1
+      })
+      this.tableData = res.records
+      console.log(res, this.id);
     },
     onSelect() {
       console.log(this.input);
