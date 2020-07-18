@@ -35,7 +35,6 @@ module.exports = {
         vue: 'Vue',
         'vue-router': 'VueRouter',
         axios: 'axios',
-        vuex:'vuex',
         lodash: '_',
         echarts: 'echarts',
         moment: 'moment',

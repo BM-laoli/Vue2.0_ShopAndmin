@@ -8,11 +8,11 @@ import vm from '../main'
 import { LOADING, UNLOADING } from '../store/mutations-types'
 
 const http = axios.create({
-  baseURL: 'http://testli.utools.club/api',
+  baseURL: 'http://192.168.29.243:3001/api',
 })
 
 const Nesthttp = axios.create({
-  baseURL: 'http://nestapi.utools.club',
+  baseURL: 'http://192.168.29.243:3045',
 })
 
 
@@ -38,7 +38,7 @@ http.interceptors.request.use(
 )
 // v1接口拦截调请求
 //我们在这里全局捕获错误，进行统一的错误处理,定义一个拦截器,response
-Nesthttp.interceptors.response.use(
+http.interceptors.response.use(
   (res) => {
 
     setTimeout(() => {
@@ -78,7 +78,6 @@ Nesthttp.interceptors.request.use((config)=>{
 
 Nesthttp.interceptors.response.use((res)=>{
   setTimeout(() => {
-    // Vue.__Shop_Scope.unloading()
       vm.$store.commit(UNLOADING)
   }, 10);  
   return res

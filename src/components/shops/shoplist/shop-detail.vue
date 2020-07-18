@@ -1,7 +1,7 @@
 <template>
   <div>
     <bread-crumbs :level="this.$route.meta"></bread-crumbs>
-    <el-card class="box-card">
+    <el-card class="box-card" v-if="isflase">
       <el-form ref="form" :model="form" label-width="100px">
         <el-row>
           <el-col :span="12">
@@ -240,7 +240,9 @@ export default {
   data() {
     return {
       checkList: [],
-      form: {}
+      form: {
+      },
+      isflase: false
     };
   },
   created() {
@@ -249,8 +251,8 @@ export default {
     // Mock.mock();
   },
   mounted() {
-    this.getCheckBox();
     this.getShopDetailFn();
+    this.getCheckBox();
   },
   methods: {
     getCheckBox() {
@@ -271,6 +273,7 @@ export default {
         const res = await getShopDetail(id);
         console.log("res", res);
         this.form = res.data;
+         this.isflase = true
       } catch (err) {
         this.$message.error("获取商铺详情失败，请重试！");
       }
