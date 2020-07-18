@@ -1,6 +1,11 @@
 // 注意，由于这个阿里佰秀的服务器没有登录tokne的校验功能！！！不必设置拦截器
 import axios from 'axios'
+import router from '../router'
 import Vue from 'vue'
+
+
+import vm from '../main'
+import { LOADING, UNLOADING } from '../store/mutations-types'
 
 const http = axios.create({
   baseURL: 'http://testli.utools.club/api',
@@ -10,9 +15,16 @@ const Nesthttp = axios.create({
   baseURL: 'http://nestapi.utools.club',
 })
 
-// 请求拦截 两个错误,配置token
+
+
+
+
+// v1接口请求拦截 两个错误,配置token
 http.interceptors.request.use(
   (config) => {
+
+    vm.$store.commit(LOADING)
+
     if (sessionStorage.token) {
       config.headers.Authorization = sessionStorage.token
     }
@@ -24,11 +36,16 @@ http.interceptors.request.use(
     return Promise.reject(err)
   }
 )
-
-// 拦截调请求
+// v1接口拦截调请求
 //我们在这里全局捕获错误，进行统一的错误处理,定义一个拦截器,response
 http.interceptors.response.use(
   (res) => {
+
+    setTimeout(() => {
+      // Vue.__Shop_Scope.unloading()
+        vm.$store.commit(UNLOADING)
+    }, 10);  
+
     return res
     // 什么情况下 是会跑去err?只要不是正常的状态码
   },
@@ -49,6 +66,34 @@ http.interceptors.response.use(
     return Promise.reject(err)
   }
 )
+
+// V2接口拦截器
+Nesthttp.interceptors.request.use((config)=>{
+  vm.$store.commit(LOADING)
+  return config
+},(err)=>{
+  console.log(err)
+  return Promise.reject(err)
+})
+
+Nesthttp.interceptors.response.use((res)=>{
+  setTimeout(() => {
+    // Vue.__Shop_Scope.unloading()
+      vm.$store.commit(UNLOADING)
+  }, 10);  
+  return res
+},(err)=>{
+  if (err.response.data.message) {
+    Vue.prototype.$message({
+      type: 'error',
+      message: err.response.data.message,
+    })
+  }
+  return Promise.reject(err)
+})
+
+
+
 
 export { Nesthttp }
 export default http

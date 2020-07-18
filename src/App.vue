@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-loading.fullscreen.lock="this.$store.state.loading">
     <router-view/>
   </div>
 </template>
@@ -11,7 +11,12 @@
     // 测试用例
     created () {
        window.sessionStorage.setItem('status',1)
-    },    
+    }, 
+    data() {
+      return {
+        loading: false
+      }
+    },
 }
 </script>
 
