@@ -253,9 +253,6 @@ export default {
     this.getShopDetailFn();
   },
   methods: {
-    onSubmit() {
-      console.log("submit!");
-    },
     getCheckBox() {
       const delivery = this.form.delivery;
       for (var k in delivery) {
@@ -270,9 +267,13 @@ export default {
     async getShopDetailFn() {
       const id = this.$route.query.id;
       console.log(id);
-      const res = await getShopDetail(id);
-      console.log("res", res);
-      this.form = res.data;
+      try {
+        const res = await getShopDetail(id);
+        console.log("res", res);
+        this.form = res.data;
+      } catch (err) {
+        this.$message.error("获取商铺详情失败，请重试！");
+      }
     }
   }
 };
