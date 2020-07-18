@@ -189,9 +189,13 @@ export default {
     // 获取所有行业
     async getAllIndustryFn() {
       this.industries = [];
-      const { data: res } = await getAllIndustry();
-      console.log("industries", res);
-      this.industries = res.records;
+      try {
+        const { data: res } = await getAllIndustry();
+        console.log("industries", res);
+        this.industries = res.records;
+      } catch (err) {
+        this.$message.error("获取行业列表失败！");
+      }
     },
     // 删除商铺
     delShop(id) {
@@ -227,17 +231,26 @@ export default {
       this.query.page = page || 1;
       // this.getShoplistFn();
       this.loading = true;
-      const { data: res } = await getShopList(this.query);
-      this.shopsData.shopsList = res.records;
-      // 为分页器传输配置
-      this.query.total = res.total;
+      try {
+        const { data: res } = await getShopList(this.query);
+        this.shopsData.shopsList = res.records;
+        // 为分页器传输配置
+        this.query.total = res.total;
+      } catch (err) {
+        this.$message.error("获取商铺列表失败！");
+      }
+
       this.loading = false;
     },
     // 根据商铺名和行业查询商铺ju
     async onSubmit() {
-      const { data: res } = await getIndustry(this.formInline);
-      console.log("chaxun", res);
-      this.shopsData.shopsList = res;
+      try {
+        const { data: res } = await getIndustry(this.formInline);
+        console.log("chaxun", res);
+        this.shopsData.shopsList = res;
+      } catch (err) {
+        this.$message.error("查询失败！");
+      }
     }
   }
 };

@@ -170,27 +170,31 @@ export default {
       this.loading = true;
       this.query.page = page || 1;
       const id = this.$route.query.id;
-      if (id) {
-        const { data: res } = await getProductById({
-          page: this.query.page,
-          size: this.query.size,
-          id: id
-        });
-        // console.log("productbyid", res.records);
-        this.query.total = res.total;
-        let records = res.records;
-        filterImg(records);
-        this.tableData = records;
-        this.loading = false;
-      } else {
-        const { data: res } = await getProductList(this.query);
-        // console.log("product", res.records);
-        this.query.total = res.total;
-        let records = res.records;
-        filterImg(records);
-        this.tableData = records;
-        // console.log("records", records);
-        this.loading = false;
+      try {
+        if (id) {
+          const { data: res } = await getProductById({
+            page: this.query.page,
+            size: this.query.size,
+            id: id
+          });
+          // console.log("productbyid", res.records);
+          this.query.total = res.total;
+          let records = res.records;
+          filterImg(records);
+          this.tableData = records;
+          this.loading = false;
+        } else {
+          const { data: res } = await getProductList(this.query);
+          // console.log("product", res.records);
+          this.query.total = res.total;
+          let records = res.records;
+          filterImg(records);
+          this.tableData = records;
+          // console.log("records", records);
+          this.loading = false;
+        }
+      } catch (err) {
+        this.$message.error("获取商品列表失败！");
       }
     },
     // 表格数据格式化
@@ -200,24 +204,37 @@ export default {
     // 获取所有商品类别
     async getProductTypeFn() {
       // 获取商品一级分类
-      const { data: result } = await getProductType1();
-      this.productType1 = result.records;
-      console.log("ProductType1", result.records);
+      try {
+        const { data: result } = await getProductType1();
+        this.productType1 = result.records;
+        console.log("ProductType1", result.records);
+      } catch (err) {
+        this.$message.error("获取一级商品分类失败！");
+      }
+
       // 获取商品二级分类
-      const { data: res } = await getProductType2();
-      this.productType2 = res.records;
-      console.log("ProductType2", res.records);
+      try {
+        const { data: res } = await getProductType2();
+        this.productType2 = res.records;
+        console.log("ProductType2", res.records);
+      } catch (err) {
+        this.$message.error("获取二级分类失败");
+      }
     },
     // 商品查询
     async onSubmit() {
-      console.log(this.form);
-      const { data: res } = await getProductByName(this.form);
-      console.log("查询", res);
-      this.query.total = 1;
-      // array
-      const records = res.records;
-      filterImg(records);
-      this.tableData = res.records;
+      // console.log(this.form);
+      try {
+        const { data: res } = await getProductByName(this.form);
+        console.log("查询", res);
+        this.query.total = 1;
+        // array
+        const records = res.records;
+        filterImg(records);
+        this.tableData = res.records;
+      } catch (err) {
+        this.$message.error("商品查询失败，请重试！");
+      }
     },
     // 上架下架切换
     async upToggle(id) {

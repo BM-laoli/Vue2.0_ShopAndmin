@@ -206,14 +206,18 @@ export default {
     },
     async getAnalysisFn() {
       const id = this.$route.query.id;
-      const { data: res } = await getAnalysis(id);
-      console.log("analysis", res);
-      this.info = res;
-      this.loading = true;
-      this.$nextTick(() => {
-        this.drawSale();
-        this.drawConsum();
-      });
+      try {
+        const { data: res } = await getAnalysis(id);
+        console.log("analysis", res);
+        this.info = res;
+        this.loading = true;
+        this.$nextTick(() => {
+          this.drawSale();
+          this.drawConsum();
+        });
+      } catch (err) {
+        this.$message.error("获取数据失败！");
+      }
 
       // this.drawConsum();
     }
