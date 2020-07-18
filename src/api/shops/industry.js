@@ -10,5 +10,5 @@ export const addIndustryInfo = data => {
     return http.post('/shopmanage/shoplist/createIndustry', data)
 }
 export const editIndustryInfo = (id, data) => {
-    return http.put('/shopmanage/shoplist/editIndustry', { params: id }, data)
+    return http.put(`/shopmanage/shoplist/editIndustry?id=${id}`, data)
 }
