@@ -22,7 +22,7 @@ module.exports = {
 
     const myCfg = {
       entry: {
-        app: './src/main-dev.js',
+        app: './src/main.js',
       },
     }
 
@@ -39,6 +39,7 @@ module.exports = {
         lodash: '_',
         echarts: 'echarts',
         moment: 'moment',
+        xlsx:'xlsx'
       }
     }
 

@@ -37,35 +37,75 @@
       </div>
       <!-- body 身体 -->
       <div class="tabbe-box">
-        <el-tabs v-model="activeName" type="card">
+        <el-tabs v-model="activeName" type="card" @tab-click="getOrderListByStatus(0)">
           <el-tab-pane label="全部" name="first">
-            <order-table :orderData="orderData"></order-table>
+            <order-table
+              :orderData="orderData"
+              @changeSize="($event)=>{parmas.size=$event}"
+              @changeCurrent="($event)=>{parmas.page=$event}"
+              @changeStatus="changeStatus($event)"
+            ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="待支付" name="second">
-            <order-table></order-table>
+          <el-tab-pane label="待支付" name="0">
+            <order-table
+              :orderData="orderData"
+              @changeSize="($event)=>{parmas.size=$event}"
+              @changeCurrent="($event)=>{parmas.page=$event}"
+              @changeStatus="changeStatus($event)"
+            ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="待自提" name="third">
-            <order-table></order-table>
+          <el-tab-pane label="待自提" name="third" @click="getOrderListByStatus">
+            <order-table
+              :orderData="orderData"
+              @changeSize="($event)=>{parmas.size=$event}"
+              @changeCurrent="($event)=>{parmas.page=$event}"
+              @changeStatus="changeStatus($event)"
+            ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="待配送" name="fourth">
-            <order-table></order-table>
+          <el-tab-pane label="待配送" name="fourth" @click="getOrderListByStatus">
+            <order-table
+              :orderData="orderData"
+              @changeSize="($event)=>{parmas.size=$event}"
+              @changeCurrent="($event)=>{parmas.page=$event}"
+              @changeStatus="changeStatus($event)"
+            ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="待发货" name="five">
-            <order-table></order-table>
+          <el-tab-pane label="待发货" name="five" @click="getOrderListByStatus">
+            <order-table
+              :orderData="orderData"
+              @changeSize="($event)=>{parmas.size=$event}"
+              @changeCurrent="($event)=>{parmas.page=$event}"
+              @changeStatus="changeStatus($event)"
+            ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="已收货" name="six">
-            <order-table></order-table>
+          <el-tab-pane label="已收货" name="six" @click="getOrderListByStatus">
+            <order-table
+              :orderData="orderData"
+              @changeSize="($event)=>{parmas.size=$event}"
+              @changeCurrent="($event)=>{parmas.page=$event}"
+              @changeStatus="changeStatus($event)"
+            ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="售后退款" name="seven">
-            <order-table></order-table>
+          <el-tab-pane label="售后退款" name="seven" @click="getOrderListByStatus">
+            <order-table
+              :orderData="orderData"
+              @changeSize="($event)=>{parmas.size=$event}"
+              @changeCurrent="($event)=>{parmas.page=$event}"
+              @changeStatus="changeStatus($event)"
+            ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="已取消" name="eight">
-            <order-table></order-table>
+          <el-tab-pane label="已取消" name="eight" @click="getOrderListByStatus">
+            <order-table
+              :orderData="orderData"
+              @changeSize="($event)=>{parmas.size=$event}"
+              @changeCurrent="($event)=>{parmas.page=$event}"
+              @changeStatus="changeStatus($event)"
+            ></order-table>
           </el-tab-pane>
         </el-tabs>
       </div>
       <!-- 手工订单模态框 -->
-      <order-add ref="orderAddRef"></order-add>
+      <order-add ref="orderAddRef" @reset="reset"></order-add>
     </el-card>
   </div>
 </template>
@@ -75,7 +115,7 @@ import breadCrumbs from "../../components/common/bread-crumbs";
 import OrderTable from "@/components/order/order-table.vue";
 import OrderAdd from "@/components/order/order-add.vue";
 import { orderMock } from "@/api/mock/test";
-import { getOrder } from "@/api/shops/order.js";
+import { getOrder, getOrderByStatus } from "@/api/shops/order.js";
 export default {
   name: "OrderList",
   data() {
@@ -95,7 +135,8 @@ export default {
       parmas: {
         size: 10,
         page: 1
-      }
+      },
+      keyword1: null
     };
   },
   components: {
@@ -110,11 +151,38 @@ export default {
     },
     addOrder() {
       this.$refs.orderAddRef.checkDrawer();
+    },
+    async init() {
+      const { data: res } = await getOrder(this.parmas);
+      this.orderData = res;
+    },
+    // 修改本条数据的状态
+    changeStatus(e) {
+      const data = this.orderData.records.find(v => v._id === e.id);
+      data.package = e.package;
+    },
+    // 刷新页面
+    reset() {
+      this.init();
+    },
+    // 获取不同状态的数据
+    async getOrderListByStatus(v) {
+      this.keyword1 = v;
+      const { data: res } = await getOrderByStatus(this.parmas, this.keyword1);
+      this.orderData = res;
     }
   },
-  async mounted() {
-    const { data: res } = await getOrder(this.parmas);
-    this.orderData = res;
+  mounted() {
+    this.init();
+    this.$watch(
+      "parmas",
+      () => {
+        this.init();
+      },
+      {
+        deep: true
+      }
+    );
   }
 };
 </script>

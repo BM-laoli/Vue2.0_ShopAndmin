@@ -14,16 +14,17 @@ import './plugins/element-ui'
 // 演示初始化
 import './assets/sass/style.scss'
 
-
 // 自定义命名空间,请在这个项目下 放在全局的资源或者库
-import {deleteMessage} from './lib/utils'
-Vue.prototype.name_space = { 
-    deleteMessage
+import { deleteMessage } from './lib/utils'
+Vue.prototype.name_space = {
+  deleteMessage
 }
 
 
 // filter
 import './filters/LSZ-text-abbreviation'
+import './filters/date-dispose'
+import './filters/order-filters'
 
 // mock
 import '@/mock'

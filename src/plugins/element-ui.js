@@ -43,10 +43,12 @@ import {
   MenuItemGroup,
   Image,
   TimePicker,
+  Drawer,
   DatePicker
 } from 'element-ui'
 import Vue from 'vue'
 Vue.use(Upload)
+Vue.use(Drawer)
 Vue.use(DatePicker)
 Vue.use(TimePicker)
 Vue.use(Image)

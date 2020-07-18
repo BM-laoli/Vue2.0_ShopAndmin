@@ -38,7 +38,7 @@ http.interceptors.request.use(
 )
 // v1接口拦截调请求
 //我们在这里全局捕获错误，进行统一的错误处理,定义一个拦截器,response
-http.interceptors.response.use(
+Nesthttp.interceptors.response.use(
   (res) => {
 
     setTimeout(() => {
