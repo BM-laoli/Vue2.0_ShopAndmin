@@ -37,8 +37,8 @@
       </div>
       <!-- body 身体 -->
       <div class="tabbe-box">
-        <el-tabs v-model="activeName" type="card" @tab-click="getOrderListByStatus(0)">
-          <el-tab-pane label="全部" name="first">
+        <el-tabs v-model="activeName" type="card" @tab-click="getOrderListByStatus()">
+          <el-tab-pane label="全部" name="10">
             <order-table
               :orderData="orderData"
               @changeSize="($event)=>{parmas.size=$event}"
@@ -54,7 +54,7 @@
               @changeStatus="changeStatus($event)"
             ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="待自提" name="third" @click="getOrderListByStatus">
+          <el-tab-pane label="已支付待配送" name="1">
             <order-table
               :orderData="orderData"
               @changeSize="($event)=>{parmas.size=$event}"
@@ -62,7 +62,7 @@
               @changeStatus="changeStatus($event)"
             ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="待配送" name="fourth" @click="getOrderListByStatus">
+          <el-tab-pane label="待发货" name="2">
             <order-table
               :orderData="orderData"
               @changeSize="($event)=>{parmas.size=$event}"
@@ -70,7 +70,7 @@
               @changeStatus="changeStatus($event)"
             ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="待发货" name="five" @click="getOrderListByStatus">
+          <el-tab-pane label="已发货" name="3">
             <order-table
               :orderData="orderData"
               @changeSize="($event)=>{parmas.size=$event}"
@@ -78,7 +78,7 @@
               @changeStatus="changeStatus($event)"
             ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="已收货" name="six" @click="getOrderListByStatus">
+          <el-tab-pane label="已收货" name="4">
             <order-table
               :orderData="orderData"
               @changeSize="($event)=>{parmas.size=$event}"
@@ -86,7 +86,7 @@
               @changeStatus="changeStatus($event)"
             ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="售后退款" name="seven" @click="getOrderListByStatus">
+          <el-tab-pane label="售后退款" name="6">
             <order-table
               :orderData="orderData"
               @changeSize="($event)=>{parmas.size=$event}"
@@ -94,7 +94,7 @@
               @changeStatus="changeStatus($event)"
             ></order-table>
           </el-tab-pane>
-          <el-tab-pane label="已取消" name="eight" @click="getOrderListByStatus">
+          <el-tab-pane label="已取消" name="8">
             <order-table
               :orderData="orderData"
               @changeSize="($event)=>{parmas.size=$event}"
@@ -130,13 +130,13 @@ export default {
         },
         rules: []
       },
-      activeName: "first",
+      activeName: "10",
       orderData: [],
       parmas: {
         size: 10,
         page: 1
       },
-      keyword1: null
+      keyword1: 10
     };
   },
   components: {
@@ -166,8 +166,8 @@ export default {
       this.init();
     },
     // 获取不同状态的数据
-    async getOrderListByStatus(v) {
-      this.keyword1 = v;
+    async getOrderListByStatus() {
+      this.keyword1 = parseInt(this.activeName);
       const { data: res } = await getOrderByStatus(this.parmas, this.keyword1);
       this.orderData = res;
     }
