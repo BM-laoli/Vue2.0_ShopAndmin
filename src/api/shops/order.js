@@ -33,7 +33,8 @@ export const getOrderData = (id) => {
 }
 
 // 根据状态获取不同数据
-export const getOrderByStatus = (data) => {
+export const getOrderByStatus = (data, status) => {
+  data.keyword1 = status
   return Nesthttp.get('/ordermange/queryStatus', {
     params: data
   })
