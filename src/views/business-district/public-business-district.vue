@@ -3,7 +3,7 @@
    <bread-crumbs :level="this.$route.meta"></bread-crumbs>
     <el-card class="box-card bg-defaultPink">
       <!-- heder头部 -->
-        <hader-from></hader-from>
+        <hader-from @data-query="queryLoadList" is-pagination.sync="ispagination"></hader-from>
     </el-card>  
 
     
@@ -82,14 +82,16 @@
               </el-table-column>
                 <el-table-column
                 label="操作"
+                #default="{row:shopbase}"
               >
-                <el-link :underline="false" icon="el-icon-more">详情</el-link>
-                <el-link :underline="false" icon="el-icon-s-management">查看商品</el-link>
-                <el-link :underline="false" icon="el-icon-s-marketing">经营分析</el-link>
+               <el-link :underline="false" icon="el-icon-more" @click="$router.push( {path:'/home/shops/shopDetail',query:{id: shopbase._id}} )">详情</el-link>
+               <el-link :underline="false" icon="el-icon-s-management" @click="$router.push( {path:'/home/shops/productList', query:{id: shopbase._id}} )">查看商品</el-link>
+               <el-link :underline="false" icon="el-icon-s-marketing" @click="$router.push( {path:'/home/shops/businessAnalysis', query:{id: shopbase._id+''}} )">经营分析</el-link>
               </el-table-column>
             </el-table>
         </div>
              <el-pagination
+              v-show="ispagination"
               @size-change="onLoadList()"
               @current-change="onLoadList()"
               :current-page.sync="tableData.queryInfo.page"
@@ -114,6 +116,7 @@ import  HaderFrom from '../../components/business-district/hader-from'
     },
     data() {
       return {
+          ispagination:true,
           tableData:{
             list:[],
             queryInfo:{
@@ -129,6 +132,7 @@ import  HaderFrom from '../../components/business-district/hader-from'
   },
    methods: {
     async onLoadList(){
+      console.log(666666);
       try {
         const {data:res } = await getBusinessListPublic( this.tableData.queryInfo)
         this.tableData.list = res.records
@@ -136,11 +140,15 @@ import  HaderFrom from '../../components/business-district/hader-from'
         this.tableData.queryInfo.total = res.total,
         this.tableData.queryInfo.size = res.size,
         this.tableData.queryInfo.page = res.page
-
+        this.ispagination = true
       } catch (error) {
         console.log(error);
       }
 
+    },
+    queryLoadList(value){
+      this.tableData.list = value 
+      this.ispagination = false
     }
    },
   }

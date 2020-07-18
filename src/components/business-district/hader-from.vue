@@ -20,7 +20,7 @@
         <el-form-item>
           <div class="comfrim">
             <el-button type="primary" @click="onQuery">查询</el-button>
-            <el-button type="primary" @click="$refs.industry.resetFields()">重置</el-button>
+            <el-button type="primary" @click="onRest">重置</el-button>
           </div>
         </el-form-item>
       </el-form>
@@ -32,6 +32,11 @@ import  {getPersinaCategrory,getPersinaCategroryByQueryinfo} from '../../api/moc
 import { log } from 'util'
   export default {
     name:'HaderFrom',
+    props: {
+      IsPagination:{
+        type: Boolean,
+      },
+    },
     data() {
       return {
          from:{ 
@@ -62,16 +67,23 @@ import { log } from 'util'
     methods: {
       async onQuery() {
         const {data:res} = await getPersinaCategroryByQueryinfo(this.from)
-        console.log(res);
+        this.$emit('data-query',res)
+        
       },
       async onloadCategeroy(){
         const {data:res} = await getPersinaCategrory()
         this.options = res.records
+        
 
       },
       handleChange(value){
       console.log(value);
       },
+      onRest(){
+        this.from.keyword2 = ''
+        this.from.keyword1 = ''
+        this.$parent.$parent.onLoadList()
+      }
     },
   }
 </script>

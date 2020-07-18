@@ -31,6 +31,7 @@
           <span class="searchBtns">
             <el-button type="primary">查询</el-button>
             <el-button type="info" @click="formReset">重置</el-button>
+            <el-button type="success" @click="addOrder">手工订单</el-button>
           </span>
         </el-form>
       </div>
@@ -63,6 +64,8 @@
           </el-tab-pane>
         </el-tabs>
       </div>
+      <!-- 手工订单模态框 -->
+      <order-add ref="orderAddRef"></order-add>
     </el-card>
   </div>
 </template>
@@ -70,7 +73,9 @@
 <script>
 import breadCrumbs from "../../components/common/bread-crumbs";
 import OrderTable from "@/components/order/order-table.vue";
+import OrderAdd from "@/components/order/order-add.vue";
 import { orderMock } from "@/api/mock/test";
+import { getOrder } from "@/api/shops/order.js";
 export default {
   name: "OrderList",
   data() {
@@ -86,24 +91,30 @@ export default {
         rules: []
       },
       activeName: "first",
-      orderData: []
+      orderData: [],
+      parmas: {
+        size: 10,
+        page: 1
+      }
     };
   },
   components: {
     breadCrumbs,
-    OrderTable
+    OrderTable,
+    OrderAdd
   },
   methods: {
     formReset() {
       console.log(this.$refs.searchFormRef);
       this.$refs.searchFormRef.resetFields();
+    },
+    addOrder() {
+      this.$refs.orderAddRef.checkDrawer();
     }
   },
   async mounted() {
-    const {
-      data: { data }
-    } = await orderMock();
-    this.orderData = data.array;
+    const { data: res } = await getOrder(this.parmas);
+    this.orderData = res;
   }
 };
 </script>

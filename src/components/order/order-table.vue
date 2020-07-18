@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="orderData" border style="width: 100%">
+    <el-table :data="orderData.records" border style="width: 100%">
       <el-table-column prop="id" label="商户ID" width="110"></el-table-column>
       <el-table-column prop="name" label="商户名称" width="120"></el-table-column>
       <el-table-column prop="orderId" label="订单号" width="100"></el-table-column>

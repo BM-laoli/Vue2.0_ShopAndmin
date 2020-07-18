@@ -1,8 +1,8 @@
 <template>
   <div>
-      <el-form :inline="true"  label-width="150px" :model="formInline" class="demo-form-inline">
+      <el-form ref="queryRef" :inline="true"  label-width="150px" :model="formInline" class="demo-form-inline">
         <el-form-item label="用户ID/昵称">
-          <el-input v-model="formInline.query" placeholder="请输入用户ID/昵称"></el-input>
+          <el-input v-model="formInline.keyword1" placeholder="请输入用户ID/昵称"></el-input>
         </el-form-item>
 
         <el-form-item label="日期">
@@ -30,12 +30,13 @@
 </template>
 
 <script>
+import  {getConsumpPersonQuery} from '../../api/mock/business-district' 
   export default {
     name:'HaderForm',
     data() {
       return {
         formInline: {
-          query:'',
+          keyword1:'',
         },
          pickerOptions: {
           shortcuts: [{
@@ -69,10 +70,16 @@
       }
     },
     methods: {
-      onSubmit() {
-        
+      async onSubmit() {
+        let { data:res } = await getConsumpPersonQuery(this.formInline)
+        this.$emit( 'data-change',res.records)
       },
-      onCancel(){}
+      onCancel(){
+          this.$refs.queryRef.resetFields()
+          this.formInline.keyword1 = ''
+          this.value =  ''
+          this.$parent.$parent.onLoadList()
+      }
     },
   }
 </script>
