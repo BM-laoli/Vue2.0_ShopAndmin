@@ -90,7 +90,7 @@
           <el-table-column prop="shop_id" label="备注" width="160" #default="{row:shopbase}">
             <span>社会我大天朝的店铺</span>
           </el-table-column>
-          <el-table-column label="操作" #default="{row:shopbase}" width="300px">
+          <el-table-column label="操作" #default="{row:shopbase}" min-width="400">
             <!-- <el-link :underline="false" icon="el-icon-more">详情</el-link>
         <el-link :underline="false" icon="el-icon-s-management">查看商品</el-link>
         <el-link :underline="false" icon="el-icon-s-marketing">经营分析</el-link>
@@ -99,20 +99,27 @@
             <router-link
               class="cut-down"
               :to="{path:'/home/shops/shopDetail', query:{id: shopbase._id}}"
-            >详情</router-link>
+            >
+              <el-button type="primary" size="mini">详情</el-button>
+            </router-link>
             <router-link
               class="cut-down"
               :to="{path:'/home/shops/productList', query:{id: shopbase._id}}"
-            >查看商品</router-link>
+            >
+              <el-button type="primary" size="mini">查看商品</el-button>
+            </router-link>
             <router-link
               class="cut-down"
               :to="{path:'/home/shops/businessAnalysis', query:{id: shopbase._id+''}}"
-            >经营分析</router-link>
-            <span
-              class="cut-down"
+            >
+              <el-button type="primary" size="mini">经营分析</el-button>
+            </router-link>
+            <el-button
+              type="warning"
+              size="mini"
               @click="stateChange(shopbase._id)"
-            >{{shopbase.is_approved ? '停用' :'启用' }}</span>
-            <span class="delete" @click="delShop(shopbase._id)">删除</span>
+            >{{shopbase.is_approved ? '停用' :'启用' }}</el-button>
+            <el-button type="danger" size="mini" @click="delShop(shopbase._id)">删除</el-button>
           </el-table-column>
         </el-table>
         <!-- 分页器 -->
@@ -125,6 +132,7 @@
           :page-size="query.size"
           layout="total, sizes, prev, pager, next, jumper"
           :total="query.total"
+          style="margin-top:15px"
         ></el-pagination>
       </div>
     </el-card>

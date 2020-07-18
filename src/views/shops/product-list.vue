@@ -88,9 +88,13 @@
             label="状态"
             #default="{row}"
           >{{row.is_approved?'上架':'下架'}}</el-table-column>
-          <el-table-column align="center" label="操作" #default="{row}">
-            <span class="cut-down" @click="upToggle(row._id)">{{row.is_approved?'下架':'上架'}}</span>
-            <span class="delete" @click="delProduct(row._id)">删除</span>
+          <el-table-column align="center" label="操作" #default="{row}" min-width="150">
+            <el-button
+              type="primary"
+              size="mini"
+              @click="upToggle(row._id)"
+            >{{row.is_approved?'下架':'上架'}}</el-button>
+            <el-button type="danger" size="mini" @click="delProduct(row._id)">删除</el-button>
           </el-table-column>
         </el-table>
         <el-pagination
@@ -101,6 +105,7 @@
           :page-size="query.size"
           layout="total, sizes, prev, pager, next, jumper"
           :total="query.total"
+          style="margin-top:15px"
         ></el-pagination>
       </div>
     </el-card>

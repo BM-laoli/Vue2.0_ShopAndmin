@@ -8,8 +8,8 @@ const home = () => import('../views/layout')
 const welcome = () => import('../views/home/welcome')
 // 商铺管理
 const shopsList = () => import('../views/shops/shops-list')
-const shopDetail = () => import('../views/shops/shoplist/shop-detail')
-const businessAnalysis = () => import('../views/shops/shoplist/business-analysis')
+const shopDetail = () => import('../components/shops/shoplist/shop-detail')
+const businessAnalysis = () => import('../components/shops/shoplist/business-analysis')
 const productList = () => import('../views/shops/product-list')
 const openShop = () => import('../views/shops/open-shop')
 const openShopAudit = () => import('@/components/shops/open-shop-audit.vue')
@@ -244,7 +244,7 @@ const routes = [
 // 解决路由重复报错
 
 const originalPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push (location) {
+VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch((err) => err)
 }
 
