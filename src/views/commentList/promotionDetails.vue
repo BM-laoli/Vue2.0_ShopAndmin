@@ -82,7 +82,12 @@
                 </el-table-column>
                 <el-table-column prop="shopebaseid.phone" label="店铺联系电话">
                 </el-table-column>
-                <el-table-column prop="start_time" label="推广开店日期">
+                <el-table-column
+                    prop="start_time"
+                    label="推广开店日期"
+                    #default="{row}"
+                >
+                    {{ row.start_time | format }}
                 </el-table-column>
                 <el-table-column
                     prop="earnings"
@@ -113,6 +118,7 @@
 <script>
 import breadCrumbs from '../../components/common/bread-crumbs';
 import { getShopListById, getPromoteByName } from '../../api/mock/cuzHttp';
+import { format } from '@/filters/date-dispose.js';
 export default {
     name: 'PromotionDetails',
     components: { breadCrumbs },
@@ -154,14 +160,16 @@ export default {
             this.$refs.findFormRef.validate(async (valid) => {
                 if (!valid) return;
 
-                const data = await getPromoteByName({
+                const { data: res } = await getPromoteByName({
                     keyword1: this.findForm.query,
                     keyword2: this.findForm.date[0],
                     keyword3: this.findForm.date[1],
                 });
-                console.log(data);
-                let res = data.data.filter((v) => v.inventory_docs.length > 0);
-                console.log(res);
+
+                this.list = res.records;
+                this.total = res.total;
+                this.shopCount = res.records.length;
+                this.earnings = res.records[0].pro_perice;
             });
         },
         // 点击重置查询表单

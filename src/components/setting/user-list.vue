@@ -6,8 +6,8 @@
         </el-table-column>
         <el-table-column prop="phone" label="联系电话"> </el-table-column>
         <el-table-column prop="role" label="职位"> </el-table-column>
-        <el-table-column prop="status" label="状态">
-            {{ list.status == true ? '启用' : '停用' }}
+        <el-table-column prop="status" label="状态" #default="{row}">
+            {{ row.status == true ? '启用' : '停用' }}
         </el-table-column>
         <el-table-column label="操作" width="400" #default="{row}">
             <el-button
