@@ -267,7 +267,11 @@ router.beforeEach((to, from, next) => {
   if ( token  ){ return next()  }
 
   if( to.path !== '/login' ){ 
+<<<<<<< HEAD
     Message.warning('您还没有登录，请先登录')
+=======
+      Message.warning('您还没有登录，请先登录')
+>>>>>>> ad7f1efa8104de682b1c106a46ca0aa6d31c7cf6
     return next('/login')
   }
 
