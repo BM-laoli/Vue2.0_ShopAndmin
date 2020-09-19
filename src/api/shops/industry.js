@@ -1,14 +1,14 @@
-import {Nesthttp} from '../../plugins/http'
+import http from '../../plugins/http'
 
 export const getAllIndustry = data => {
-    return Nesthttp.get('/shopmanage/shoplist/queryallindustry', { params: data })
+  return http.get('/shopmanage/shoplist/queryallindustry', { params: data })
 }
 export const getIndustryByName = data => {
-    return Nesthttp.get('/shopmanage/shoplist/queryindustrybyname', { params: data })
+  return http.get('/shopmanage/shoplist/queryindustrybyname', { params: data })
 }
 export const addIndustryInfo = data => {
-    return Nesthttp.post('/shopmanage/shoplist/createIndustry', data)
+  return http.post('/shopmanage/shoplist/createIndustry', data)
 }
 export const editIndustryInfo = (id, data) => {
-    return Nesthttp.put(`/shopmanage/shoplist/editIndustry?id=${id}`, data)
+  return http.put(`/shopmanage/shoplist/editIndustry?id=${id}`, data)
 }

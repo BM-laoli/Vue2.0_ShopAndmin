@@ -206,29 +206,30 @@ import { getConsumpPersonById,getPersinalData } from '@/api/mock/business-distri
           }
 
           var option = {
-            tooltip: {
-              trigger: "item",
-              formatter: "{a} <br/>{b}({d}%)"
+            tooltip: { // 提示框
+              trigger: "item", // 触发的类型  数据项图形触发，饼图就是点击触发
+              formatter: "{a} <br/> {b}({d}%)"  // 提示框浮层内容格式器，支持字符串模板和回调函数两种形式。,具体的配置项还有很多
+              // a b d 都是占位符号 表示的是  系列名称，数据项名称，百分比
             },
 
-            visualMap: {
-              show: false,
-              min: 80,
+            visualMap: { // 是视觉映射组件
+              show: false,  // 是否显示 visualMap-continuous 组件。如果设置为 false，不会显示，但是数据映射的功能还存在。注意数据的映射还是存在的
+              min: 80,  // 视觉映射的最大最小值
               max: 600,
-              inRange: {
-                colorLightness: [0, 1]
+              inRange: {  // 定义 在选中范围中 的视觉元素。（用户可以和 visualMap 组件交互，用鼠标或触摸选择范围）
+                colorLightness: [0, 1]  // 演示的明暗程度
               }
             },
-            series: [
+            series: [  // 系列里列表，说白了 就是类型
               {
                 name: "销售情况",
                 type: "pie",
                 radius: "65%",
                 center: ["50%", "50%"],
-                data: data.sort(function(a, b) {
+                data: data.sort(function(a, b) {  // 获取数据
                   return a.value - b.value;
-                }),
-                roseType: "radius",
+                }), 
+                roseType: "radius",  // 是否显示南丁格尔图 通过半径区分数据大小。
                 label: {
                   color: "#1E1E1E"
                 },
@@ -246,14 +247,15 @@ import { getConsumpPersonById,getPersinalData } from '@/api/mock/business-distri
                   shadowColor: "rgba(0, 0, 0, 0.5)"
                 },
 
-                animationType: "scale",
-                animationEasing: "elasticOut",
-                animationDelay: function(idx) {
+                animationType: "scale",  // 初始动画效果
+                animationEasing: "elasticOut",  // 初始化的时候 动画的效果曲线
+                animationDelay: function(idx) {  // 动画的缓动延迟时间
                   return Math.random() * 200;
                 }
               }
             ]
           };
+
           saleEchart.setOption(option);
         },
     }

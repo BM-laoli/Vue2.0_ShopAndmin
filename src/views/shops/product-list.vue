@@ -124,6 +124,7 @@ import {
 import { filterImg } from "../../filters/LSZ-text-abbreviation";
 import table2excel from "element-ui-excel2table";
 export default {
+  name:'ProductdList',
   components: {
     breadCrumbs
   },
@@ -154,6 +155,10 @@ export default {
     this.getProductTypeFn();
     // this.getProductListFn();
   },
+  beforeRouteUpdate(to, from, next) {
+    this.changes()
+    next();
+  },
   methods: {
     // 导出表格
     excel() {
@@ -165,11 +170,21 @@ export default {
       // console.log(this.query.size);
       this.handleCurrentChange();
     },
+    async changes(){
+      this.loading = true;
+      this.query.page = 1;
+       const { data: res } = await getProductList(this.query);
+          this.query.total = res.total;
+          let records = res.records;
+          filterImg(records);
+          this.tableData = records;
+          this.loading = false;
+    },
     // 当前页变化时获取商品列表
     async handleCurrentChange(page) {
       this.loading = true;
       this.query.page = page || 1;
-      const id = this.$route.query.id;
+      let id = this.$route.query.id;
       try {
         if (id) {
           const { data: res } = await getProductById({
@@ -177,26 +192,25 @@ export default {
             size: this.query.size,
             id: id
           });
-          // console.log("productbyid", res.records);
           this.query.total = res.total;
           let records = res.records;
           filterImg(records);
           this.tableData = records;
           this.loading = false;
+          id = ''
         } else {
           const { data: res } = await getProductList(this.query);
-          // console.log("product", res.records);
           this.query.total = res.total;
           let records = res.records;
           filterImg(records);
           this.tableData = records;
-          // console.log("records", records);
           this.loading = false;
         }
       } catch (err) {
         this.$message.error("获取商品列表失败！");
       }
     },
+    
     // 表格数据格式化
     formatter(row, column, cellValue, index) {
       return cellValue + "元";

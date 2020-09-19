@@ -1,5 +1,5 @@
 <template>
-  <div class="contents" >
+  <div class="contents">
     <div class="login_box">
       <h2>系统登录</h2>
       <div class="box">
@@ -52,17 +52,17 @@ export default {
         }
 
         // 2.验证通过开始发请求
-        let { data: res } = await http.post('/login', this.loginForm)
+        let { data: res } = await http.post('/auth/login', this.loginForm)
         // 3. 拿到数据之后开始做处理 是存还是抛出错误====> 请拦截器中判断错误
-        
-        window.sessionStorage.setItem("token", res.token);
+
+        window.sessionStorage.setItem("token", res.access_token);
 
         this.$notify({
           title: "欢迎您，管理员",
           message: "登录成功"
         });
         this.$router.push("/home");
-      })  
+      })
 
     }
   }
@@ -77,12 +77,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: url('http://jiayihn.cn:9880/xjymanage/images/homeloge.jpg')
-
-  ;
+  background: url("http://jiayihn.cn:9880/xjymanage/images/homeloge.jpg");
   background-position: center;
-background-repeat: no-repeat;
-background-size: cover;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .login_box {

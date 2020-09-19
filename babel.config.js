@@ -7,16 +7,16 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   presets: [
-    '@vue/cli-plugin-babel/preset'
+    '@vue/cli-plugin-babel/preset',
   ],
-  plugins: [
-    [
-      'component',
-      {
-        libraryName: 'element-ui',
-        styleLibraryName: 'theme-chalk'
-      } 
-    ],
-    ...proPluguns
-  ]
+  //   plugins: [
+  //     [
+  //       'component',
+  //       {
+  //         libraryName: 'element-ui',
+  //         styleLibraryName: 'theme-chalk'
+  //       } 
+  //     ],
+  //     ...proPluguns
+  //   ]
 }

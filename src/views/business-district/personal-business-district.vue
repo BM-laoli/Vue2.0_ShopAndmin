@@ -86,14 +86,14 @@
       </div>
 
       <el-pagination
-              @size-change="onLoadList()"
-              @current-change="onLoadList()"
-              :current-page.sync="tableData.queryInfo.page"
-              :page-sizes="[2, 5, 10]"
-              :page-size.sync="tableData.queryInfo.size"
-              layout="total, sizes, prev, pager, next,jumper, slot"
-              :total="tableData.queryInfo.total">
-            </el-pagination>
+        @size-change="onLoadList()"
+        @current-change="onLoadList()"
+        :current-page.sync="tableData.queryInfo.page"
+        :page-sizes="[2, 5, 10]"
+        :page-size.sync="tableData.queryInfo.size"
+        layout="total, sizes, prev, pager, next,jumper, slot"
+        :total="tableData.queryInfo.total">
+      </el-pagination>
     </el-card>
 
 

@@ -92,5 +92,7 @@ Vue.use(Table)
 Vue.use(TableColumn)
 
 Vue.prototype.$message = Message
+Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$notify = Notification
+

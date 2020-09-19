@@ -1,7 +1,7 @@
-import { Nesthttp } from '../../plugins/http'
+import http from '../../plugins/http'
 
 export const getShopCouponListApi = params => {
-  return Nesthttp({
+  return http({
     method: 'get',
     url: '/coupon/getCouponListShop',
     params
@@ -9,7 +9,7 @@ export const getShopCouponListApi = params => {
 }
 
 export const getQueryShopCouponApi = params => {
-  return Nesthttp({
+  return http({
     method: 'get',
     url: '/coupon/getCouponListShopQuery',
     params

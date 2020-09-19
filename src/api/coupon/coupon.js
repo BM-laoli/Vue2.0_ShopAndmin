@@ -1,8 +1,8 @@
-import { Nesthttp } from '../../plugins/http'
+import http from '../../plugins/http'
 
 // 获取所有的通用优惠券
 export const getCouponListApi = params => {
-  return Nesthttp({
+  return http({
     method: 'get',
     url: '/coupon/getCouponList',
     params
@@ -11,7 +11,7 @@ export const getCouponListApi = params => {
 
 // 添加优惠券
 export const addCouponApi = data => {
-  return Nesthttp({
+  return http({
     method: 'post',
     url: '/coupon/CreateCoupon',
     data
@@ -20,7 +20,7 @@ export const addCouponApi = data => {
 
 // 更新优惠券
 export const updateCouponApi = (id, data) => {
-  return Nesthttp({
+  return http({
     method: 'put',
     url: '/coupon/CouponEdit',
     params: {
@@ -32,13 +32,13 @@ export const updateCouponApi = (id, data) => {
 
 // 删除优惠券
 export const deleteCouponApi = (id, data) => {
-  return Nesthttp({
+  return http({
   })
 }
 
 // 查询优惠券
 export const getQueryCouponApi = params => {
-  return Nesthttp({
+  return http({
     method: 'get',
     url: '/coupon/getCouponQuery',
     params

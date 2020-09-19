@@ -8,25 +8,23 @@ import vm from '../main'
 import { LOADING, UNLOADING } from '../store/mutations-types'
 
 const http = axios.create({
-  baseURL: 'http://192.168.29.243:3001/api',
-})
-
-const Nesthttp = axios.create({
-  baseURL: 'http://192.168.29.243:3045',
+  baseURL: 'http://112.124.109.250:3045'
+  // baseURL: 'http://localhost:3045'
 })
 
 
 
 
 
-// v1接口请求拦截 两个错误,配置token
+// v1接口请求拦截 两个出口,配置token
 http.interceptors.request.use(
   (config) => {
 
     vm.$store.commit(LOADING)
 
     if (sessionStorage.token) {
-      config.headers.Authorization = sessionStorage.token
+      console.log(sessionStorage.token, '<====token');
+      config.headers.token = sessionStorage.token
     }
 
     return config
@@ -43,8 +41,8 @@ http.interceptors.response.use(
 
     setTimeout(() => {
       // Vue.__Shop_Scope.unloading()
-        vm.$store.commit(UNLOADING)
-    }, 500);  
+      vm.$store.commit(UNLOADING)
+    }, 500);
 
     return res
     // 什么情况下 是会跑去err?只要不是正常的状态码
@@ -53,8 +51,8 @@ http.interceptors.response.use(
     if (err.response.data.message) {
       setTimeout(() => {
         // Vue.__Shop_Scope.unloading()
-          vm.$store.commit(UNLOADING)
-      }, 2000);  
+        vm.$store.commit(UNLOADING)
+      }, 2000);
       Vue.prototype.$message({
         type: 'error',
         message: err.response.data.message,
@@ -71,32 +69,4 @@ http.interceptors.response.use(
   }
 )
 
-// V2接口拦截器
-Nesthttp.interceptors.request.use((config)=>{
-  vm.$store.commit(LOADING)
-  return config
-},(err)=>{
-  console.log(err)
-  return Promise.reject(err)
-})
-
-Nesthttp.interceptors.response.use((res)=>{
-  setTimeout(() => {
-      vm.$store.commit(UNLOADING)
-  }, 10);  
-  return res
-},(err)=>{
-  if (err.response.data.message) {
-    Vue.prototype.$message({
-      type: 'error',
-      message: err.response.data.message,
-    })
-  }
-  return Promise.reject(err)
-})
-
-
-
-
-export { Nesthttp }
 export default http

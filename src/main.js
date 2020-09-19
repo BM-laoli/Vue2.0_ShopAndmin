@@ -5,8 +5,8 @@ import store from './store'
 
 // 加载ele组件库
 import 'element-ui/lib/theme-chalk/index.css';
-// import ElementUI from 'element-ui';
-// Vue.use( ElementUI )
+import ElementUI from 'element-ui';
+Vue.use(ElementUI)
 import './plugins/element-ui'
 
 
@@ -37,9 +37,9 @@ Vue.use(animated)
 
 Vue.config.productionTip = false
 const vm = new Vue({
-    router,
-    store,
-    render: h => h(App)
+  router,
+  store,
+  render: h => h(App)
 }).$mount('#app')
 
 export default vm
