@@ -15,7 +15,7 @@
     "element-ui-excel2table": "^1.0.3",
     "lodash": "^4.17.15",
     "mockjs": "^1.1.0",
-    "moment": "^2.27.0",
+    "moment": "^2.29.4",
     "sass": "^1.26.8",
     "sass-loader": "^8.0.2",
     "tiptap": "^1.27.1",
